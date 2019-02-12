@@ -8,6 +8,7 @@
 
 class UPaperGroupedSpriteComponent;
 class UPaperSprite;
+class UMaterialInterface;
 
 UCLASS()
 class TINYTOWN_API ATT_GridManager : public AActor
@@ -16,42 +17,64 @@ class TINYTOWN_API ATT_GridManager : public AActor
 	
 public:	
 
-	/*---------- Functions ----------*/
-
+	/*---------- Functions -----------*/
 	ATT_GridManager();
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 
 protected:
-	/*---------- Components ----------*/
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	/*---------- Components ----------*/
+	UPROPERTY()
+		USceneComponent* Root;
+	UPROPERTY(VisibleDefaultsOnly)
 		UPaperGroupedSpriteComponent* instanceGroupedSpriteComp;
 
 
-	/*---------- Functions ----------*/
-
+	/*---------- Functions -----------*/
 	virtual void BeginPlay() override;
 
-	void CalculateTileLocations(int x, int y, FVector& Center, float distance);
-
-	void SpawnTileInstances();
+	void SpawnTiles(int x, int y, FVector Center, float distance); // Spawns all tile instances seperated by distance in a x by y grid, centered around Center.
 
 
-	/*---------- Variables ----------*/
+	/*---------- Variables -----------*/
 
-	UPROPERTY(EditDefaultsOnly, Category ="Grid Settings")
+	//Size of the grid on the X axis
+	UPROPERTY(EditAnywhere, Category ="Grid Settings")
 		int sizeX;
-	UPROPERTY(EditDefaultsOnly, Category = "Grid Settings")
+	//Size of the grid on the Y axis
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
 		int sizeY;
-	UPROPERTY(EditDefaultsOnly, Category = "Grid Settings")
+	//Distance that separate each tile from one another
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
 		float distanceBetweenTiles;
-	UPROPERTY(EditDefaultsOnly, Category = "Grid Settings")
+	//Default sprite for a tile
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
 		UPaperSprite* tileSpriteNormal;
+	//Z offset for hovered tiles
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+		float tileHoveredZOffset;
 
-	TArray<FVector> tileLocations;
+	TArray<FVector> tileLocations; // Array of all spawned tile instances locations 
+
+	int32 clickedTile; // TileID of the currently clicked tile
+	TArray<int32> modifiedTiles; // Array of all tiles that have been altered
 
 
 public:	
 
+	/*---------- Functions -----------*/
+
+	// Set this tile as hovered
+	UFUNCTION(BlueprintCallable)
+		void TileHovered(int TileID);
+
+	//Set this tile as clicked
+	UFUNCTION(BlueprintCallable)
+		void TileClicked(int TileID);
+
+	//Reset all altered tiles to their original state
+	UFUNCTION(BlueprintCallable)
+		void TileClearState();
 
 };
