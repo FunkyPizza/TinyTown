@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EngineUtils.h"
 #include "TT_GridManager.h"
+#include "TT_BlockManager.h"
 
 
 /*---------- Primary functions ----------*/
@@ -67,6 +68,7 @@ ATT_GridManager* ATT_PlayerGridCamera::GetGridManager()
 			return *ActorItr;
 		}
 	}
+	UE_LOG(LogTemp, Log, TEXT("Couldn't get GridManager in PlayerGridCamera."))
 	return nullptr;
 }
 
@@ -93,7 +95,7 @@ void ATT_PlayerGridCamera::InputCameraZoom(float value)
 	}
 }
 
-void ATT_PlayerGridCamera::InputKeyboardMovements(float donotuse)
+void ATT_PlayerGridCamera::InputKeyboardMovements(float donotuse) 
 {
 	if (isMovementEnabled) {
 		isMovingCamera = true;
@@ -103,13 +105,13 @@ void ATT_PlayerGridCamera::InputKeyboardMovements(float donotuse)
 	else {
 		isMovingCamera = false;
 	}
-}
+} 
 
 void ATT_PlayerGridCamera::InputCameraMovements()
 {
 	if (isMovementEnabled) {
 
-		if (isSelectButtonDown) {
+		if (isMoveButtonDown) {
 
 			isMovingCamera = true;
 
@@ -130,13 +132,26 @@ void ATT_PlayerGridCamera::InputCameraRotation()
 
 			isRotatingCamera = true;
 
-			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), cameraRotationYSensitivity, cameraRotationXSensitivity);
+			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), cameraRotationXSensitivity, cameraRotationYSensitivity);
 		}
 
 		else {
 			isRotatingCamera = false;
 		}
 	}
+}
+
+void ATT_PlayerGridCamera::InputKeyboardRotation(float value)
+{
+	if (isMovementEnabled) {
+		isRotatingCamera = true;
+		RotateCamera(-value, 0.0f, cameraRotationKeyboardSensitivty, 0);
+	}
+
+	else {
+		isRotatingCamera = false;
+	}
+
 }
 
 void ATT_PlayerGridCamera::InputSelectButtonDown()
@@ -163,14 +178,22 @@ void ATT_PlayerGridCamera::InputSelectButtonUp()
 
 void ATT_PlayerGridCamera::InputRotationButtonDown()
 {
-	if (!isSelectButtonDown) {
 		isRotationButtonDown = true;
-	}
 }
 
 void ATT_PlayerGridCamera::InputRotationButtonUp()
 {
 	isRotationButtonDown = false;
+}
+
+void ATT_PlayerGridCamera::InputMoveButtonDown()
+{
+	isMoveButtonDown = true;
+}
+
+void ATT_PlayerGridCamera::InputMoveButtonUp()
+{
+	isMoveButtonDown = false;
 }
 
 
@@ -188,18 +211,44 @@ void ATT_PlayerGridCamera::MoveCamera(float X, float Y, float sensitivity)
 
 void ATT_PlayerGridCamera::RotateCamera(float X, float Y, float XSensit, float YSensit)
 {
-	FRotator newRotationY = FRotator(Y, 0, 0) * YSensit;
-	SpringArmComp->AddLocalRotation(newRotationY);
 
-	FRotator newRotationX = FRotator(0, X, 0) * XSensit;
-	AddActorLocalRotation(newRotationX);
+	FRotator currentRotation = SpringArmComp->GetRelativeTransform().GetRotation().Rotator();
+
+	if (currentRotation.Pitch >= -5.0f ){
+		SpringArmComp->SetRelativeRotation(FRotator(-5.1f, 0, 0));
+		return;
+	}
+
+	if (currentRotation.Pitch <= -85.0f) {
+		SpringArmComp->SetRelativeRotation(FRotator(-84.9f, 0, 0));
+		return;
+	}
+
+		FRotator newRotationY = FRotator(Y, 0, 0) * YSensit;
+		SpringArmComp->AddLocalRotation(newRotationY);
+
+		FRotator newRotationX = FRotator(0, X, 0) * XSensit;
+		AddActorLocalRotation(newRotationX);
 }
 
 
 /*---------- Grid interaction functions ----------*/
+
+void ATT_PlayerGridCamera::BuildUnderCursor()
+{
+	FHitResult Hit;
+	if (GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit))
+	{
+		if (Hit.GetActor()->IsA(ATT_GridManager::StaticClass())) {
+
+				GridManager->BlockManager->CreateBuildingOnTile(Hit.Item);
+		}
+	}
+}
+
 void ATT_PlayerGridCamera::MouseTrace()
 {
-	if (!isSelectButtonDown)
+	if (GridManager && !isSelectButtonDown)
 	{
 		FHitResult Hit;
 		if (GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit))
@@ -227,14 +276,17 @@ void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* Play
 	//Keyboard
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATT_PlayerGridCamera::InputKeyboardMovements);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATT_PlayerGridCamera::InputKeyboardMovements);
-	PlayerInputComponent->BindAxis("MoveForward");
-	PlayerInputComponent->BindAxis("MoveRight");
+	PlayerInputComponent->BindAxis("XRotation", this, &ATT_PlayerGridCamera::InputKeyboardRotation);
+	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATT_PlayerGridCamera::BuildUnderCursor);
+
 
 	//Mouse
 	PlayerInputComponent->BindAction("InputSelect", IE_Pressed, this, &ATT_PlayerGridCamera::InputSelectButtonDown);
 	PlayerInputComponent->BindAction("InputSelect", IE_Released, this, &ATT_PlayerGridCamera::InputSelectButtonUp);
 	PlayerInputComponent->BindAction("InputRotation", IE_Pressed, this, &ATT_PlayerGridCamera::InputRotationButtonDown);
 	PlayerInputComponent->BindAction("InputRotation", IE_Released, this, &ATT_PlayerGridCamera::InputRotationButtonUp);
+	PlayerInputComponent->BindAction("InputMovement", IE_Pressed, this, &ATT_PlayerGridCamera::InputMoveButtonDown);
+	PlayerInputComponent->BindAction("InputMovement", IE_Released, this, &ATT_PlayerGridCamera::InputMoveButtonUp);
 	PlayerInputComponent->BindAxis("ZoomIn", this, &ATT_PlayerGridCamera::InputCameraZoom);
 	PlayerInputComponent->BindAxis("MouseY");
 	PlayerInputComponent->BindAxis("MouseX");

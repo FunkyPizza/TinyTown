@@ -2,6 +2,8 @@
 
 #include "TT_GridManager.h"
 #include "PaperGroupedSpriteComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "TT_BlockManager.h"
 
 /*---------- Primary functions ----------*/
 
@@ -36,6 +38,8 @@ void ATT_GridManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SpawnBlockManager();
+
 }
 
 
@@ -59,38 +63,57 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector Center, float distance)
 
 }
 
+void ATT_GridManager::SpawnBlockManager()
+{
+	if (BlockManagerClass) {
+
+		ATT_BlockManager* newBlockManager;
+		newBlockManager = GetWorld()->SpawnActorDeferred<ATT_BlockManager>(BlockManagerClass, GetActorTransform());
+		if (newBlockManager) {
+			newBlockManager->SetGridManager(this);
+			BlockManager = newBlockManager;
+
+			UGameplayStatics::FinishSpawningActor(newBlockManager, GetActorTransform());
+		}
+	}
+	else {
+		UE_LOG(LogTemp, Log, TEXT("BlockManagerClass no set in GridManager. Please set it, and try again."))
+	}
+}
+
 
 /*---------- Tile functions ----------*/
 
 void ATT_GridManager::TileHovered(int TileID)
 {
-	if (!modifiedTiles.Contains(TileID) || clickedTile ==0 ) {
+	if (!modifiedTiles.Contains(TileID)) {
 
 		TileClearState();
-		clickedTile = 0;
+		clickedTile = -1;
 
 		FTransform tempTileTransform;
 		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
-		instanceGroupedSpriteComp->RemoveInstance(TileID);
-
 		FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.1f, 1.1f, 1.1f));
-		modifiedTiles.Add(instanceGroupedSpriteComp->AddInstance(newTransform, tileSpriteNormal, true, FLinearColor::White));
+
+		instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
+
+		modifiedTiles.Add(TileID);
 	}
 }
 
 void ATT_GridManager::TileClicked(int TileID)
 {
-	if (clickedTile == 0) {
+	if (modifiedTiles.Contains(TileID) && (clickedTile == -1)) {
 
 		TileClearState();
 
 		FTransform tempTileTransform;
 		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
-		instanceGroupedSpriteComp->RemoveInstance(TileID);
-
 		FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(0.8f, 0.8f, 0.8f));
 
-		int32 clickedTile = instanceGroupedSpriteComp->AddInstance(newTransform, tileSpriteNormal, true, FLinearColor::White);
+		instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
+
+		int32 clickedTile = TileID;
 		modifiedTiles.Add(clickedTile);
 	}
 }
@@ -105,12 +128,26 @@ void ATT_GridManager::TileClearState()
 
 			FTransform tempTileTransform;
 			instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
-			instanceGroupedSpriteComp->RemoveInstance(TileID);
-
 			FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
-			instanceGroupedSpriteComp->AddInstance(newTransform, tileSpriteNormal, true, FLinearColor::White);
+
+			instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
 		}
 		modifiedTiles.Empty();
 	}
+}
+
+FVector ATT_GridManager::GetTileLocation(int TileID)
+{
+	FTransform tempTransform;
+	FVector tempVector;
+
+	if (TileID != -1) {
+
+		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTransform, true);
+		tempVector = tempTransform.GetLocation();
+
+	}
+
+	return tempVector;
 }
 

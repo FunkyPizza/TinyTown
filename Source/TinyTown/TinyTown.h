@@ -3,4 +3,5 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TT_Global.h"
 

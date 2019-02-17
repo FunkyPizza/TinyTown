@@ -37,26 +37,47 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	void InputKeyboardMovements(float donotuse); // Handles camera movements via keyboard
+	// Handles camera movements via keyboard
+	void InputKeyboardMovements(float donotuse); 
 
-	void InputCameraMovements(); // Handles camera movements via mouse/touch
+	// Handles camera movements via mouse/touch
+	void InputCameraMovements();
 
-	void InputCameraRotation(); //Handles camera rotation via mouse
+	//Handles camera rotation via mouse
+	void InputCameraRotation(); 
 
-	void InputCameraZoom(float value); // Handles zoom via mouse
-	   
-	void InputSelectButtonDown(); //Handles Select button input
+	//Handles camera rotation via keyboard
+	void InputKeyboardRotation(float value); 
+
+	// Handles zoom via mouse
+	void InputCameraZoom(float value); 
+
+	//Handles Select button input
+	void InputSelectButtonDown(); 
 	void InputSelectButtonUp();
 
-	void InputRotationButtonDown(); //Handles Rotation button input
+	//Handles Rotation button input
+	void InputRotationButtonDown(); 
 	void InputRotationButtonUp();
 
-	void MouseTrace(); // Get hit results under cursor, handles tile detection
+	//Handles Select button input
+	void InputMoveButtonDown();
+	void InputMoveButtonUp();
 
-	void MoveCamera(float X, float Y, float sensitivity); // Moves the camera in XY direction multiplied by Sensitivity
-	void RotateCamera(float X, float Y, float XSensit, float YSensit); // Rotates the camera around Y and Z axis multiplied by Sensitivity
+	// Get hit results under cursor, handles tile detection
+	void MouseTrace(); 
 
-	ATT_GridManager* GetGridManager(); // TActor iterator to find grid manager
+	// Moves the camera in XY direction multiplied by Sensitivity
+	void MoveCamera(float X, float Y, float sensitivity); 
+
+	// Rotates the camera around Y and Z axis multiplied by Sensitivity
+	void RotateCamera(float X, float Y, float XSensit, float YSensit); 
+
+	//Prototype of a building mechanic
+	void BuildUnderCursor(); 
+
+	// TActor iterator to find grid manager
+	ATT_GridManager* GetGridManager(); 
 
  
 /*---------- Variables -----------*/
@@ -77,6 +98,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
 	float cameraRotationXSensitivity;
 
+	// Movement sensitivity for moving the camera with keyboard
+	UPROPERTY(EditAnywhere, Category = "Input Settings")
+		float cameraRotationKeyboardSensitivty;
+
 	// Maximum length for the spring arm
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float MaxSpringArmLength;
@@ -93,17 +118,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	int zoomLerpSpeed;
 
+	// Current grid manager
+	ATT_GridManager* GridManager; 
 
-	ATT_GridManager* GridManager; // Current grid manager
+	//Zoom variables
+	int zoomCurrentStep; 
+	int zoomCoefficient;
+	float newTargetArmLength;
 
-	int zoomCurrentStep; //Temp var to track zoom steps
-	int zoomCoefficient; //Length of one zoom step
-	float newTargetArmLength; //New arm length after input (used to lerp on tick)
-
-	bool isMovementEnabled; // Dictates whether the player can move the camera or not
+	// Dictates whether the player can move the camera or not
+	bool isMovementEnabled; 
 
 	bool isSelectButtonDown; // Indicates if the Select Button (Left click / touch) is down
 	bool isRotationButtonDown; // Indicates if the Rotate button (middle mouse / 2 fingers) is down
+	bool isMoveButtonDown; // Indicates if the Move button (right click) is down
 	bool isMovingCamera; // Indicates if the camera is being moved
 	bool isRotatingCamera; // Indicates if the camera is being rotated
 
