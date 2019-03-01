@@ -3,13 +3,14 @@
 #include "TT_Block.h"
 #include "Engine/DataTable.h"
 #include "TT_Global.h"
+#include "TT_BlockManager.h"
 
 
 /*---------- Primary functions ----------*/
 
 ATT_Block::ATT_Block()
 {
-	GetDataTable(0, 0);
+
 }
 
 void ATT_Block::BeginPlay()
@@ -17,23 +18,45 @@ void ATT_Block::BeginPlay()
 	Super::BeginPlay();
 }
 
-
-/*---------- Data Table functions ----------*/
-
-void ATT_Block::GetDataTable(int buildingType, int buildingID)
+void ATT_Block::SetBlockStats(FTT_Struct_Block* inputStats)
 {
-	//Gets Data table
-	
-	//TODO: Change table depending on buildingType
-
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataBlock_DataObject(TEXT("DataTable'/Game/Data/Data_Block.Data_Block'"));
-	if (DataBlock_DataObject.Succeeded())
+	if (inputStats)
 	{
-		data_Block = DataBlock_DataObject.Object;
-
-		//Gets table row
-		static const FString ContextString(TEXT("data_Block_Context"));
-		blockStats = data_Block->FindRow<FTT_Struct_Block>(FName(TEXT("0")), ContextString, true);
+		blockStats = *inputStats;
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Block stats not set on its creation in %s. inputStats not valid."), *GetName());
+	}
+}
+
+FTT_Struct_Block* ATT_Block::GetBlockStats()
+{
+	return &blockStats;
+}
+
+void ATT_Block::SetBlockManager(ATT_BlockManager* BlockManager)
+{
+	blockManager = BlockManager;
+}
+
+ATT_BlockManager* ATT_Block::GetBlockManager()
+{
+	return blockManager;
+}
+
+void ATT_Block::SetBlockTileIDs(TArray<int> TileIDs)
+{
+	blockTileIDs = TileIDs;
+}
+
+TArray<int> ATT_Block::GetBlockTileIDs()
+{
+	return blockTileIDs;
+}
+
+void ATT_Block::DestroyBlock()
+{
+	this->Destroy();
 }
 

@@ -38,6 +38,7 @@ protected:
 	// Spawns all tile instances separated by distance in a x by y grid, centered around Center.
 	void SpawnTiles(int x, int y, FVector Center, float distance); 
 
+	// Spawns a block manager
 	void SpawnBlockManager();
 
 
@@ -77,10 +78,17 @@ protected:
 	// Array of all tiles that have been altered
 	TArray<int32> modifiedTiles; 
 
+	// Value of the last tile of the TileIDs array the last time a zone was calculated
+	int lastZoneTile;
+
 
 public:	
+
+	/*---------- Components ----------*/
 	UPROPERTY(VisibleDefaultsOnly)
 		UPaperGroupedSpriteComponent* instanceGroupedSpriteComp;
+
+
 	/*---------- Functions -----------*/
 
 	// Set this tile as hovered -- Called by PlayGridCamera
@@ -91,12 +99,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void TileClicked(int TileID);
 
+	//Set this array of tiles as Residential Zone -- Called by PlayGridCamera
+	UFUNCTION(BlueprintCallable)
+		void TileZoneRes(TArray<int> TileIDs);
+
 	//Reset all altered tiles to their original state -- Called by PlayGridCamera
 	UFUNCTION(BlueprintCallable)
 		void TileClearState();
 
 	//Public accessor for tile locations
 	FVector GetTileLocation(int TileID);
+
+	// Returns the distance between each tile
+	float GetDistanceBetweenTiles();
+
+	// Returns the size of the grid in a 2D Vector
+	FVector2D GetGridSize();
+
 
 	/*---------- Variables -----------*/
  

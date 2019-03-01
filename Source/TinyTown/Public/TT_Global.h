@@ -11,7 +11,7 @@ struct FTT_Struct_Block : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
-		FText Name;
+		FText Block_Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
 		FText Description;
@@ -21,6 +21,9 @@ struct FTT_Struct_Block : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
 		int32 Efficiency;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+		bool Resizable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
 		int32 Size_X;
@@ -41,7 +44,10 @@ struct FTT_Struct_Block : public FTableRowBase
 		int32 R_Ha;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
-		int32 R_Ut;
+		int32 R_El;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+		int32 R_Wa;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
 		int32 R_In;
@@ -59,7 +65,10 @@ struct FTT_Struct_Block : public FTableRowBase
 		int32 P_Ha;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
-		int32 P_Ut;
+		int32 P_El;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+		int32 P_Wa;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
 		int32 P_In;

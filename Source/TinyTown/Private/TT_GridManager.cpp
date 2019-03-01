@@ -24,14 +24,16 @@ ATT_GridManager::ATT_GridManager()
 
 void ATT_GridManager::OnConstruction(const FTransform& Transform)
 {
-	if ( sizeX * sizeY != tileLocations.Num()) {
+	Super::OnConstruction(Transform);
 
+	// Refresh the grid only when the grid size has been changed. Enables moving the grid with refreshing all instances.
+	//if ( sizeX * sizeY != tileLocations.Num()) 
+	//{
 		instanceGroupedSpriteComp->ClearInstances();
 		tileLocations.Empty();
 
 		SpawnTiles(sizeX, sizeY, GetActorLocation(), distanceBetweenTiles);
-	}
-	Super::OnConstruction(Transform);
+	//}
 }
 
 void ATT_GridManager::BeginPlay()
@@ -47,16 +49,16 @@ void ATT_GridManager::BeginPlay()
 
 void ATT_GridManager::SpawnTiles(int x, int y, FVector Center, float distance)
 {
-	for (int i = 0; i < y; i++) {
-		for (int j = 0; j < x; j++) {
+	for (int i = 0; i < y; i++) 
+	{
+		for (int j = 0; j < x; j++) 
+		{
 
 			//Calculating new location (will spawn around center vector hence the very long expression). Taken from "2D Grid Execution Macro".
 			FVector newLocation = FVector(Center + (FVector(distance * 0.5f, distance * 0.5f, 0.0f) + (distance * (FVector((j - (float(x) / 2)), (i - (float(y) / 2)), 0.0f)))));
-
 			tileLocations.Add(newLocation);
 
 			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
-
 			instanceGroupedSpriteComp->AddInstance(tileTransform, tileSpriteNormal, true, FLinearColor::White);
 		}
 	}
@@ -65,19 +67,23 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector Center, float distance)
 
 void ATT_GridManager::SpawnBlockManager()
 {
-	if (BlockManagerClass) {
-
+	if (BlockManagerClass) 
+	{
+		//Spawn TT_BlockManager and assign its TT_GridManager to this object
 		ATT_BlockManager* newBlockManager;
 		newBlockManager = GetWorld()->SpawnActorDeferred<ATT_BlockManager>(BlockManagerClass, GetActorTransform());
-		if (newBlockManager) {
+		
+		if (newBlockManager) 
+		{
 			newBlockManager->SetGridManager(this);
 			BlockManager = newBlockManager;
 
 			UGameplayStatics::FinishSpawningActor(newBlockManager, GetActorTransform());
 		}
 	}
-	else {
-		UE_LOG(LogTemp, Log, TEXT("BlockManagerClass no set in GridManager. Please set it, and try again."))
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BlockManagerClass no set in GridManager. Please set it, and try again."))
 	}
 }
 
@@ -86,8 +92,9 @@ void ATT_GridManager::SpawnBlockManager()
 
 void ATT_GridManager::TileHovered(int TileID)
 {
-	if (!modifiedTiles.Contains(TileID)) {
-
+	// Check if the tile is already hovered
+		if (!modifiedTiles.Contains(TileID)) 
+	{
 		TileClearState();
 		clickedTile = -1;
 
@@ -97,14 +104,16 @@ void ATT_GridManager::TileHovered(int TileID)
 
 		instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
 
+		//Marks the tile as hovered or "modified"
 		modifiedTiles.Add(TileID);
 	}
 }
 
 void ATT_GridManager::TileClicked(int TileID)
 {
-	if (modifiedTiles.Contains(TileID) && (clickedTile == -1)) {
-
+	//Check the tile is hovered and hasn't been clicked
+	if (modifiedTiles.Contains(TileID) && (clickedTile == -1)) 
+	{
 		TileClearState();
 
 		FTransform tempTileTransform;
@@ -113,17 +122,37 @@ void ATT_GridManager::TileClicked(int TileID)
 
 		instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
 
+		//Marks the tile as hovered or "modified" and as clicked
 		int32 clickedTile = TileID;
 		modifiedTiles.Add(clickedTile);
 	}
 }
 
+void ATT_GridManager::TileZoneRes(TArray<int> TileIDs)
+{
+	if (TileIDs.Num() > 0)
+	{
+		if (TileIDs.Last() != lastZoneTile)
+		{
+			lastZoneTile = TileIDs.Last();
+			TileClearState();
+
+			for (int i = 0; i < TileIDs.Num(); ++i)
+			{
+				instanceGroupedSpriteComp->UpdateInstanceColor(TileIDs[i], FLinearColor::Green);
+
+				modifiedTiles.Add(TileIDs[i]);
+			}
+		}
+	}
+}
+
 void ATT_GridManager::TileClearState()
 {
-	if (modifiedTiles.Num() > 0) {
-
-		for (int i = 0; i < modifiedTiles.Num(); ++i) {
-
+	if (modifiedTiles.Num() > 0) 
+	{
+		for (int i = 0; i < modifiedTiles.Num(); ++i) 
+		{
 			int TileID = modifiedTiles[i];
 
 			FTransform tempTileTransform;
@@ -131,6 +160,7 @@ void ATT_GridManager::TileClearState()
 			FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
 
 			instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
+			instanceGroupedSpriteComp->UpdateInstanceColor(TileID, FLinearColor::White, true);
 		}
 		modifiedTiles.Empty();
 	}
@@ -141,13 +171,22 @@ FVector ATT_GridManager::GetTileLocation(int TileID)
 	FTransform tempTransform;
 	FVector tempVector;
 
-	if (TileID != -1) {
-
+	if (TileID != -1) 
+	{
 		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTransform, true);
 		tempVector = tempTransform.GetLocation();
-
 	}
 
 	return tempVector;
+}
+
+float ATT_GridManager::GetDistanceBetweenTiles()
+{
+	return distanceBetweenTiles;
+}
+
+FVector2D ATT_GridManager::GetGridSize()
+{
+	return FVector2D(sizeX, sizeY);
 }
 
