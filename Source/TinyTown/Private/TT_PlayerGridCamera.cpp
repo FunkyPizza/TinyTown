@@ -478,7 +478,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		// If the player is resizing a block, do not update the block's location to the mouse's position
 		if (!isSettingBlockSize)
 		{
-			placingBlockTargetLocation = GridManager->GetTileLocation(lastLinetracedTile);
+			placingBlockTargetLocation = GridManager->GetTileLocation(lastLinetracedTile) - FVector(0, GridManager->GetDistanceBetweenTiles(), 0);
 		}
 
 		// Get tile location to lerp the block to
@@ -570,15 +570,15 @@ void ATT_PlayerGridCamera::DeleteBlockOnTile(int TileID)
 // PROTOTYPE Build function
 void ATT_PlayerGridCamera::Build0()
 {
-	StartBuilding(0);
+	StartBuilding(1);
 }
 void ATT_PlayerGridCamera::Build1()
 {
-	StartBuilding(3);
+	StartBuilding(2);
 }
 void ATT_PlayerGridCamera::Build2()
 {
-	StartBuilding(2);
+	StartBuilding(3);
 }
 void ATT_PlayerGridCamera::Build3()
 {

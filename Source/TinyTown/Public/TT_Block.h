@@ -25,6 +25,11 @@ public:
 protected:
 
 /*---------- Components ----------*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USceneComponent* Root;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USceneComponent* BuildingRoot;
 
 
 /*---------- Functions -----------*/

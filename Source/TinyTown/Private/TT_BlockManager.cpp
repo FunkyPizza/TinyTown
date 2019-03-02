@@ -80,9 +80,11 @@ void ATT_BlockManager::SpawnBlock(int BlockID, FTransform BlockTransform, int Ti
 		//Get Block Default stats from data table
 		FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(BlockID);
 
-		//Get the top right tileID of the rectangular zone 
-		int BlockEndTile = GetBlockEndTile(TileID, BlockStats->Size_X, BlockStats->Size_Y, false); //Implement modulo pi bool depending on block rotation
-		TArray<int> BlockZoneTileIDs = CalculateZoneTileIDs(TileID, BlockEndTile);
+		//Get the block's zone characteristics
+		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(BlockTransform.Rotator().Yaw), 90, 0.1f);
+		int BlockStartTile = GetZoneStartTileFromAnchorPoint(TileID, BlockStats->AnchorTileX, BlockStats->Size_X, BlockStats->Size_Y);
+		int BlockEndTile = GetZoneEndTile (BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+		TArray<int> BlockZoneTileIDs = CalculateZoneTileIDs(BlockStartTile, BlockEndTile);
 
 		SpawnedActor->SetBlockStats(BlockStats);
 		SpawnedActor->SetBlockManager(this);
@@ -167,29 +169,41 @@ TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
 			for (int j = 0; j < abs(blockSize.X); j++)
 			{
 				int newTileID = StartTile + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
-
+				
 				TileIDs.Add(newTileID);
 			}
 		}
+		GridManager->TileZoneRes(TileIDs);
 		return TileIDs;
 	}
 
 	return TileIDs;
 }
 
-int ATT_BlockManager::GetBlockEndTile(int StartTile, int SizeX, int SizeY, bool isModuloHalfPi)
+int ATT_BlockManager::GetZoneStartTileFromAnchorPoint(int AnchorTileID, int AnchorPointX, int SizeX, int SizeY)
+{
+	if (AnchorPointX == 0)
+	{
+		return AnchorTileID;
+	}
+
+	int newStartTile = AnchorTileID - (AnchorPointX * GridManager->GetGridSize().X);
+	return newStartTile;
+}
+
+int ATT_BlockManager::GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool isModuloHalfPi)
 {
 	int xSize = SizeX;
 	int ySize = SizeY;
 
-	// isModulohalfpi indicates the orientation of the building, if true the building is rotated 90° in which case SizeX = SizeY and SizeY = SizeX
 	if (isModuloHalfPi)
 	{
-		xSize = SizeY;
-		ySize = SizeX;
+		int tempXSize = xSize;
+		xSize = ySize;
+		ySize = tempXSize;
 	}
 
-	int newTileID = StartTile + (SizeY * GridManager->GetGridSize().X) + SizeX;
+	int newTileID = StartTile + (ySize * GridManager->GetGridSize().X) + xSize;
 	return newTileID;
 }
 

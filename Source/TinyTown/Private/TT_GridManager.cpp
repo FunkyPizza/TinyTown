@@ -149,7 +149,7 @@ void ATT_GridManager::TileZoneRes(TArray<int> TileIDs)
 
 void ATT_GridManager::TileClearState()
 {
-	if (modifiedTiles.Num() > 0) 
+	/*if (modifiedTiles.Num() > 0) 
 	{
 		for (int i = 0; i < modifiedTiles.Num(); ++i) 
 		{
@@ -163,7 +163,7 @@ void ATT_GridManager::TileClearState()
 			instanceGroupedSpriteComp->UpdateInstanceColor(TileID, FLinearColor::White, true);
 		}
 		modifiedTiles.Empty();
-	}
+	}*/
 }
 
 FVector ATT_GridManager::GetTileLocation(int TileID)

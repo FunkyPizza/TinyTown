@@ -10,7 +10,12 @@
 
 ATT_Block::ATT_Block()
 {
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Root;
 
+	BuildingRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BlockRoot"));
+	BuildingRoot->AddLocalOffset(FVector(-128, -128, 0), false);
+	BuildingRoot->SetupAttachment(Root);
 }
 
 void ATT_Block::BeginPlay()
