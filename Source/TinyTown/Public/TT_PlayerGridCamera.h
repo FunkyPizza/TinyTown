@@ -158,10 +158,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Block Building")
 	float ghostBlockMovementSpeed;
 
-	// The speed at which a ghost block rotates on the grid (when placing down a block).
-	UPROPERTY(EditAnywhere, Category = "Block Building")
-	float ghostBlockRotationSpeed;
-
 	// How fast can the mouse rotate the ghostBlock when placing down a block.
 	UPROPERTY(EditAnywhere, Category = "Block Building")
 	float ghostBlockRotationMouseThreshold;

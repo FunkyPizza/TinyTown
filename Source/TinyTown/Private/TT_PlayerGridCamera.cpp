@@ -367,9 +367,9 @@ void ATT_PlayerGridCamera::StartBuilding(int BlockID)
 	{
 		placingBlockGhost->SetBlockStats(GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID));
 		placingBlockGhost->SetBlockManager(GridManager->BlockManager);
+		placingBlockGhost->ActivateEditMode();
 
 		UGameplayStatics::FinishSpawningActor(placingBlockGhost, blockTransform);
-
 
 		isPlacingDownBlock = true;
 	}
@@ -441,7 +441,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		else
 		{
 			// Check that the mouse button is held and that the block has finished its previous rotation
-			if (isSelectButtonDown && FMath::IsNearlyEqual(placingBlockGhost->GetActorRotation().Yaw, placingBlockTargetRotation.Yaw, 0.1f))
+			if (isSelectButtonDown && FMath::IsNearlyEqual(placingBlockGhost->RotationRoot->RelativeRotation.Yaw, placingBlockTargetRotation.Yaw, 0.1f))
 			{
 				// Check for any mouse movement meaning the player wants to rotate the block
 				if (!(FMath::IsNearlyEqual(GetInputAxisValue("MouseX"), 0.0f, ghostBlockRotationMouseThreshold)))
@@ -456,7 +456,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 
 					if (placingBlockTargetRotation.Yaw < -180)
 					{
-							placingBlockTargetRotation = FRotator(0, 90, 0);
+						placingBlockTargetRotation = FRotator(0, 90, 0);
 					}
 				}
 
@@ -469,7 +469,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 
 					if (placingBlockTargetRotation.Yaw > 180)
 					{
-							placingBlockTargetRotation = FRotator(0, -90, 0);
+						placingBlockTargetRotation = FRotator(0, -90, 0);
 					}
 				}
 			}
@@ -478,12 +478,12 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		// If the player is resizing a block, do not update the block's location to the mouse's position
 		if (!isSettingBlockSize)
 		{
-			placingBlockTargetLocation = GridManager->GetTileLocation(lastLinetracedTile) - FVector(0, GridManager->GetDistanceBetweenTiles(), 0);
+			placingBlockTargetLocation = GridManager->GetTileLocation(lastLinetracedTile);
 		}
 
 		// Get tile location to lerp the block to
 		placingBlockGhost->SetActorLocation(FMath::Lerp(placingBlockGhost->GetActorLocation(), placingBlockTargetLocation, ghostBlockMovementSpeed * deltaTime));
-		placingBlockGhost->SetActorRotation(FMath::Lerp(placingBlockGhost->GetActorRotation(), placingBlockTargetRotation, ghostBlockRotationSpeed * deltaTime));
+		placingBlockGhost->SetBlockRotation(placingBlockTargetRotation);
 	}
 }
 

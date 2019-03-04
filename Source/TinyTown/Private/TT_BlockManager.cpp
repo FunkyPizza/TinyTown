@@ -51,10 +51,7 @@ void ATT_BlockManager::CreateBlockOnTile(int TileID, int blockID, FRotator Block
 		UE_LOG(LogTemp, Log, TEXT("Grid Maker not set in %s, cannot build"), *GetName());
 		return;
 	}
-
-		FTransform blockTransform = FTransform(BlockRotation, GridManager->GetTileLocation(TileID), FVector(1, 1, 1));
-
-		SpawnBlock(blockID, blockTransform, TileID);
+		SpawnBlock(blockID, BlockRotation, TileID);
 }
 
 void ATT_BlockManager::CreateBlockOnTile(int TileID, FRotator BlockRotation, FString buildingType, int efficiency, int sizeX, int sizeY)
@@ -66,13 +63,15 @@ void ATT_BlockManager::CreateBlockOnTile(int TileID, FRotator BlockRotation, FSt
 	}
 
 	int blockID = GetRandomBlockIDFromParameter(buildingType, efficiency, sizeX, sizeY);
-	FTransform blockTransform = FTransform(BlockRotation, GridManager->GetTileLocation(TileID), FVector(1, 1, 1));
 	
-	SpawnBlock(blockID, blockTransform, TileID);
+	SpawnBlock(blockID, BlockRotation, TileID);
 }
 
-void ATT_BlockManager::SpawnBlock(int BlockID, FTransform BlockTransform, int TileID)
+void ATT_BlockManager::SpawnBlock(int BlockID, FRotator BlockRotation, int TileID)
 {
+	// Makes block transform based on TileID
+	FTransform BlockTransform = FTransform(FRotator(0, 0, 0), GridManager->GetTileLocation(TileID), FVector(1, 1, 1));
+
 	ATT_Block* SpawnedActor;
 	SpawnedActor = GetWorld()->SpawnActorDeferred<ATT_Block>(BlockToSpawn, BlockTransform);
 	if (SpawnedActor)
@@ -81,7 +80,7 @@ void ATT_BlockManager::SpawnBlock(int BlockID, FTransform BlockTransform, int Ti
 		FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(BlockID);
 
 		//Get the block's zone characteristics
-		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(BlockTransform.Rotator().Yaw), 90, 0.1f);
+		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(BlockRotation.Yaw), 90, 0.1f);
 		int BlockStartTile = GetZoneStartTileFromAnchorPoint(TileID, BlockStats->AnchorTileX, BlockStats->Size_X, BlockStats->Size_Y);
 		int BlockEndTile = GetZoneEndTile (BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
 		TArray<int> BlockZoneTileIDs = CalculateZoneTileIDs(BlockStartTile, BlockEndTile);
@@ -89,7 +88,12 @@ void ATT_BlockManager::SpawnBlock(int BlockID, FTransform BlockTransform, int Ti
 		SpawnedActor->SetBlockStats(BlockStats);
 		SpawnedActor->SetBlockManager(this);
 		SpawnedActor->SetBlockTileIDs(BlockZoneTileIDs);
+		SpawnedActor->SetBlockRotation(BlockRotation);
+		SpawnedActor->SetBlockPosition();
+		SpawnedActor->UpdateBlockRotationAndLocation();
+
 		UGameplayStatics::FinishSpawningActor(SpawnedActor, BlockTransform);
+
 
 		for (int i = 0; i < BlockZoneTileIDs.Num(); i++)
 		{
@@ -186,8 +190,33 @@ int ATT_BlockManager::GetZoneStartTileFromAnchorPoint(int AnchorTileID, int Anch
 	{
 		return AnchorTileID;
 	}
+	
+	int anchorX;
+	int anchorY;
 
-	int newStartTile = AnchorTileID - (AnchorPointX * GridManager->GetGridSize().X);
+	if (SizeX % 2 == 0)
+	{
+		anchorX = SizeX / 2;
+	}
+	else
+	{
+		anchorX = FMath::TruncToInt(SizeX / 2);
+	}
+
+	if (SizeY % 2 == 0)
+	{
+		anchorY = SizeY / 2;
+	}
+	else
+	{
+		anchorY = FMath::TruncToInt(SizeY / 2);
+	}
+
+	int AnchorRelativeTileID = anchorY + anchorX * SizeX;
+
+	int ActualTileID = AnchorRelativeTileID - GridManager->GetGridSize().X - 1;
+
+	int newStartTile = ActualTileID - (AnchorPointX * GridManager->GetGridSize().X);
 	return newStartTile;
 }
 

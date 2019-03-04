@@ -43,7 +43,7 @@ protected:
 	void ClearTileArraysAtIndex(int index);
 
 	// Spawns a block at location (TileIDs is only passed through for register the block on the grid)
-	void SpawnBlock(int BlockID, FTransform BlockTransform, int TileID);
+	void SpawnBlock(int BlockID, FRotator BlockRotation, int TileID);
 
 
 	/*---------- Variables -----------*/
