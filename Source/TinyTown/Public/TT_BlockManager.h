@@ -77,8 +77,8 @@ public:
 	// Returns the EndTileID of a zone with the given parameters (see top of page for zone explanation)
 	int GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool isModuloHalfPi);
 
-	// Returns the StartTileID of a zone relative to a given anchor point (see top of page for zone explanation)
-	int GetZoneStartTileFromAnchorPoint(int AnchorTileID, int AnchorPointX, int SizeX, int SizeY);
+	// Returns the StartTileID from a zone size and hovered tile. (see top of page for zone explanation)
+	int GetZoneStartTileFromZoneSize(int TileID, int SizeX, int SizeY, bool isModuloHalfPi);
 
 	// Returns block stats from data table by row id.
 	FTT_Struct_Block* GetBlockStatsFromBlockID(int buildingID);

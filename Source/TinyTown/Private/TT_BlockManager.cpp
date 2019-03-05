@@ -81,7 +81,7 @@ void ATT_BlockManager::SpawnBlock(int BlockID, FRotator BlockRotation, int TileI
 
 		//Get the block's zone characteristics
 		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(BlockRotation.Yaw), 90, 0.1f);
-		int BlockStartTile = GetZoneStartTileFromAnchorPoint(TileID, BlockStats->AnchorTileX, BlockStats->Size_X, BlockStats->Size_Y);
+		int BlockStartTile = GetZoneStartTileFromZoneSize(TileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
 		int BlockEndTile = GetZoneEndTile (BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
 		TArray<int> BlockZoneTileIDs = CalculateZoneTileIDs(BlockStartTile, BlockEndTile);
 
@@ -184,40 +184,43 @@ TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
 	return TileIDs;
 }
 
-int ATT_BlockManager::GetZoneStartTileFromAnchorPoint(int AnchorTileID, int AnchorPointX, int SizeX, int SizeY)
+int ATT_BlockManager::GetZoneStartTileFromZoneSize(int TileID, int SizeX, int SizeY, bool isModuloHalfPi)
 {
-	if (AnchorPointX == 0)
-	{
-		return AnchorTileID;
-	}
-	
-	int anchorX;
-	int anchorY;
+	/* This function is tightly bound to the way a building is moved and rotated (when being placed down). 
+		For any changes to this function, make sure to change EditMode in Block.cpp	*/
+
+	int offsetX;
+	int offsetY;
 
 	if (SizeX % 2 == 0)
 	{
-		anchorX = SizeX / 2;
+		offsetX = FMath::TruncToInt(SizeX / 2) - 1;
 	}
 	else
 	{
-		anchorX = FMath::TruncToInt(SizeX / 2);
+		offsetX = FMath::TruncToInt(SizeX / 2);
 	}
 
 	if (SizeY % 2 == 0)
 	{
-		anchorY = SizeY / 2;
+		offsetY = FMath::TruncToInt(SizeY / 2) - 1;
 	}
 	else
 	{
-		anchorY = FMath::TruncToInt(SizeY / 2);
+		offsetY = FMath::TruncToInt(SizeY / 2);
 	}
 
-	int AnchorRelativeTileID = anchorY + anchorX * SizeX;
+	int ActualTileID;
 
-	int ActualTileID = AnchorRelativeTileID - GridManager->GetGridSize().X - 1;
+	// Is the block rotated 90°
+	if (isModuloHalfPi)
+	{
+		ActualTileID = TileID - offsetX * GridManager->GetGridSize().X - offsetY;
+		return ActualTileID;
+	}
 
-	int newStartTile = ActualTileID - (AnchorPointX * GridManager->GetGridSize().X);
-	return newStartTile;
+	ActualTileID = TileID - offsetY * GridManager->GetGridSize().X - offsetX;
+	return ActualTileID;
 }
 
 int ATT_BlockManager::GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool isModuloHalfPi)

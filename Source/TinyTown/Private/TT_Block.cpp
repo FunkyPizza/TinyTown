@@ -70,6 +70,7 @@ TArray<int> ATT_Block::GetBlockTileIDs()
 	return blockTileIDs;
 }
 
+// Block positioning
 
 void ATT_Block::SetBlockPosition()
 {
@@ -111,7 +112,6 @@ void ATT_Block::SetBlockPosition()
 	{
 		newY = 0;
 	}
-
 
 	if (FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f))
 	{

@@ -25,6 +25,7 @@ public:
 protected:
 
 /*---------- Components ----------*/
+
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
@@ -33,12 +34,9 @@ protected:
 		USceneComponent* BuildingRoot;
 
 
-
-
 /*---------- Functions -----------*/
+
 	virtual void BeginPlay() override;
-
-
 
 
 /*---------- Variables -----------*/
@@ -53,14 +51,17 @@ protected:
 	// This array contains all the tile the block is covering/using.
 	TArray<int> blockTileIDs;
 
-	// Default RotationRoot rotator
-	FRotator blockRotation;
-
+	/* The following variables are the temporary values for rotation and location of
+	a block which is updated when in EditMode and when being spawned by BlockManager.*/
+	FRotator blockRotation; 
 	FVector blockAnchorLocation;
 
+	// Timer replicating Tick function (see EditModeTick)
 	FTimerHandle TimerHandle_EditMode;
 
+	// Distance between tiles being set when BlockManager is set
 	float distanceBetweenTiles;
+
 
 public:	
 
@@ -71,7 +72,6 @@ public:
 		USceneComponent* RotationRoot;
 
 /*---------- Functions -----------*/
-
 
 // Initialisation, see variable comment for info (made in TT_BlockManager)
 
@@ -84,18 +84,17 @@ public:
 	void SetBlockTileIDs(TArray<int> TileIDs);
 	TArray<int> GetBlockTileIDs();
 
-	// Set the block's position to fit neatly on the grid and to be centered around its anchor point
-	void SetBlockPosition();
+	/* The two following functions only set variables,
+		use UpdateBlockRotationAndLocation to actually confirm the move. */
+	void SetBlockPosition(); // Set the block's position to fit neatly on the grid and to be centered around its anchor point. 
+	void SetBlockRotation(FRotator Rotation); // Set the rotator variable of the RotationRoot
 
-	// Set the default rotator of the RotationRoot
-	void SetBlockRotation(FRotator Rotation);
-
+	// Updates a block's rotation and location based of 
 	void UpdateBlockRotationAndLocation();
 
+	// Activate/Stop edit mode, updating block location and rotation on tick
 	void ActivateEditMode();
-
 	void StopEditMode();
-
 	void EditModeTick();
 
 
@@ -107,5 +106,6 @@ public:
 
 /*---------- Variables -----------*/
 
+	// Indicates whether this block is being updated or not
 	bool isInEditingMode;
 };
