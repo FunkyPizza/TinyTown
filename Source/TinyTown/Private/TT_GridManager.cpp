@@ -4,6 +4,7 @@
 #include "PaperGroupedSpriteComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TT_BlockManager.h"
+#include "TimerManager.h"
 
 /*---------- Primary functions ----------*/
 
@@ -42,6 +43,35 @@ void ATT_GridManager::BeginPlay()
 
 	SpawnBlockManager();
 
+	ActivateZoneViewMode(true, false, false);
+
+}
+
+
+/*---------- Accessor functions ----------*/
+
+FVector ATT_GridManager::GetTileLocation(int TileID)
+{
+	FTransform tempTransform;
+	FVector tempVector;
+
+	if (TileID != -1)
+	{
+		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTransform, true);
+		tempVector = tempTransform.GetLocation();
+	}
+
+	return tempVector;
+}
+
+float ATT_GridManager::GetDistanceBetweenTiles()
+{
+	return distanceBetweenTiles;
+}
+
+FVector2D ATT_GridManager::GetGridSize()
+{
+	return FVector2D(sizeX, sizeY);
 }
 
 
@@ -93,7 +123,7 @@ void ATT_GridManager::SpawnBlockManager()
 void ATT_GridManager::TileHovered(int TileID)
 {
 	// Check if the tile is already hovered
-		if (!modifiedTiles.Contains(TileID)) 
+	if (!modifiedTiles.Contains(TileID) || viewModeTiles.Contains(TileID)) 
 	{
 		TileClearState();
 		clickedTile = -1;
@@ -128,65 +158,133 @@ void ATT_GridManager::TileClicked(int TileID)
 	}
 }
 
-void ATT_GridManager::TileZoneRes(TArray<int> TileIDs)
+void ATT_GridManager::SetTileColorFromZoneID(TArray<int> TileIDs, int ZoneID)
 {
 	if (TileIDs.Num() > 0)
 	{
-		if (TileIDs.Last() != lastZoneTile)
+
+		TileClearState();
+
+		for (int i = 0; i < TileIDs.Num(); ++i)
 		{
-			lastZoneTile = TileIDs.Last();
-			TileClearState();
+			FLinearColor ZoneColor;
 
-			for (int i = 0; i < TileIDs.Num(); ++i)
+			switch (ZoneID)
 			{
-				instanceGroupedSpriteComp->UpdateInstanceColor(TileIDs[i], FLinearColor::Green);
+			case 0:
+				ZoneColor = ResidentialZoneTileColour;
+				UE_LOG(LogTemp, Warning, TEXT("ZoneID = 0 in SetTileColorFromZoneID. Setting colour = ResidentialZoneTileColour."))
+				break;
 
-				modifiedTiles.Add(TileIDs[i]);
+			case 1:
+				ZoneColor = ResidentialZoneTileColour;
+				break;
+
+			case 2:
+				ZoneColor = CommercialZoneTileColour;
+				break;
+
+			case 3:
+				ZoneColor = IndustrialZoneTileColour;
+				break;
 			}
+
+			SetTileColor(TileIDs[i], ZoneColor);
 		}
 	}
+}
+
+void ATT_GridManager::SetTileColor(int TileID, FLinearColor Color)
+{
+	instanceGroupedSpriteComp->UpdateInstanceColor(TileID, Color);
+	modifiedTiles.Add(TileID);
+
 }
 
 void ATT_GridManager::TileClearState()
 {
-	/*if (modifiedTiles.Num() > 0) 
+	if (modifiedTiles.Num() > 0) 
 	{
 		for (int i = 0; i < modifiedTiles.Num(); ++i) 
-		{
+		{			
 			int TileID = modifiedTiles[i];
 
-			FTransform tempTileTransform;
-			instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
-			FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
+				FTransform tempTileTransform;
+				instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
+				FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
 
-			instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
-			instanceGroupedSpriteComp->UpdateInstanceColor(TileID, FLinearColor::White, true);
+				instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
+
+			if (!viewModeTiles.Contains(TileID))
+			{
+				instanceGroupedSpriteComp->UpdateInstanceColor(TileID, FLinearColor::White, true);
+			}
 		}
 		modifiedTiles.Empty();
-	}*/
+	}
 }
 
-FVector ATT_GridManager::GetTileLocation(int TileID)
-{
-	FTransform tempTransform;
-	FVector tempVector;
 
-	if (TileID != -1) 
+/*---------- View modes functions ----------*/
+
+void ATT_GridManager::ActivateZoneViewMode(bool Residential, bool Commercial, bool Industrial)
+{
+	isZoneViewMode = true;
+	isViewResidential = Residential;
+	isViewCommercial = Commercial;
+	isViewIndustrial = Industrial;
+
+	GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.1f, true, 0.0f);
+}
+
+void ATT_GridManager::StopZoneViewMode()
+{
+	isZoneViewMode = false;
+	isViewResidential = false;
+	isViewCommercial = false;
+	isViewIndustrial = false;
+}
+
+void ATT_GridManager::ViewModeTick()
+{
+	TArray<int> tempZoneTileIDs;
+	tempZoneTileIDs = BlockManager->GetZoneTileIDs();
+	viewModeTiles.Empty();
+	
+	for (int i = 0; i < tempZoneTileIDs.Num(); i++)
 	{
-		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTransform, true);
-		tempVector = tempTransform.GetLocation();
+		if (tempZoneTileIDs[i] != 0)
+		{
+			// Checks for each Zone ID (see top of .h) check if view mode is active
+
+			if (tempZoneTileIDs[i] == 1)
+			{
+				if (isViewResidential)
+				{
+					viewModeTiles.Add(i);
+					SetTileColor(i, ResidentialZoneTileColour);
+				}
+			}
+
+			if (tempZoneTileIDs[i] == 2)
+			{
+				if (isViewCommercial)
+				{
+					viewModeTiles.Add(i);
+					SetTileColor(i, CommercialZoneTileColour);
+				}
+			}
+
+			if (tempZoneTileIDs[i] == 3)
+			{
+				if (isViewResidential)
+				{
+					viewModeTiles.Add(i);
+					SetTileColor(i, IndustrialZoneTileColour);
+				}
+			}
+		}
 	}
 
-	return tempVector;
-}
-
-float ATT_GridManager::GetDistanceBetweenTiles()
-{
-	return distanceBetweenTiles;
-}
-
-FVector2D ATT_GridManager::GetGridSize()
-{
-	return FVector2D(sizeX, sizeY);
 }
 

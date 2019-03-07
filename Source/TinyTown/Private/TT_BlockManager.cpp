@@ -39,6 +39,7 @@ void ATT_BlockManager::SetArraySizes()
 
 	spawnedBlockID.SetNum(tileAmount, true);
 	spawnedBlocks.SetNum(tileAmount, true);
+	spawnedZoneID.SetNum(tileAmount, true);
 }
 
 
@@ -65,6 +66,14 @@ void ATT_BlockManager::CreateBlockOnTile(int TileID, FRotator BlockRotation, FSt
 	int blockID = GetRandomBlockIDFromParameter(buildingType, efficiency, sizeX, sizeY);
 	
 	SpawnBlock(blockID, BlockRotation, TileID);
+}
+
+void ATT_BlockManager::CreateZoneOnTiles(TArray<int> ZoneTileIDs, int ZoneID)
+{
+	for (int i = 0; i < ZoneTileIDs.Num(); i++)
+	{
+		spawnedZoneID[ZoneTileIDs[i]] = ZoneID;
+	}
 }
 
 void ATT_BlockManager::SpawnBlock(int BlockID, FRotator BlockRotation, int TileID)
@@ -113,7 +122,7 @@ void ATT_BlockManager::DeleteBlockOnTile(int TileID)
 {
 	if (!spawnedBlocks[TileID])
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No block to delete at this TileID in BlockManager."));
+		DeleteZoneOnTile(TileID);
 		return;
 	}
 
@@ -125,6 +134,18 @@ void ATT_BlockManager::DeleteBlockOnTile(int TileID)
 	}
 
 	blockToDelete->DestroyBlock();
+}
+
+void ATT_BlockManager::DeleteZoneOnTile(int TileID)
+{
+	if (spawnedZoneID[TileID] == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No blocks nor zones to delete at this TileID in BlockManager."));
+		return;
+	}
+
+	spawnedZoneID[TileID] = 0;
+
 }
 
 TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
@@ -177,7 +198,6 @@ TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
 				TileIDs.Add(newTileID);
 			}
 		}
-		GridManager->TileZoneRes(TileIDs);
 		return TileIDs;
 	}
 
@@ -239,6 +259,10 @@ int ATT_BlockManager::GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool i
 	return newTileID;
 }
 
+TArray<int> ATT_BlockManager::GetZoneTileIDs()
+{
+	return spawnedZoneID;
+}
 
 /*---------- Data Table functions ----------*/
 

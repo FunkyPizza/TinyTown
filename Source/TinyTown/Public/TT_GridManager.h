@@ -78,8 +78,27 @@ protected:
 	// Array of all tiles that have been altered
 	TArray<int32> modifiedTiles; 
 
-	// Value of the last tile of the TileIDs array the last time a zone was calculated
-	int lastZoneTile;
+
+	// View modes
+	// Timer responsible of the view mode tile refreshing
+	FTimerHandle TimerHandler_ViewMode;
+
+	// Array of all the tiles affected by view modes
+	TArray<int> viewModeTiles;
+
+	bool isZoneViewMode; // Indicates if any view mode is currently active
+	bool isViewResidential; // Indicates if Residential view mode is active
+	bool isViewCommercial; // Indicates if Commercial view mode is active
+	bool isViewIndustrial; // Indicates if Industrial view mode is active
+
+	// Colour of tiles to be displayed in view mode
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	FLinearColor ResidentialZoneTileColour;
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	FLinearColor CommercialZoneTileColour;
+	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	FLinearColor IndustrialZoneTileColour;
+
 
 
 public:	
@@ -101,7 +120,10 @@ public:
 
 	//Set this array of tiles as Residential Zone -- Called by PlayGridCamera
 	UFUNCTION(BlueprintCallable)
-		void TileZoneRes(TArray<int> TileIDs);
+		void SetTileColorFromZoneID(TArray<int> TileIDs, int ZoneID);
+
+	// Set the tile a certain color
+	void SetTileColor(int TileID, FLinearColor Color);
 
 	//Reset all altered tiles to their original state -- Called by PlayGridCamera
 	UFUNCTION(BlueprintCallable)
@@ -116,12 +138,19 @@ public:
 	// Returns the size of the grid in a 2D Vector
 	FVector2D GetGridSize();
 
+	// Activates zone view modes (depending on the booleans)
+	void ActivateZoneViewMode(bool Residential, bool Commercial, bool Industrial);
+
+	// Deactivates all view modes
+	void StopZoneViewMode();
+
+	// Function responsible of refreshing the tiles
+	void ViewModeTick();
+
 
 	/*---------- Variables -----------*/
  
-	//Reference to the block manager (spawned on begin play) used by player.
+	// Reference to the block manager (spawned on begin play) used by player.
 	ATT_BlockManager* BlockManager; 
-
-
-
+	   	 
 };

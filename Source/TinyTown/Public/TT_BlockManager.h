@@ -50,6 +50,8 @@ protected:
 	// Array containing all block IDs where index=TileID
 	TArray<int> spawnedBlockID; 
 
+	TArray<int> spawnedZoneID;
+
 	// Array containing reference to all spawned blocks where index=TileID
 	TArray<ATT_Block*> spawnedBlocks;
 
@@ -89,6 +91,11 @@ public:
 	// Returns all blocks matching parameter in data table
 	TArray<int> GetAllBlockIDsFromParameter(FString buildingType, int efficiency, int sizeX, int sizeY);
 
+	void CreateZoneOnTiles(TArray<int> ZoneTileIDs, int ZoneID);
+
+	void DeleteZoneOnTile(int TileID);
+
+	TArray<int> GetZoneTileIDs();
 
 	/*---------- Variables -----------*/
 	// Reference to the parent GridManager (who spawned this)

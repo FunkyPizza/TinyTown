@@ -397,7 +397,7 @@ void ATT_PlayerGridCamera::FinishBuilding()
 	}
 	if (isGhostBlockResizable)
 	{
-
+		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, 1);
 	}
 
 	CancelBuiding();
@@ -433,8 +433,8 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		// Resizing the block
 		if (isSettingBlockSize)
 		{
-			placingLastZoneBuilt = CalculateZoneTileIDs(placingBlockTileID, lastLinetracedTile);
-			GridManager->TileZoneRes(placingLastZoneBuilt);
+			placingLastZoneBuilt = GridManager->BlockManager->CalculateZoneTileIDs(placingBlockTileID, lastLinetracedTile);
+			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, 1);
 		}
 
 		// If not, rotate it
