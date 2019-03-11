@@ -108,6 +108,9 @@ protected:
 	void Build3();
 	void DestroyBlockUnderCursor();
  
+	// Pass through to GridManager view mode function
+	UFUNCTION(BlueprintCallable)
+	void ToggleViewMode(int ViewMode);
 
 /*---------- Variables -----------*/
 

@@ -86,7 +86,7 @@ protected:
 	// Array of all the tiles affected by view modes
 	TArray<int> viewModeTiles;
 
-	bool isZoneViewMode; // Indicates if any view mode is currently active
+	bool isViewMode; // Indicates if any view mode is currently active
 	bool isViewResidential; // Indicates if Residential view mode is active
 	bool isViewCommercial; // Indicates if Commercial view mode is active
 	bool isViewIndustrial; // Indicates if Industrial view mode is active
@@ -138,8 +138,8 @@ public:
 	// Returns the size of the grid in a 2D Vector
 	FVector2D GetGridSize();
 
-	// Activates zone view modes (depending on the booleans)
-	void ActivateZoneViewMode(bool Residential, bool Commercial, bool Industrial);
+	// Activates zone view modes (0:Residential, 1:Commercial, 2:Industrial)
+	void ActivateZoneViewMode(int ViewMode);
 
 	// Deactivates all view modes
 	void StopZoneViewMode();

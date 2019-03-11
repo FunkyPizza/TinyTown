@@ -43,8 +43,6 @@ void ATT_GridManager::BeginPlay()
 
 	SpawnBlockManager();
 
-	ActivateZoneViewMode(true, false, false);
-
 }
 
 
@@ -198,7 +196,6 @@ void ATT_GridManager::SetTileColor(int TileID, FLinearColor Color)
 {
 	instanceGroupedSpriteComp->UpdateInstanceColor(TileID, Color);
 	modifiedTiles.Add(TileID);
-
 }
 
 void ATT_GridManager::TileClearState()
@@ -222,41 +219,77 @@ void ATT_GridManager::TileClearState()
 		}
 		modifiedTiles.Empty();
 	}
+	
+	// If no view modes active, reset all tiles that were affected 
+	if (!isViewMode)
+	{
+		for (int i = 0; i < viewModeTiles.Num(); i++)
+		{
+			instanceGroupedSpriteComp->UpdateInstanceColor(viewModeTiles[i], FLinearColor::White, true);
+		}
+	}
 }
 
 
 /*---------- View modes functions ----------*/
 
-void ATT_GridManager::ActivateZoneViewMode(bool Residential, bool Commercial, bool Industrial)
+void ATT_GridManager::ActivateZoneViewMode(int ViewMode)
 {
-	isZoneViewMode = true;
-	isViewResidential = Residential;
-	isViewCommercial = Commercial;
-	isViewIndustrial = Industrial;
+	StopZoneViewMode();
 
-	GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.1f, true, 0.0f);
+	switch (ViewMode)
+	{
+	default:
+		break;
+	case 0:
+		break;
+
+	case 1:
+		isViewResidential = true;
+		break;
+
+	case 2:
+		isViewCommercial = true;
+		break;
+
+	case 3:
+		isViewIndustrial = true;
+		break;
+	}
+
+	isViewMode = true;
+	GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.2f, true, 0.0f);
 }
 
 void ATT_GridManager::StopZoneViewMode()
 {
-	isZoneViewMode = false;
+	GetWorldTimerManager().ClearTimer(TimerHandler_ViewMode);
+
+	isViewMode = false;
 	isViewResidential = false;
 	isViewCommercial = false;
 	isViewIndustrial = false;
+
+	TileClearState();
 }
 
 void ATT_GridManager::ViewModeTick()
 {
+	if (!isViewMode)
+	{
+		return;
+	}
+
 	TArray<int> tempZoneTileIDs;
 	tempZoneTileIDs = BlockManager->GetZoneTileIDs();
 	viewModeTiles.Empty();
-	
+
 	for (int i = 0; i < tempZoneTileIDs.Num(); i++)
 	{
 		if (tempZoneTileIDs[i] != 0)
 		{
 			// Checks for each Zone ID (see top of .h) check if view mode is active
-
+			
 			if (tempZoneTileIDs[i] == 1)
 			{
 				if (isViewResidential)
@@ -274,10 +307,10 @@ void ATT_GridManager::ViewModeTick()
 					SetTileColor(i, CommercialZoneTileColour);
 				}
 			}
-
+			
 			if (tempZoneTileIDs[i] == 3)
 			{
-				if (isViewResidential)
+				if (isViewIndustrial)
 				{
 					viewModeTiles.Add(i);
 					SetTileColor(i, IndustrialZoneTileColour);
@@ -285,6 +318,5 @@ void ATT_GridManager::ViewModeTick()
 			}
 		}
 	}
-
 }
 

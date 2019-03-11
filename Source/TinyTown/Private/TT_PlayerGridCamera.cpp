@@ -397,7 +397,8 @@ void ATT_PlayerGridCamera::FinishBuilding()
 	}
 	if (isGhostBlockResizable)
 	{
-		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, 1);
+		// TODO: Separate data base for zone to avoid the -6
+		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockGhostID - 6);
 	}
 
 	CancelBuiding();
@@ -434,7 +435,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		if (isSettingBlockSize)
 		{
 			placingLastZoneBuilt = GridManager->BlockManager->CalculateZoneTileIDs(placingBlockTileID, lastLinetracedTile);
-			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, 1);
+			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID -6);
 		}
 
 		// If not, rotate it
@@ -572,15 +573,15 @@ void ATT_PlayerGridCamera::DeleteBlockOnTile(int TileID)
 // PROTOTYPE Build function
 void ATT_PlayerGridCamera::Build0()
 {
-	StartBuilding(1);
+	ToggleViewMode(0);
 }
 void ATT_PlayerGridCamera::Build1()
 {
-	StartBuilding(2);
+	ToggleViewMode(1);
 }
 void ATT_PlayerGridCamera::Build2()
 {
-	StartBuilding(3);
+	ToggleViewMode(2);
 }
 void ATT_PlayerGridCamera::Build3()
 {
@@ -589,6 +590,11 @@ void ATT_PlayerGridCamera::Build3()
 void ATT_PlayerGridCamera::DestroyBlockUnderCursor()
 {
 	DeleteBlockOnTile(lastLinetracedTile);
+}
+
+void ATT_PlayerGridCamera::ToggleViewMode(int ViewMode)
+{
+	GridManager->ActivateZoneViewMode(ViewMode);
 }
 
 /*---------- Input binding ----------*/
@@ -607,7 +613,6 @@ void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("2", IE_Pressed, this, &ATT_PlayerGridCamera::Build2);
 	PlayerInputComponent->BindAction("3", IE_Pressed, this, &ATT_PlayerGridCamera::Build3);
 	PlayerInputComponent->BindAction("Delete", IE_Pressed, this, &ATT_PlayerGridCamera::DestroyBlockUnderCursor);
-
 
 	//Mouse
 	PlayerInputComponent->BindAction("InputSelect", IE_Pressed, this, &ATT_PlayerGridCamera::InputSelectButtonDown);
