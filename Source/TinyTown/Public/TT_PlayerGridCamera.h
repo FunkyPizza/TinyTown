@@ -78,6 +78,7 @@ protected:
 	ATT_GridManager* GetGridManager(); 
 
 	// Spawns a ghostBlock that follows the mouse to indicate where the player is building
+	UFUNCTION(BlueprintCallable)
 	void StartBuilding(int BlockID);
 
 	void ActivateZoneBuilding();

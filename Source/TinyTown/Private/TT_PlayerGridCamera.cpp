@@ -564,6 +564,8 @@ TArray<int> ATT_PlayerGridCamera::CalculateZoneTileIDs(int StartTile, int EndTil
 void ATT_PlayerGridCamera::DeleteBlockOnTile(int TileID)
 {
 	GridManager->BlockManager->DeleteBlockOnTile(TileID);
+	GridManager->TileClearState();
+	currentLinetracedTile = -1;
 }
 
 
