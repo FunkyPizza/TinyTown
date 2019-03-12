@@ -38,19 +38,25 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	// Handles camera movements via keyboard
-	void InputKeyboardMovements(float donotuse); 
+	/** Handles camera movements via keyboard
+	* @params notused This parameter enables the function to be bound to an AxisInput. It is not used.
+	*/
+	void InputKeyboardMovements(float notused);
 
-	// Handles camera movements via mouse/touch
+	/** Handles camera rotation via keyboard.
+* @params notused This parameter enables the function to be bound to an AxisInput. It is not used.
+*/
+	void InputKeyboardRotation(float notused);
+
+	/** Handles camera movements via mouse/touch. */
 	void InputCameraMovements();
 
-	//Handles camera rotation via mouse
+	/** Handles camera rotation via mouse. */
 	void InputCameraRotation(); 
 
-	//Handles camera rotation via keyboard
-	void InputKeyboardRotation(float value); 
-
-	// Handles zoom via mouse
+	/** Handles zoom via mouse. Zooms in or out step by step, steps being defined in BeginPlay.
+	* @params value If <0 will zoom out, else if >0 will zoom in.
+	*/
 	void InputCameraZoom(float value); 
 
 	//Handles Select button inputs
@@ -65,104 +71,138 @@ protected:
 	void InputMoveButtonDown();
 	void InputMoveButtonUp();
 
-	// Get hit results under cursor, handles tile detection
+	/** Linetrace from the camera to the grid and updates tile if they are hovered. */
 	void MouseTrace(); 
 
-	// Moves the camera in XY direction multiplied by Sensitivity
-	void MoveCamera(float X, float Y, float sensitivity); 
+	/** Moves the camera in XY direction multiplied by Sensitivity.
+	* @params x Direction X to move in (-1 < X < 1).
+	* @params y Direction Y to move in (-1 < x < 1).
+	* @params sensitivity Used to scale movement speed (defined by blueprint variable).
+	*/
+	void MoveCamera(float x, float y, float sensitivity); 
 
-	// Rotates the camera around Y and Z axis multiplied by Sensitivity
-	void RotateCamera(float X, float Y, float XSensit, float YSensit); 
+	/** Rotates the camera around Y and Z axis multiplied by Sensitivity
+	* @params x Amount of Yaw to add.
+	* @params y Amount of Pitch to add.
+	* @params xSensitivity Used to scale Yaw rotation speed (defined by blueprint variable).
+	* @params ySensitivity Used to scale Pitch rotation speed (defined by blueprint variable).
+	*/
+	void RotateCamera(float x, float y, float xSensitivity, float ySensitivity);
 
-	// TActor iterator to find grid manager
+	/** 
+	* Finds and saves the GridManager as a reference.
+	* This uses the first existing GridManager object that it finds, doesn't support multiple GridManager objects.
+	*/
 	ATT_GridManager* GetGridManager(); 
 
-	// Spawns a ghostBlock that follows the mouse to indicate where the player is building
+	/**
+	 * Spawns a block in edit mode (aka "ghostblock") to show the player where he is placing down the block.
+	 * @params blockID Data table index of the row corresponding to the block to spawn.
+	 */ 
 	UFUNCTION(BlueprintCallable)
-	void StartBuilding(int BlockID);
+	void StartBuilding(int blockID);
 
+	/**
+	 * If the building is flagged as "Resizable", the player will instead be placing down a zone instead
+	 * of a block. This will avoid the building being placed down on first click and instead will require a drag & drop.
+	 */
 	void ActivateZoneBuilding();
 
-	// Confirms the building location and rotation
+	/**
+	* Finalises the block building or zone building process. Calls the BlockManager to build the block and ensures
+	* the temporary "ghostblock" is destroyed.
+	*/
 	void FinishBuilding();
 
-	// Cancels the building of a block
+	/**
+	 * Cancels the building of block if any. Ensures the temporary "ghostblock" is destroyed.
+	 */
 	void CancelBuiding();
 
-	// Enables the movement and rotation of the ghostBlock
+	/**
+	 * Lerps the "ghostblock" on tick to ensure a smooth movement. If placing a zone, this will
+	 * update the grid to show what tiles are being affected.
+	 * @params deltaTime deltaTime value being passed through via the Tick function.
+	 */
 	void TickBuilding(float deltaTime);
 
-	// Calls BuildBlockOnTile in BlockManager
-	void BuildBlockOnTile(int TileID, int BlockID, FRotator BlockRotation);
+	/**
+	 * Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
+	 * @params tileID TileID of the tile to clear/ owned by the block to delete.
+	 */ 
+	void DeleteBlockOnTile(int tileID);
 
-	// Calls DeleteBlockOnTile in BlockManager
-	void DeleteBlockOnTile(int TileID);
+	/**
+	 * Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
+	 * This function is very similar to the one in BlockManager to the exception of the for loop (<= instead of <).
+	 * @params tileA Corner A / StartTile of the zone.
+	 * @params tileB Opposite corner to A.
+	 */
+	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 
-	// Gets all TileIDs contained in the rectangular zone (where params are opposite corners)
-	TArray<int> CalculateZoneTileIDs(int StartTile, int EndTile);
+	/**
+	 * Calls ActivateZoneViewMode in GridManager.
+	 * @params ViewMode ViewMode ID (should be replaced by EBuildingType)
+	 */
+	UFUNCTION(BlueprintCallable)
+		void ToggleViewMode(int ViewMode);
+
 
 	//PROTOTYPE Build function
-	void Build0();
-	void Build1();
-	void Build2();
-	void Build3();
 	void DestroyBlockUnderCursor();
- 
-	// Pass through to GridManager view mode function
-	UFUNCTION(BlueprintCallable)
-	void ToggleViewMode(int ViewMode);
+
 
 /*---------- Variables -----------*/
 
-	// Movement sensitivity for moving the camera with mouse or touch drag
+	/** Movement sensitivity for moving the camera with mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float cameraDragSensitivty;
+	float inputMovementMouseSensitivity;
 
-	// Movement sensitivity for moving the camera with keyboard
+	/** Movement sensitivity for moving the camera with keyboard. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float cameraDragKeyboardSensitivty;
+	float inputMovementKeyboardSensitivity;
 
-	// Y axis rotation sensitivity using mouse or touch 
+	/** Y axis rotation sensitivity using mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float cameraRotationYSensitivity;
+	float inputYRotationSensitivity;
 
-	// X axis rotation sensitivity using mouse or touch 
+	/** X axis rotation sensitivity using mouse input. */ 
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float cameraRotationXSensitivity;
+	float inputXRotationSensitivity;
 
-	// Movement sensitivity for moving the camera with keyboard
+	/** Movement sensitivity for rotating the camera with keyboard. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-		float cameraRotationKeyboardSensitivty;
+	float inputRotationKeyboardSensitivty;
 
-	// Maximum length for the spring arm
+	/** Maximum length for the spring arm. */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float MaxSpringArmLength;
 
-	// Minimum length for the spring arm
+	/** Minimum length for the spring arm. */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float MinSpringArmLength;
 
-	// Defines how accurately the player can zoom (the higher, the slower the zoom)
+	/** Defines how accurately the player can zoom (the higher, the slower the zoom). */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	int zoomStepAccuracy;
 
-	// Defines how fast the camera lerps when zooming and de-zooming (the higher, the faster)
+	/** Defines how fast the camera lerps when zooming and de-zooming (the higher, the faster). */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	int zoomLerpSpeed;
 
-	// The class responsible to display blocks being placed down.
+	/** The class responsible to display blocks being placed down.. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
 	TSubclassOf<ATT_Block> placingBlockGhostClass;
 
-	// The class responsible to display resizable block being placed down.
+	/** The class responsible to display resizable block being placed down. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-		TSubclassOf<ATT_Block> placingResizableBlockGhostClass;
+	TSubclassOf<ATT_Block> placingResizableBlockGhostClass;
 
-	// The speed at which a ghost block moves on the grid (when placing down a block).
+	/** The speed at which a ghost block moves on the grid (when placing down a block). */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
 	float ghostBlockMovementSpeed;
 
-	// How fast can the mouse rotate the ghostBlock when placing down a block.
+	/** How fast can the mouse rotate the ghostBlock when placing down a block. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
 	float ghostBlockRotationMouseThreshold;
 
@@ -180,7 +220,7 @@ protected:
 	float placingBlockMouseY; // Y Mouse position at beginning of ghostBlock rotation
 
 
-	// Current grid manager
+	/** Reference to the current GridManager, set by GetGridManager(). */
 	ATT_GridManager* GridManager; 
 
 
@@ -207,6 +247,7 @@ protected:
 public:	
 
 	/*---------- Functions -----------*/
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

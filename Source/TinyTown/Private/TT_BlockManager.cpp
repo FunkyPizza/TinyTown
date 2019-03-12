@@ -14,7 +14,9 @@ ATT_BlockManager::ATT_BlockManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	GetBlockDataTable();
+
+	// Get the data table holding block's data
+	data_Block = GetBlockDataTable();
 }
 
 void ATT_BlockManager::BeginPlay()
@@ -29,33 +31,31 @@ void ATT_BlockManager::SetGridManager(ATT_GridManager* newGridManager)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Couldn't set new grid manager in block manager, null input."))
 	}
+
+	// If valid, set the grid manager
 	GridManager = newGridManager;
-	SetArraySizes();
+
+	// Make sure tile arrays are resized
+	int numberOfTiles = GridManager->GetGridSize().X * GridManager->GetGridSize().Y;
+	SetTileArraysSize(numberOfTiles);
 }
 
-void ATT_BlockManager::SetArraySizes()
+void ATT_BlockManager::SetTileArraysSize(int newArraySize)
 {
-	int tileAmount = GridManager->GetGridSize().X * GridManager->GetGridSize().Y;
-
-	spawnedBlockID.SetNum(tileAmount, true);
-	spawnedBlocks.SetNum(tileAmount, true);
-	spawnedZoneID.SetNum(tileAmount, true);
+	spawnedBlockID.SetNum(newArraySize, true);
+	spawnedBlocks.SetNum(newArraySize, true);
+	spawnedZoneID.SetNum(newArraySize, true);
 }
 
-
-/*---------- Block building functions ----------*/
-
-void ATT_BlockManager::CreateBlockOnTile(int TileID, int blockID, FRotator BlockRotation)
+TArray<int> ATT_BlockManager::GetSpawnedZoneTileIDs()
 {
-	if (!GridManager) 
-	{
-		UE_LOG(LogTemp, Log, TEXT("Grid Maker not set in %s, cannot build"), *GetName());
-		return;
-	}
-		SpawnBlock(blockID, BlockRotation, TileID);
+	return spawnedZoneID;
 }
 
-void ATT_BlockManager::CreateBlockOnTile(int TileID, FRotator BlockRotation, FString buildingType, int efficiency, int sizeX, int sizeY)
+
+/*---------- Block & Zone building functions ----------*/
+
+void ATT_BlockManager::SpawnBlockFromParameters(int tileID, FRotator blockRotation, FString buildingType, int efficiency, int sizeX, int sizeY)
 {
 	if (!GridManager)
 	{
@@ -65,39 +65,31 @@ void ATT_BlockManager::CreateBlockOnTile(int TileID, FRotator BlockRotation, FSt
 
 	int blockID = GetRandomBlockIDFromParameter(buildingType, efficiency, sizeX, sizeY);
 	
-	SpawnBlock(blockID, BlockRotation, TileID);
+	SpawnBlock(blockID, blockRotation, tileID);
 }
 
-void ATT_BlockManager::CreateZoneOnTiles(TArray<int> ZoneTileIDs, int ZoneID)
-{
-	for (int i = 0; i < ZoneTileIDs.Num(); i++)
-	{
-		spawnedZoneID[ZoneTileIDs[i]] = ZoneID;
-	}
-}
-
-void ATT_BlockManager::SpawnBlock(int BlockID, FRotator BlockRotation, int TileID)
+void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileID)
 {
 	// Makes block transform based on TileID
-	FTransform BlockTransform = FTransform(FRotator(0, 0, 0), GridManager->GetTileLocation(TileID), FVector(1, 1, 1));
+	FTransform BlockTransform = FTransform(FRotator(0, 0, 0), GridManager->GetTileLocation(tileID), FVector(1, 1, 1));
 
 	ATT_Block* SpawnedActor;
 	SpawnedActor = GetWorld()->SpawnActorDeferred<ATT_Block>(BlockToSpawn, BlockTransform);
 	if (SpawnedActor)
 	{
 		//Get Block Default stats from data table
-		FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(BlockID);
+		FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(blockID);
 
 		//Get the block's zone characteristics
-		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(BlockRotation.Yaw), 90, 0.1f);
-		int BlockStartTile = GetZoneStartTileFromZoneSize(TileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-		int BlockEndTile = GetZoneEndTile (BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-		TArray<int> BlockZoneTileIDs = CalculateZoneTileIDs(BlockStartTile, BlockEndTile);
+		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f);
+		int BlockStartTile = GetZoneStartTileFromZoneSize(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+		int BlockEndTile = GetZoneEndTileFromZoneSize(BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+		TArray<int> BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(BlockStartTile, BlockEndTile);
 
 		SpawnedActor->SetBlockStats(BlockStats);
 		SpawnedActor->SetBlockManager(this);
 		SpawnedActor->SetBlockTileIDs(BlockZoneTileIDs);
-		SpawnedActor->SetBlockRotation(BlockRotation);
+		SpawnedActor->SetBlockRotation(blockRotation);
 		SpawnedActor->SetBlockPosition();
 		SpawnedActor->UpdateBlockRotationAndLocation();
 
@@ -106,27 +98,21 @@ void ATT_BlockManager::SpawnBlock(int BlockID, FRotator BlockRotation, int TileI
 
 		for (int i = 0; i < BlockZoneTileIDs.Num(); i++)
 		{
-			spawnedBlockID[BlockZoneTileIDs[i]] = BlockID;
+			spawnedBlockID[BlockZoneTileIDs[i]] = blockID;
 			spawnedBlocks[BlockZoneTileIDs[i]] = SpawnedActor;
 		}
 	}
 }
 
-void ATT_BlockManager::ClearTileArraysAtIndex(int index)
+void ATT_BlockManager::DeleteBlockOnTile(int tileID)
 {
-	spawnedBlockID[index] = 0;
-	spawnedBlocks[index] = nullptr;
-}
-
-void ATT_BlockManager::DeleteBlockOnTile(int TileID)
-{
-	if (!spawnedBlocks[TileID])
+	if (!spawnedBlocks[tileID])
 	{
-		DeleteZoneOnTile(TileID);
+		DeleteZoneOnTile(tileID);
 		return;
 	}
 
-	ATT_Block* blockToDelete = spawnedBlocks[TileID];
+	ATT_Block* blockToDelete = spawnedBlocks[tileID];
 	for (int i = 0; i < blockToDelete->GetBlockTileIDs().Num(); i++)
 	{
 		int indexToClear = blockToDelete->GetBlockTileIDs()[i];
@@ -136,35 +122,52 @@ void ATT_BlockManager::DeleteBlockOnTile(int TileID)
 	blockToDelete->DestroyBlock();
 }
 
-void ATT_BlockManager::DeleteZoneOnTile(int TileID)
+void ATT_BlockManager::CreateZoneOnTiles(TArray<int> tileIDs, int zoneID)
 {
-	if (spawnedZoneID[TileID] == 0)
+	for (int i = 0; i < tileIDs.Num(); i++)
+	{
+		spawnedZoneID[tileIDs[i]] = zoneID;
+	}
+}
+
+void ATT_BlockManager::DeleteZoneOnTile(int tileID)
+{
+	if (spawnedZoneID[tileID] == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No blocks nor zones to delete at this TileID in BlockManager."));
 		return;
 	}
 
-	spawnedZoneID[TileID] = 0;
+	spawnedZoneID[tileID] = 0;
 
 }
 
-TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
+void ATT_BlockManager::ClearTileArraysAtIndex(int index)
+{
+	spawnedBlockID[index] = 0;
+	spawnedBlocks[index] = nullptr;
+}
+
+
+/*---------- Zone Tiles functions ----------*/
+
+TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
 {
 	TArray<int> TileIDs;
 	UE_LOG(LogTemp, Log, TEXT("CalculatingZoneTileIDs in BlockManager."));
 
-	if (StartTile != 0 && EndTile != 0)
+	if (tileA != 0 && tileB != 0)
 	{
 		// Convert TileID into polar coordinates
 		int Ay;
 		int Ax;
-		Ay = StartTile / GridManager->GetGridSize().X;
-		Ax = StartTile - (Ay * GridManager->GetGridSize().X);
+		Ay = tileA / GridManager->GetGridSize().X;
+		Ax = tileA - (Ay * GridManager->GetGridSize().X);
 
 		int By;
 		int Bx;
-		By = EndTile / GridManager->GetGridSize().X;
-		Bx = EndTile - (By * GridManager->GetGridSize().X);
+		By = tileB / GridManager->GetGridSize().X;
+		Bx = tileB - (By * GridManager->GetGridSize().X);
 
 		// Get block size from vector AB>
 		FVector2D blockSize;
@@ -174,7 +177,7 @@ TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
 
 		// Convert polar coordinates into grid of tiles
 		float distance = GridManager->GetDistanceBetweenTiles();
-		FVector startLocation = GridManager->GetTileLocation(StartTile);
+		FVector startLocation = GridManager->GetTileLocation(tileA);
 
 		float xSign = 1.0f;
 		float ySign = 1.0f;
@@ -193,7 +196,7 @@ TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
 		{
 			for (int j = 0; j < abs(blockSize.X); j++)
 			{
-				int newTileID = StartTile + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
+				int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
 				
 				TileIDs.Add(newTileID);
 			}
@@ -204,7 +207,7 @@ TArray<int> ATT_BlockManager::CalculateZoneTileIDs(int StartTile, int EndTile)
 	return TileIDs;
 }
 
-int ATT_BlockManager::GetZoneStartTileFromZoneSize(int TileID, int SizeX, int SizeY, bool isModuloHalfPi)
+int ATT_BlockManager::GetZoneStartTileFromZoneSize(int tileB, int sizeX, int sizeY, bool isModuloHalfPi)
 {
 	/* This function is tightly bound to the way a building is moved and rotated (when being placed down). 
 		For any changes to this function, make sure to change EditMode in Block.cpp	*/
@@ -212,22 +215,22 @@ int ATT_BlockManager::GetZoneStartTileFromZoneSize(int TileID, int SizeX, int Si
 	int offsetX;
 	int offsetY;
 
-	if (SizeX % 2 == 0)
+	if (sizeX % 2 == 0)
 	{
-		offsetX = FMath::TruncToInt(SizeX / 2) - 1;
+		offsetX = FMath::TruncToInt(sizeX / 2) - 1;
 	}
 	else
 	{
-		offsetX = FMath::TruncToInt(SizeX / 2);
+		offsetX = FMath::TruncToInt(sizeX / 2);
 	}
 
-	if (SizeY % 2 == 0)
+	if (sizeY % 2 == 0)
 	{
-		offsetY = FMath::TruncToInt(SizeY / 2) - 1;
+		offsetY = FMath::TruncToInt(sizeY / 2) - 1;
 	}
 	else
 	{
-		offsetY = FMath::TruncToInt(SizeY / 2);
+		offsetY = FMath::TruncToInt(sizeY / 2);
 	}
 
 	int ActualTileID;
@@ -235,18 +238,18 @@ int ATT_BlockManager::GetZoneStartTileFromZoneSize(int TileID, int SizeX, int Si
 	// Is the block rotated 90°
 	if (isModuloHalfPi)
 	{
-		ActualTileID = TileID - offsetX * GridManager->GetGridSize().X - offsetY;
+		ActualTileID = tileB - offsetX * GridManager->GetGridSize().X - offsetY;
 		return ActualTileID;
 	}
 
-	ActualTileID = TileID - offsetY * GridManager->GetGridSize().X - offsetX;
+	ActualTileID = tileB - offsetY * GridManager->GetGridSize().X - offsetX;
 	return ActualTileID;
 }
 
-int ATT_BlockManager::GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool isModuloHalfPi)
+int ATT_BlockManager::GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi)
 {
-	int xSize = SizeX;
-	int ySize = SizeY;
+	int xSize = sizeX;
+	int ySize = sizeY;
 
 	if (isModuloHalfPi)
 	{
@@ -255,32 +258,28 @@ int ATT_BlockManager::GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool i
 		ySize = tempXSize;
 	}
 
-	int newTileID = StartTile + (ySize * GridManager->GetGridSize().X) + xSize;
+	int newTileID = tileA + (ySize * GridManager->GetGridSize().X) + xSize;
 	return newTileID;
 }
 
-TArray<int> ATT_BlockManager::GetZoneTileIDs()
-{
-	return spawnedZoneID;
-}
 
 /*---------- Data Table functions ----------*/
 
-void ATT_BlockManager::GetBlockDataTable()
+UDataTable* ATT_BlockManager::GetBlockDataTable()
 {
-	//Gets Data table
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataBlock_DataObject(TEXT("DataTable'/Game/Data/Data_Block.Data_Block'"));
 	if (DataBlock_DataObject.Succeeded())
 	{
-		data_Block = DataBlock_DataObject.Object;
+		return DataBlock_DataObject.Object;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't find Data_Block in BlockManager."))
+		UE_LOG(LogTemp, Warning, TEXT("Can't find Data_Block in BlockManager."));
+		return nullptr;
 	}
 }
 
-FTT_Struct_Block* ATT_BlockManager::GetBlockStatsFromBlockID(int buildingID)
+FTT_Struct_Block* ATT_BlockManager::GetBlockStatsFromBlockID(int blockID)
 {
 	if (data_Block)
 	{
@@ -295,7 +294,7 @@ FTT_Struct_Block* ATT_BlockManager::GetBlockStatsFromBlockID(int buildingID)
 			if (row)
 			{
 				// Check if current row is row ID = buildingID
-				if (name == FName(*FString::FromInt(buildingID)))
+				if (name == FName(*FString::FromInt(blockID)))
 				{
 					return row;
 				}

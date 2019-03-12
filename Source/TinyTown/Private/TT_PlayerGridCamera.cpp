@@ -31,22 +31,6 @@ ATT_PlayerGridCamera::ATT_PlayerGridCamera()
 
 }
 
-void ATT_PlayerGridCamera::BeginPlay()
-{
-	Super::BeginPlay();
-
-	//Get the grid manager the player interacts with 
-	GridManager = GetGridManager();
-
-	//Enables camera movement
-	isMovementEnabled = true;
-
-	//Set camera zoom values
-	zoomCurrentStep = zoomStepAccuracy / 2;
-	zoomCoefficient = (MaxSpringArmLength - MinSpringArmLength) / zoomStepAccuracy;
-	InputCameraZoom(1);
-}
-
 void ATT_PlayerGridCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -73,6 +57,22 @@ void ATT_PlayerGridCamera::Tick(float DeltaTime)
 
 }
 
+void ATT_PlayerGridCamera::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//Get the grid manager the player interacts with 
+	GridManager = GetGridManager();
+
+	//Enables camera movement
+	isMovementEnabled = true;
+
+	//Set camera zoom values
+	zoomCurrentStep = zoomStepAccuracy / 2;
+	zoomCoefficient = (MaxSpringArmLength - MinSpringArmLength) / zoomStepAccuracy;
+	InputCameraZoom(1);
+}
+
 ATT_GridManager* ATT_PlayerGridCamera::GetGridManager()
 {
 	// Iterate through actors of class TT_GridManager and gets first result. (There should be only one at all times)
@@ -89,16 +89,15 @@ ATT_GridManager* ATT_PlayerGridCamera::GetGridManager()
 
 
 /*---------- Player input functions ----------*/
-
 // Keyboard inputs
 
-void ATT_PlayerGridCamera::InputKeyboardMovements(float donotuse)
+void ATT_PlayerGridCamera::InputKeyboardMovements(float notused)
 {
 	if (isMovementEnabled) 
 	{
 		isMovingCamera = true;
 
-		MoveCamera(GetInputAxisValue("MoveRight"), GetInputAxisValue("MoveForward"), cameraDragKeyboardSensitivty);
+		MoveCamera(GetInputAxisValue("MoveRight"), GetInputAxisValue("MoveForward"), inputMovementKeyboardSensitivity);
 	}
 
 	else 
@@ -107,13 +106,13 @@ void ATT_PlayerGridCamera::InputKeyboardMovements(float donotuse)
 	}
 }
 
-void ATT_PlayerGridCamera::InputKeyboardRotation(float value)
+void ATT_PlayerGridCamera::InputKeyboardRotation(float notused)
 {
 	if (isMovementEnabled) 
 	{
 		isRotatingCamera = true;
 
-		RotateCamera(-value, 0.0f, cameraRotationKeyboardSensitivty, 0);
+		RotateCamera(-notused, 0.0f, inputRotationKeyboardSensitivty, 0);
 	}
 
 	else 
@@ -121,7 +120,6 @@ void ATT_PlayerGridCamera::InputKeyboardRotation(float value)
 		isRotatingCamera = false;
 	}
 }
-
 
 // Mouse inputs
 
@@ -133,7 +131,7 @@ void ATT_PlayerGridCamera::InputCameraMovements()
 		{
 			isMovingCamera = true;
 
-			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), cameraDragSensitivty);
+			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), inputMovementMouseSensitivity);
 		}
 
 		else 
@@ -151,7 +149,7 @@ void ATT_PlayerGridCamera::InputCameraRotation()
 		{
 			isRotatingCamera = true;
 
-			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), cameraRotationXSensitivity, cameraRotationYSensitivity);
+			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), inputXRotationSensitivity, inputYRotationSensitivity);
 		}
 
 		else 
@@ -259,18 +257,19 @@ void ATT_PlayerGridCamera::InputMoveButtonUp()
 
 
 /*---------- Camera movement functions ----------*/
-void ATT_PlayerGridCamera::MoveCamera(float X, float Y, float sensitivity)
+
+void ATT_PlayerGridCamera::MoveCamera(float x, float y, float sensitivity)
 {
 	//Avoids a speed increase when both X and Y axis = 1.
-	float axisYNormalized = Y * FMath::Abs(FMath::Sin(FMath::Atan2(Y, X)));
-	float axisXNormalized = X * FMath::Abs(FMath::Cos(FMath::Atan2(Y, X)));
+	float axisYNormalized = y * FMath::Abs(FMath::Sin(FMath::Atan2(y, x)));
+	float axisXNormalized = x * FMath::Abs(FMath::Cos(FMath::Atan2(y, x)));
 
 	FVector movementVector = FVector(axisYNormalized * sensitivity, axisXNormalized * sensitivity, 0.0f);
 
 	AddActorLocalOffset(movementVector);
 }
 
-void ATT_PlayerGridCamera::RotateCamera(float X, float Y, float XSensit, float YSensit)
+void ATT_PlayerGridCamera::RotateCamera(float x, float y, float xSensitivity, float ySensitivity)
 {
 
 	FRotator currentRotation = SpringArmComp->GetRelativeTransform().GetRotation().Rotator();
@@ -288,16 +287,17 @@ void ATT_PlayerGridCamera::RotateCamera(float X, float Y, float XSensit, float Y
 	}
 
 	// Rotate Y
-	FRotator newRotationY = FRotator(Y, 0, 0) * YSensit;
+	FRotator newRotationY = FRotator(y, 0, 0) * ySensitivity;
 	SpringArmComp->AddLocalRotation(newRotationY);
 
 	// Rotate X
-	FRotator newRotationX = FRotator(0, X, 0) * XSensit;
+	FRotator newRotationX = FRotator(0, x, 0) * xSensitivity;
 	AddActorLocalRotation(newRotationX);
 }
 
 
 /*---------- Grid interaction functions ----------*/
+
 void ATT_PlayerGridCamera::MouseTrace()
 {
 	// Checks if there is a valid TT_GridManager and only line traces if the player hasn't clicked yet
@@ -331,9 +331,8 @@ void ATT_PlayerGridCamera::MouseTrace()
 	}
 }
 
-
 // Block building
-void ATT_PlayerGridCamera::StartBuilding(int BlockID)
+void ATT_PlayerGridCamera::StartBuilding(int blockID)
 {
 	if (!placingBlockGhostClass)
 	{
@@ -348,7 +347,7 @@ void ATT_PlayerGridCamera::StartBuilding(int BlockID)
 	}
 
 	// Ghost block setting
-	placingBlockGhostID = BlockID;
+	placingBlockGhostID = blockID;
 	isGhostBlockResizable = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID)->Resizable;
 	FTransform blockTransform = FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(1,1,1));
 	placingBlockTargetLocation = FVector(0, 0, 0);
@@ -393,7 +392,7 @@ void ATT_PlayerGridCamera::FinishBuilding()
 	// Building block
 	if (!isGhostBlockResizable)
 	{
-		BuildBlockOnTile(lastLinetracedTile, placingBlockGhostID, placingBlockTargetRotation);
+		GridManager->BlockManager->SpawnBlock(placingBlockGhostID, placingBlockTargetRotation, lastLinetracedTile);
 	}
 	if (isGhostBlockResizable)
 	{
@@ -434,7 +433,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		// Resizing the block
 		if (isSettingBlockSize)
 		{
-			placingLastZoneBuilt = GridManager->BlockManager->CalculateZoneTileIDs(placingBlockTileID, lastLinetracedTile);
+			placingLastZoneBuilt = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
 			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID -6);
 		}
 
@@ -488,11 +487,6 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 	}
 }
 
-void ATT_PlayerGridCamera::BuildBlockOnTile(int TileID, int BlockID, FRotator BlockRotation)
-{
-	GridManager->BlockManager->CreateBlockOnTile(TileID, BlockID, BlockRotation);
-}
-
 // Resizable block building
 void ATT_PlayerGridCamera::ActivateZoneBuilding()
 {
@@ -503,25 +497,25 @@ void ATT_PlayerGridCamera::ActivateZoneBuilding()
 	isMovementEnabled = false;
 }
 
-TArray<int> ATT_PlayerGridCamera::CalculateZoneTileIDs(int StartTile, int EndTile)
+TArray<int> ATT_PlayerGridCamera::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
 {
 	TArray<int> TileIDs;
 	UE_LOG(LogTemp, Log, TEXT("CalculatingZoneTileIDs in PlayerGridCamera."));
 
-	if (placingBlocklastEndTileID != EndTile && StartTile != 0 && EndTile != 0)
+	if (placingBlocklastEndTileID != tileB && tileA != 0 && tileB != 0)
 	{
-		placingBlocklastEndTileID = EndTile;
+		placingBlocklastEndTileID = tileB;
 
 		// Convert TileID into polar coordinates
 		int Ay;
 		int Ax;
-		Ay = StartTile / GridManager->GetGridSize().X;
-		Ax = StartTile - (Ay * GridManager->GetGridSize().X);
+		Ay = tileA / GridManager->GetGridSize().X;
+		Ax = tileA - (Ay * GridManager->GetGridSize().X);
 
 		int By;
 		int Bx;
-		By = EndTile / GridManager->GetGridSize().X;
-		Bx = EndTile - (By * GridManager->GetGridSize().X);
+		By = tileB / GridManager->GetGridSize().X;
+		Bx = tileB - (By * GridManager->GetGridSize().X);
 
 		// Get block size from vector AB>
 		FVector2D blockSize;
@@ -531,7 +525,7 @@ TArray<int> ATT_PlayerGridCamera::CalculateZoneTileIDs(int StartTile, int EndTil
 
 		// Convert polar coordinates into grid of tiles
 		float distance = GridManager->GetDistanceBetweenTiles();
-		FVector startLocation = GridManager->GetTileLocation(StartTile);
+		FVector startLocation = GridManager->GetTileLocation(tileA);
 
 		float xSign = 1.0f;
 		float ySign = 1.0f;
@@ -550,7 +544,7 @@ TArray<int> ATT_PlayerGridCamera::CalculateZoneTileIDs(int StartTile, int EndTil
 		{
 			for (int j = 0; j <= abs(blockSize.X); j++)
 			{
-				int newTileID = StartTile + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
+				int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
 
 				TileIDs.Add(newTileID);
 			}
@@ -562,31 +556,15 @@ TArray<int> ATT_PlayerGridCamera::CalculateZoneTileIDs(int StartTile, int EndTil
 }
 
 // Block Actions 
-void ATT_PlayerGridCamera::DeleteBlockOnTile(int TileID)
+void ATT_PlayerGridCamera::DeleteBlockOnTile(int tileID)
 {
-	GridManager->BlockManager->DeleteBlockOnTile(TileID);
+	GridManager->BlockManager->DeleteBlockOnTile(tileID);
 	GridManager->TileClearState();
 	currentLinetracedTile = -1;
 }
 
 
 // PROTOTYPE Build function
-void ATT_PlayerGridCamera::Build0()
-{
-	ToggleViewMode(0);
-}
-void ATT_PlayerGridCamera::Build1()
-{
-	ToggleViewMode(1);
-}
-void ATT_PlayerGridCamera::Build2()
-{
-	ToggleViewMode(2);
-}
-void ATT_PlayerGridCamera::Build3()
-{
-	StartBuilding(7);
-}
 void ATT_PlayerGridCamera::DestroyBlockUnderCursor()
 {
 	DeleteBlockOnTile(lastLinetracedTile);
@@ -608,10 +586,6 @@ void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("XRotation", this, &ATT_PlayerGridCamera::InputKeyboardRotation);
 
 	//PROTOTYPE Build input
-	PlayerInputComponent->BindAction("0", IE_Pressed, this, &ATT_PlayerGridCamera::Build0);
-	PlayerInputComponent->BindAction("1", IE_Pressed, this, &ATT_PlayerGridCamera::Build1);
-	PlayerInputComponent->BindAction("2", IE_Pressed, this, &ATT_PlayerGridCamera::Build2);
-	PlayerInputComponent->BindAction("3", IE_Pressed, this, &ATT_PlayerGridCamera::Build3);
 	PlayerInputComponent->BindAction("Delete", IE_Pressed, this, &ATT_PlayerGridCamera::DestroyBlockUnderCursor);
 
 	//Mouse

@@ -17,8 +17,6 @@ class TINYTOWN_API ATT_Block : public AActor
 	GENERATED_BODY()
 	
 public:	
-
-/*---------- Functions -----------*/
 	ATT_Block();
 
 
@@ -29,7 +27,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
-	// This component is used to adjust a block's position depending on its AnchorPointX (from blockStats)
+	/** This component is used to adjust a block's position depending on its AnchorPointX (from blockStats). */
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* BuildingRoot;
 
@@ -41,22 +39,23 @@ protected:
 
 /*---------- Variables -----------*/
 
-	// This struct contains all the information that characterise this block
+	/** This struct contains all the information that characterise this block (both block building as well a gameplay variables). */
 	UPROPERTY(BlueprintReadOnly)
 	FTT_Struct_Block blockStats;
 
-	// MAY NEED TO BE REMOVED
+	/** Reference to BlockManager, set on spawn. */
 	ATT_BlockManager* blockManager;
 
-	// This array contains all the tile the block is covering/using.
+	/** This array contains all the tile the block owns. If a block is owned, no other block can be spawned on it. */
 	TArray<int> blockTileIDs;
 
-	/* The following variables are the temporary values for rotation and location of
-	a block which is updated when in EditMode and when being spawned by BlockManager.*/
+	/**
+	 * The following variables are the temporary values for rotation and location of a block which is updated when in EditMode and when being spawned by BlockManager.
+	 */ 
 	FRotator blockRotation; 
 	FVector blockAnchorLocation;
 
-	// Timer replicating Tick function (see EditModeTick)
+	/* Timer replicating Tick function (see EditModeTick). */
 	FTimerHandle TimerHandle_EditMode;
 
 	// Distance between tiles being set when BlockManager is set
@@ -67,7 +66,7 @@ public:
 
 /*---------- Components ----------*/
 
-	// This component is used to rotate a block when being placed down.
+	/** This component is used to rotate a block when being placed down. */
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* RotationRoot;
 
@@ -84,8 +83,7 @@ public:
 	void SetBlockTileIDs(TArray<int> TileIDs);
 	TArray<int> GetBlockTileIDs();
 
-	/* The two following functions only set variables,
-		use UpdateBlockRotationAndLocation to actually confirm the move. */
+	// The two following functions only set variables, use UpdateBlockRotationAndLocation to actually confirm the move. 
 	void SetBlockPosition(); // Set the block's position to fit neatly on the grid and to be centered around its anchor point. 
 	void SetBlockRotation(FRotator Rotation); // Set the rotator variable of the RotationRoot
 

@@ -281,7 +281,7 @@ void ATT_GridManager::ViewModeTick()
 	}
 
 	TArray<int> tempZoneTileIDs;
-	tempZoneTileIDs = BlockManager->GetZoneTileIDs();
+	tempZoneTileIDs = BlockManager->GetSpawnedZoneTileIDs();
 	viewModeTiles.Empty();
 
 	for (int i = 0; i < tempZoneTileIDs.Num(); i++)

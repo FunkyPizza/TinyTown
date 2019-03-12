@@ -31,79 +31,155 @@ public:
 
 protected:
 	/*---------- Functions -----------*/
+
 	virtual void BeginPlay() override;
 	
-	// Initialise the block data table
-	void GetBlockDataTable();
+	/**
+	* Returns the data table located at the specified path.
+	* @params Path Path of the data table to return.	
+	*/
+	UDataTable* GetBlockDataTable();
 
-	// Sets all tile array sizes to number of tile
-	void SetArraySizes();
+	/**
+	 * Resize all the tile arrays (responsible of holding tile information, such as if it is used, what is it used by etc ...)
+	 * to the number of tiles there are in the level.
+	 * @params NumberOfTiles Number to resize the arrays to.
+	 */
+	void SetTileArraysSize(int newArraySize);
 
-	// Clears a specific index of all Block related arrays
+	/**
+	 * Clear any value in tile arrays at the specified index.
+	 * @params index Index of the tile to clear (index = instance index of the tile)
+	 */
 	void ClearTileArraysAtIndex(int index);
-
-	// Spawns a block at location (TileIDs is only passed through for register the block on the grid)
-	void SpawnBlock(int BlockID, FRotator BlockRotation, int TileID);
 
 
 	/*---------- Variables -----------*/
-	// Array containing all block IDs where index=TileID
+
+	/** Tile Array - Array of spawned block IDs where index = index of the tile.*/
 	TArray<int> spawnedBlockID; 
 
+	/** Tile Array - Array of spawned zone IDs where index = index of the tile.*/
 	TArray<int> spawnedZoneID;
 
-	// Array containing reference to all spawned blocks where index=TileID
+	/** Tile Array - Array of spawned blocks where index = index of the tile.*/
 	TArray<ATT_Block*> spawnedBlocks;
 
-	//Reference to the "Block" DataTable 
+	/** Data table holding data of all the blocks.*/
 	UDataTable* data_Block;
 
 	
 public:	
 
 	/*---------- Functions -----------*/
-	// Used to set default GridManager when spawned by ATT_GridManager
+
+	/** Sets the GridManager variable and sets the size of all tile arrays.
+	* @params newGridManager New value of GridManager
+	*/
 	void SetGridManager(ATT_GridManager* newGridManager);
 
-	// Spawns block (buildingID = RowName) on TileID
-	void CreateBlockOnTile(int TileID, int BuildingID, FRotator BlockRotation);
+	/**
+	* Calculate the zone used by the block & assign the tile arrays to the block.
+	* Spawn & initialize the block (passes through data table data, tile belonging to the block etc ..)
+	* @params blockID Data table index of the row corresponding to the block to spawn.
+	* @params blockRotation Orientation of the block. (Can only be % Pi/2 (0°, 90°, 180°)).
+	 * @params tileID Index of the tile to spawn the block around.
+	 */
+	void SpawnBlock(int blockID, FRotator blockRotation, int tileID);
 
-	// OVERLOAD: Spawns random block matching parameters on TileID
-	void CreateBlockOnTile(int TileID, FRotator BlockRotation, FString buildingType, int efficiency, int sizeX, int sizeY);
+	/**
+	* Gets a random blockID corresponding to parameters in the data table.
+	* Calls SpawnBlock to finalise the spawning.
+	* @params tileID Data table index of the row corresponding to the block.
+	* @params blockRotation Orientation of the block. (Can only be % Pi/2 (0°, 90°, 180°)).
+	* @params buildingType Type of building to look for (should be replaced by EBuildingType).
+	* @params efficiency Level of the building to look for (1-3)
+	* @params sizeX X size of block's zone (how big is the block in tiles)
+	* @params sizeY Y size of block's zone (how big is the block in tiles)
+	*/
+	void SpawnBlockFromParameters(int tileID, FRotator blockRotation, FString buildingType, int efficiency, int sizeX, int sizeY);
 
-	void DeleteBlockOnTile(int TileID);
+	/**
+	* Delete block that owns the tile selected & clears all tiles that belonged to that block. Calls DestroyBlock in the block.
+	* If the tile has no block, calls DeleteZoneOnTile.
+	* @params tileID TileID of the tile to clear/ owned by the block to delete.
+	*/
+	void DeleteBlockOnTile(int tileID);
 
-	// Returns all the tiles included in the zone (see top of page for zone explanation)
-	TArray<int> CalculateZoneTileIDs(int StartTile, int EndTile);
+	/**
+* Assigns elements of the spawnedZoneID array to a certain ZoneID.
+* @params tileIDs TileIDs of the zone's tiles.
+* @params zoneID ID of the zone to assign the tiles to.
+*/
+	void CreateZoneOnTiles(TArray<int> tileIDs, int zoneID);
 
-	// Returns the EndTileID of a zone with the given parameters (see top of page for zone explanation)
-	int GetZoneEndTile(int StartTile, int SizeX, int SizeY, bool isModuloHalfPi);
+	/**
+	* Clears the tile of any zoneIDs.
+	* @params tileID TileID of the tile to clear of a zone.
+	*/
+	void DeleteZoneOnTile(int tileID);
 
-	// Returns the StartTileID from a zone size and hovered tile. (see top of page for zone explanation)
-	int GetZoneStartTileFromZoneSize(int TileID, int SizeX, int SizeY, bool isModuloHalfPi);
+	/**
+	 * Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
+	 * (see top of page for zone explanation)
+	 * @params tileA Corner A / StartTile of the zone.
+	 * @params tileB Opposite corner to A.
+	 */
+	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 
-	// Returns block stats from data table by row id.
-	FTT_Struct_Block* GetBlockStatsFromBlockID(int buildingID);
+	/**
+	 * Returns the TileID of the corner tile opposite to tileB in a zone defined by parameters (see top of page for zone explanation). 
+	 * @params tileB Corner B / EndTile of the zone.
+	 * @params sizeX X size of block's zone (how big is the block in tiles).
+	 * @params sizeY Y size of block's zone (how big is the block in tiles).
+	 * @params isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
+	 */
+	int GetZoneStartTileFromZoneSize(int tileB, int sizeX, int sizeY, bool isModuloHalfPi);
 
-	// Returns a random block matching parameter in data table
+	/**
+	 * Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation).
+	 * @params tileA Corner A / StartTile of the zone.
+	 * @params sizeX X size of block's zone (how big is the block in tiles).
+	 * @params sizeY Y size of block's zone (how big is the block in tiles).
+	 * @params isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
+	 */
+	int GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi);
+
+	/**
+	* Returns data of block from it BlockID (see TT_Struct_Block).
+	* @params blockID Data table index of the row corresponding to the block to spawn.
+	*/
+	FTT_Struct_Block* GetBlockStatsFromBlockID(int blockID);
+
+	/**
+	* Returns a random blockID corresponding to parameters in the data table.
+	* @params buildingType Type of building to look for (see EBuildingType).
+	* @params efficiency Level of the building to look for (1-3)
+	* @params sizeX X size of block's zone (how big is the block in tiles)
+	* @params sizeY Y size of block's zone (how big is the block in tiles)
+	*/
 	int GetRandomBlockIDFromParameter(FString buildingType, int efficiency, int sizeX, int sizeY);
 
-	// Returns all blocks matching parameter in data table
+	/**
+	* Returns an array of all the blockID corresponding to parameters in the data table.
+	* @params buildingType Type of building to look for (see EBuildingType).
+	* @params efficiency Level of the building to look for (1-3)
+	* @params sizeX X size of block's zone (how big is the block in tiles)
+	* @params sizeY Y size of block's zone (how big is the block in tiles)
+	*/
 	TArray<int> GetAllBlockIDsFromParameter(FString buildingType, int efficiency, int sizeX, int sizeY);
 
-	void CreateZoneOnTiles(TArray<int> ZoneTileIDs, int ZoneID);
+	/** Accessor - Returns the array of spawned zone where index = index of the tile.*/
+	TArray<int> GetSpawnedZoneTileIDs();
 
-	void DeleteZoneOnTile(int TileID);
-
-	TArray<int> GetZoneTileIDs();
 
 	/*---------- Variables -----------*/
-	// Reference to the parent GridManager (who spawned this)
+	
+	/** Reference to the GridManager who created this block manager.*/
 	ATT_GridManager* GridManager;
 
-	//PROTOTYPE What class of actor to spawn
+	/** Blueprint reference of the class of block to spawn.*/
 	UPROPERTY(EditAnywhere, Category = "Block Settings")
 	TSubclassOf<AActor> BlockToSpawn;
-
 
 };
