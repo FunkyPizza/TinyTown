@@ -18,6 +18,7 @@ class ATT_GridManager;
 class UDataTable;
 class ATT_Block;
 struct FTT_Struct_Block;
+struct FTT_Struct_BlockType;
 
 UCLASS()
 class TINYTOWN_API ATT_BlockManager : public AActor
@@ -35,10 +36,14 @@ protected:
 	virtual void BeginPlay() override;
 	
 	/**
-	* Returns the data table located at the specified path.
-	* @params Path Path of the data table to return.	
+	* Returns the data table located at static path (see definition).	
 	*/
 	UDataTable* GetBlockDataTable();
+
+	/**
+	* 
+	*/
+	void AnalyseDataBase();
 
 	/**
 	 * Resize all the tile arrays (responsible of holding tile information, such as if it is used, what is it used by etc ...)
@@ -67,6 +72,16 @@ protected:
 
 	/** Data table holding data of all the blocks.*/
 	UDataTable* data_Block;
+
+	TArray<FTT_Struct_BlockType> blockTypesAndID;
+
+	/* /** Each element of this array contains BlockIDs of a certain block type. 
+	UPROPERTY(BlueprintReadOnly)
+	TArray<TArray<int>> blockIDArrays; */
+
+	/** Each element of this array is the BlockType name of blockIDArrays. */
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FString> blockIDTypes;
 
 	
 public:	
@@ -146,7 +161,7 @@ public:
 	int GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi);
 
 	/**
-	* Returns data of block from it BlockID (see TT_Struct_Block).
+	* Returns data of block from its BlockID (see TT_Struct_Block).
 	* @params blockID Data table index of the row corresponding to the block to spawn.
 	*/
 	FTT_Struct_Block* GetBlockStatsFromBlockID(int blockID);
@@ -181,5 +196,4 @@ public:
 	/** Blueprint reference of the class of block to spawn.*/
 	UPROPERTY(EditAnywhere, Category = "Block Settings")
 	TSubclassOf<AActor> BlockToSpawn;
-
 };

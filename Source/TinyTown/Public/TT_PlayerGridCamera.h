@@ -98,9 +98,10 @@ protected:
 	/**
 	 * Spawns a block in edit mode (aka "ghostblock") to show the player where he is placing down the block.
 	 * @params blockID Data table index of the row corresponding to the block to spawn.
+	 * @params isZone If true, will fetch block ID in data_Zone, not data_Block.
 	 */ 
 	UFUNCTION(BlueprintCallable)
-	void StartBuilding(int blockID);
+	void StartBuilding(int blockID, bool isZone);
 
 	/**
 	 * If the building is flagged as "Resizable", the player will instead be placing down a zone instead

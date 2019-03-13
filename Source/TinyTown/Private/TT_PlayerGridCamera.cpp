@@ -226,8 +226,8 @@ void ATT_PlayerGridCamera::InputSelectButtonUp()
 		return;
 	}
 
-	// If not rotating block, confirm block building locaiton.
-	if (isPlacingDownBlock && !isSettingBlockSize)
+	// If not rotating block, confirm block building location.
+	if (isPlacingDownBlock)
 	{
 		FinishBuilding();
 		return;
@@ -332,7 +332,7 @@ void ATT_PlayerGridCamera::MouseTrace()
 }
 
 // Block building
-void ATT_PlayerGridCamera::StartBuilding(int blockID)
+void ATT_PlayerGridCamera::StartBuilding(int blockID, bool isZone)
 {
 	if (!placingBlockGhostClass)
 	{
@@ -353,7 +353,7 @@ void ATT_PlayerGridCamera::StartBuilding(int blockID)
 	placingBlockTargetLocation = FVector(0, 0, 0);
 	placingBlockTargetRotation = FRotator(0, 0, 0);
 	   
-	if (isGhostBlockResizable)
+	if (isZone)
 	{
 		placingBlockGhost = GetWorld()->SpawnActorDeferred<ATT_Block>(placingResizableBlockGhostClass, blockTransform);
 	}
@@ -433,7 +433,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		// Resizing the block
 		if (isSettingBlockSize)
 		{
-			placingLastZoneBuilt = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
+			placingLastZoneBuilt = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
 			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID -6);
 		}
 
@@ -502,56 +502,50 @@ TArray<int> ATT_PlayerGridCamera::GetZoneTileIDsFromZoneParameters(int tileA, in
 	TArray<int> TileIDs;
 	UE_LOG(LogTemp, Log, TEXT("CalculatingZoneTileIDs in PlayerGridCamera."));
 
-	if (placingBlocklastEndTileID != tileB && tileA != 0 && tileB != 0)
-	{
-		placingBlocklastEndTileID = tileB;
-
-		// Convert TileID into polar coordinates
-		int Ay;
-		int Ax;
-		Ay = tileA / GridManager->GetGridSize().X;
-		Ax = tileA - (Ay * GridManager->GetGridSize().X);
-
-		int By;
-		int Bx;
-		By = tileB / GridManager->GetGridSize().X;
-		Bx = tileB - (By * GridManager->GetGridSize().X);
-
-		// Get block size from vector AB>
-		FVector2D blockSize;
-
-		blockSize = FVector2D(Bx - Ax, By - Ay);
-
-
-		// Convert polar coordinates into grid of tiles
-		float distance = GridManager->GetDistanceBetweenTiles();
-		FVector startLocation = GridManager->GetTileLocation(tileA);
-
-		float xSign = 1.0f;
-		float ySign = 1.0f;
-
-		if (blockSize.X != 0)
-		{
-			xSign = abs(blockSize.X) / blockSize.X;
-		}
-		if (blockSize.Y != 0)
-		{
-			ySign = abs(blockSize.Y) / blockSize.Y;
-		}
-
-
-		for (int i = 0; i <= abs(blockSize.Y); i++)
-		{
-			for (int j = 0; j <= abs(blockSize.X); j++)
-			{
-				int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
-
-				TileIDs.Add(newTileID);
-			}
-		}
-		return TileIDs;
-	}
+	// Convert TileID into polar coordinates
+	int Ay;
+	int Ax;
+	Ay = tileA / GridManager->GetGridSize().X;
+	Ax = tileA - (Ay * GridManager->GetGridSize().X);
 	
+	int By;
+	int Bx;
+	By = tileB / GridManager->GetGridSize().X;
+	Bx = tileB - (By * GridManager->GetGridSize().X);
+
+	// Get block size from vector AB>
+	FVector2D blockSize;
+
+	blockSize = FVector2D(Bx - Ax, By - Ay);
+
+
+	// Convert polar coordinates into grid of tiles
+	float distance = GridManager->GetDistanceBetweenTiles();
+	FVector startLocation = GridManager->GetTileLocation(tileA);
+
+	float xSign = 1.0f;
+	float ySign = 1.0f;
+
+	if (blockSize.X != 0)
+	{
+		xSign = abs(blockSize.X) / blockSize.X;
+	}
+	if (blockSize.Y != 0)
+	{
+		ySign = abs(blockSize.Y) / blockSize.Y;
+	}
+
+
+	for (int i = 0; i <= abs(blockSize.Y); i++)
+	{
+		for (int j = 0; j <= abs(blockSize.X); j++)
+		{
+			int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
+			
+			TileIDs.Add(newTileID);
+		}
+	}
+
 	return TileIDs;
 }
 

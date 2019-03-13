@@ -10,79 +10,92 @@ struct FTT_Struct_Block : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		FText Block_Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		FString Type;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Efficiency;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		bool Resizable;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Size_X;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Size_Y;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 AnchorTileX;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Initial_Cost;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_Mo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_Po;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_Ha;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_El;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_Wa;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_In;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 R_Pr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_Mo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_Po;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_Ha;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_El;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_Wa;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_In;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 P_Pr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		UStaticMesh* Mesh;
 
 };
+
+USTRUCT(BlueprintType)
+struct FTT_Struct_BlockType : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
+		FText Type_Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
+		TArray<int> BlockIDs;
+};
+
 
 USTRUCT(BlueprintType)
 struct FTT_Struct_Inventory : public FTableRowBase

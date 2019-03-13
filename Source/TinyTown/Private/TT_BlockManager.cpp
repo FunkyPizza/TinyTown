@@ -270,12 +270,59 @@ UDataTable* ATT_BlockManager::GetBlockDataTable()
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataBlock_DataObject(TEXT("DataTable'/Game/Data/Data_Block.Data_Block'"));
 	if (DataBlock_DataObject.Succeeded())
 	{
+
+		AnalyseDataBase();
+		
 		return DataBlock_DataObject.Object;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Can't find Data_Block in BlockManager."));
 		return nullptr;
+	}
+}
+
+void ATT_BlockManager::AnalyseDataBase()
+{
+	FString contextString;
+	TArray<FName> rowNames;
+	rowNames = data_Block->GetRowNames();
+
+	for (auto& name : rowNames)
+	{
+		FTT_Struct_Block* row = data_Block->FindRow<FTT_Struct_Block>(name, contextString);
+		if (row)
+		{
+			//If type hasn't been encountered yet
+			if (!blockIDTypes.Contains(row->Type))
+			{
+				// Add type to blockIDTypes array
+				blockIDTypes.Add(row->Type);
+
+				// Create new array & add BlockID to it
+				TArray<int> tempArray;
+				tempArray.Add(name);
+
+				// Add new array to blockIDArrays
+				//blockIDArrays.Add(tempArray);
+
+			}
+
+			// If type has been encountered before
+			else 
+			{
+				// Get what index this type is at
+				int arrayIndex = blockIDTypes.Find(row->Type);
+
+				// Add BlockID to blockIDArrays
+				//blockIDArrays[arrayIndex].Add(name, true);
+			}
+		}
+
+		for (int i = 0; i < blockIDTypes.Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Yo, I found the type: %s"), blockIDTypes[i]);
+		}
 	}
 }
 
