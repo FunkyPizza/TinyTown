@@ -295,36 +295,29 @@ void ATT_BlockManager::AnalyseDataBase()
 			FTT_Struct_Block* row = data_Block->FindRow<FTT_Struct_Block>(name, contextString);
 			if (row)
 			{
-				//If type hasn't been encountered yet
-				if (!blockIDTypes.Contains(row->Type))
+				// If type hasn't been encountered yet
+				if (!blockTypeMap.Contains(row->Type))
 				{
-					// Add type to blockIDTypes array
-					blockIDTypes.Add(row->Type);
-
-					// Create new struct Block Type, sets its name & add current BlockID to its BlockID array
-					FTT_Struct_BlockType tempBlockType;
-					tempBlockType.Type_Name = row->Type;
-					tempBlockType.BlockIDs.Add(FCString::Atoi(*name.ToString()));
-
-					// Add new array to array of types
-					blockIDArrays.Add(tempBlockType);
-
+					// Create a new map element for the new type, and add the first blockID to it
+					FTT_Struct_BlockType tempBlockType(row->Type, TArray<int>({ FCString::Atoi(*name.ToString()) }));
+					blockTypeMap.Add(row->Type, tempBlockType);
 				}
 
-				// If type has been encountered before
+				// If type already exist in the map
 				else
 				{
-					// Get what index this type is at
-					int arrayIndex = blockIDTypes.Find(row->Type);
-
-					// Add BlockID to blockIDArrays
-					blockIDArrays[arrayIndex].BlockIDs.Add(FCString::Atoi(*name.ToString()));
+					// Just add blockID to it
+					blockTypeMap.Find(row->Type)->BlockIDs.Add( FCString::Atoi(*name.ToString()) );
 				}
 			}
 		}
-		for (int i = 0; i < blockIDTypes.Num(); i++)
+
+		// Log all types once found.
+		TArray<FString> mapKey;
+		blockTypeMap.GetKeys(mapKey);
+		for (int i = 0; i < mapKey.Num(); i++)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Yo, I found the type: %s"), *blockIDTypes[i]);
+			UE_LOG(LogTemp, Warning, TEXT("Yo, I found the type: %s"), *mapKey[i]);
 		}
 	}
 }

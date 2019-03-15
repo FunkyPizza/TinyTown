@@ -94,6 +94,10 @@ struct FTT_Struct_BlockType : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
 		TArray<int> BlockIDs;
+	FTT_Struct_BlockType()
+	{
+
+	}
 
 	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray)
 	{

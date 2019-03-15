@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "TT_Global.h"
 #include "TT_BlockManager.generated.h"
 
 class ATT_GridManager;
@@ -73,16 +74,11 @@ protected:
 	/** Data table holding data of all the blocks.*/
 	UDataTable* data_Block;
 
-	TArray<FTT_Struct_BlockType> blockIDArrays;
-
-	/*/** Each element of this array contains BlockIDs of a certain block type. 
+	/** This map sorts all blocks by types, each key is a type (string) containing an array of BlockID (int). 
+	* Note to self: I had to include Global.h to get the struct's array size (even if = 0)
+	*/
 	UPROPERTY(BlueprintReadOnly)
-	TArray<TArray<int>> blockIDArrays; */
-
-	/** Each element of this array is the BlockType name of blockIDArrays. */
-	UPROPERTY(BlueprintReadOnly)
-	TArray<FString> blockIDTypes;
-
+	TMap<FString, FTT_Struct_BlockType> blockTypeMap;
 	
 public:	
 
