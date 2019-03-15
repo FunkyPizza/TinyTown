@@ -73,9 +73,9 @@ protected:
 	/** Data table holding data of all the blocks.*/
 	UDataTable* data_Block;
 
-	TArray<FTT_Struct_BlockType> blockTypesAndID;
+	TArray<FTT_Struct_BlockType> blockIDArrays;
 
-	/* /** Each element of this array contains BlockIDs of a certain block type. 
+	/*/** Each element of this array contains BlockIDs of a certain block type. 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<TArray<int>> blockIDArrays; */
 

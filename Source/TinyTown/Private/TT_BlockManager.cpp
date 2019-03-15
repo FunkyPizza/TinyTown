@@ -17,11 +17,14 @@ ATT_BlockManager::ATT_BlockManager()
 
 	// Get the data table holding block's data
 	data_Block = GetBlockDataTable();
+	AnalyseDataBase();
 }
 
 void ATT_BlockManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+
 	
 }
 
@@ -269,10 +272,7 @@ UDataTable* ATT_BlockManager::GetBlockDataTable()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataBlock_DataObject(TEXT("DataTable'/Game/Data/Data_Block.Data_Block'"));
 	if (DataBlock_DataObject.Succeeded())
-	{
-
-		AnalyseDataBase();
-		
+	{		
 		return DataBlock_DataObject.Object;
 	}
 	else
@@ -284,44 +284,47 @@ UDataTable* ATT_BlockManager::GetBlockDataTable()
 
 void ATT_BlockManager::AnalyseDataBase()
 {
-	FString contextString;
-	TArray<FName> rowNames;
-	rowNames = data_Block->GetRowNames();
-
-	for (auto& name : rowNames)
+	if (data_Block)
 	{
-		FTT_Struct_Block* row = data_Block->FindRow<FTT_Struct_Block>(name, contextString);
-		if (row)
+		FString contextString;
+		TArray<FName> rowNames;
+		rowNames = data_Block->GetRowNames();
+
+		for (auto& name : rowNames)
 		{
-			//If type hasn't been encountered yet
-			if (!blockIDTypes.Contains(row->Type))
+			FTT_Struct_Block* row = data_Block->FindRow<FTT_Struct_Block>(name, contextString);
+			if (row)
 			{
-				// Add type to blockIDTypes array
-				blockIDTypes.Add(row->Type);
+				//If type hasn't been encountered yet
+				if (!blockIDTypes.Contains(row->Type))
+				{
+					// Add type to blockIDTypes array
+					blockIDTypes.Add(row->Type);
 
-				// Create new array & add BlockID to it
-				TArray<int> tempArray;
-				tempArray.Add(name);
+					// Create new struct Block Type, sets its name & add current BlockID to its BlockID array
+					FTT_Struct_BlockType tempBlockType;
+					tempBlockType.Type_Name = row->Type;
+					tempBlockType.BlockIDs.Add(FCString::Atoi(*name.ToString()));
 
-				// Add new array to blockIDArrays
-				//blockIDArrays.Add(tempArray);
+					// Add new array to array of types
+					blockIDArrays.Add(tempBlockType);
 
-			}
+				}
 
-			// If type has been encountered before
-			else 
-			{
-				// Get what index this type is at
-				int arrayIndex = blockIDTypes.Find(row->Type);
+				// If type has been encountered before
+				else
+				{
+					// Get what index this type is at
+					int arrayIndex = blockIDTypes.Find(row->Type);
 
-				// Add BlockID to blockIDArrays
-				//blockIDArrays[arrayIndex].Add(name, true);
+					// Add BlockID to blockIDArrays
+					blockIDArrays[arrayIndex].BlockIDs.Add(FCString::Atoi(*name.ToString()));
+				}
 			}
 		}
-
 		for (int i = 0; i < blockIDTypes.Num(); i++)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Yo, I found the type: %s"), blockIDTypes[i]);
+			UE_LOG(LogTemp, Warning, TEXT("Yo, I found the type: %s"), *blockIDTypes[i]);
 		}
 	}
 }

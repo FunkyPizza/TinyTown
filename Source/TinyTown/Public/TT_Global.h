@@ -90,10 +90,17 @@ struct FTT_Struct_BlockType : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
-		FText Type_Name;
+		FString Type_Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
 		TArray<int> BlockIDs;
+
+	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray)
+	{
+		Type_Name = Type;
+		BlockIDs = blockIDArray;
+	}
+
 };
 
 
