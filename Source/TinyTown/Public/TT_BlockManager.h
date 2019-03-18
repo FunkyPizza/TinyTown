@@ -75,7 +75,7 @@ protected:
 	UDataTable* data_Block;
 
 	/** This map sorts all blocks by types, each key is a type (string) containing an array of BlockID (int). 
-	* Note to self: I had to include Global.h to get the struct's array size (even if = 0)
+	* Note to self: I had to include Global.h in this header to get the struct's array size (even if = 0)
 	*/
 	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, FTT_Struct_BlockType> blockTypeMap;

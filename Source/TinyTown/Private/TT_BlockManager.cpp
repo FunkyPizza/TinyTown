@@ -299,7 +299,12 @@ void ATT_BlockManager::AnalyseDataBase()
 				if (!blockTypeMap.Contains(row->Type))
 				{
 					// Create a new map element for the new type, and add the first blockID to it
-					FTT_Struct_BlockType tempBlockType(row->Type, TArray<int>({ FCString::Atoi(*name.ToString()) }));
+					FTT_Struct_BlockType tempBlockType
+					(
+						row->Type,
+						TArray<int>({ FCString::Atoi(*name.ToString()) })
+					);
+
 					blockTypeMap.Add(row->Type, tempBlockType);
 				}
 
