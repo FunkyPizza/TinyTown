@@ -51,7 +51,6 @@ protected:
 	 */
 	void SpawnBlockManager();
 
-
 	/*---------- Variables -----------*/
 
 	/** Blueprint class of BlockManager to spawn with SpawnBloackManager(). */
@@ -96,21 +95,10 @@ protected:
 	/** Array of all the tiles affected by view modes. */
 	TArray<int> viewModeTiles;
 
-	bool isViewMode; // Indicates if any view mode is currently active
-	bool isViewResidential; // Indicates if Residential view mode is active
-	bool isViewCommercial; // Indicates if Commercial view mode is active
-	bool isViewIndustrial; // Indicates if Industrial view mode is active
+	/* Indicates if any view mode is currently active. */
+	bool isViewMode;
 
-	// Colour of tiles to be displayed in view mode
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
-	FLinearColor ResidentialZoneTileColour;
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
-	FLinearColor CommercialZoneTileColour;
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
-	FLinearColor IndustrialZoneTileColour;
-
-
-
+	   	 
 public:	
 
 	/*---------- Components ----------*/
@@ -128,7 +116,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void TileClicked(int TileID);
 
-	/** Tile Effect - Set this array of tiles as Residential Zone. */
+	/** Tile Effect - Set this array of tiles as Residential Zone. 
+	* @params TileIDs Array of all TileIDs in the zone.
+	* @params ZoneID Block ID of the zone, used to specify a colour.
+	*/
 	UFUNCTION(BlueprintCallable)
 		void SetTileColorFromZoneID(TArray<int> TileIDs, int ZoneID);
 
@@ -158,7 +149,9 @@ public:
 	/** Deactivates all view modes, stops the timer and reset tile colours */
 	void StopZoneViewMode();
 
-	/** Depending on the activated view mode, will fetch the zone's tile and apply an effect on them. */
+	/** Depending on the activated view mode, will fetch the zone's tile and apply an effect on them.
+	* @TODO: Avoid accessing database on tick,  ~3ms when view mode active.
+	*/
 	void ViewModeTick();
 
 

@@ -42,7 +42,8 @@ protected:
 	UDataTable* GetBlockDataTable();
 
 	/**
-	* 
+	* This function sorts the data base into a FMap. It separates all different block types and gather all blockIDs from the 
+	* same type in the same place.
 	*/
 	void AnalyseDataBase();
 
@@ -192,4 +193,16 @@ public:
 	/** Blueprint reference of the class of block to spawn.*/
 	UPROPERTY(EditAnywhere, Category = "Block Settings")
 	TSubclassOf<AActor> BlockToSpawn;
+
+	/* This maps is a sorted version of the data base where each key is a block type, 
+	* and each value is an array of FTT_Struct_BlockType containing all BlockIDs corresponding
+	* to the block type. 
+	*/
+	TMap<FString, int> zoneIDMap;
+
+	/* This array of bool indicates which zone view mode is activate. For each block of type "zone", there is a bool. */
+	TArray<bool> isZoneViewModeActive;
+
+	/* This is array is mapped like isZoneViewModeActive. It holds the original BlockID of each zone. */
+	TArray<int> zoneViewModeIndex;
 };

@@ -332,7 +332,7 @@ void ATT_PlayerGridCamera::MouseTrace()
 }
 
 // Block building
-void ATT_PlayerGridCamera::StartBuilding(int blockID, bool isZone)
+void ATT_PlayerGridCamera::StartBuilding(int blockID)
 {
 	if (!placingBlockGhostClass)
 	{
@@ -353,7 +353,7 @@ void ATT_PlayerGridCamera::StartBuilding(int blockID, bool isZone)
 	placingBlockTargetLocation = FVector(0, 0, 0);
 	placingBlockTargetRotation = FRotator(0, 0, 0);
 	   
-	if (isZone)
+	if (isGhostBlockResizable)
 	{
 		placingBlockGhost = GetWorld()->SpawnActorDeferred<ATT_Block>(placingResizableBlockGhostClass, blockTransform);
 	}
@@ -394,10 +394,11 @@ void ATT_PlayerGridCamera::FinishBuilding()
 	{
 		GridManager->BlockManager->SpawnBlock(placingBlockGhostID, placingBlockTargetRotation, lastLinetracedTile);
 	}
+
+	// Building zone
 	if (isGhostBlockResizable)
 	{
-		// TODO: Separate data base for zone to avoid the -6
-		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockGhostID - 6);
+		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockGhostID);
 	}
 
 	CancelBuiding();
@@ -434,7 +435,7 @@ void ATT_PlayerGridCamera::TickBuilding(float deltaTime)
 		if (isSettingBlockSize)
 		{
 			placingLastZoneBuilt = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
-			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID -6);
+			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
 		}
 
 		// If not, rotate it
@@ -500,7 +501,6 @@ void ATT_PlayerGridCamera::ActivateZoneBuilding()
 TArray<int> ATT_PlayerGridCamera::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
 {
 	TArray<int> TileIDs;
-	UE_LOG(LogTemp, Log, TEXT("CalculatingZoneTileIDs in PlayerGridCamera."));
 
 	// Convert TileID into polar coordinates
 	int Ay;

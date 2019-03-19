@@ -32,7 +32,7 @@ struct FTT_Struct_Block : public FTableRowBase
 		int32 Size_Y;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 AnchorTileX;
+		FLinearColor Grid_Colour;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Initial_Cost;

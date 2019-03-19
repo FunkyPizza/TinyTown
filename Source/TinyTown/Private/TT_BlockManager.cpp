@@ -23,9 +23,6 @@ ATT_BlockManager::ATT_BlockManager()
 void ATT_BlockManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-
-	
 }
 
 void ATT_BlockManager::SetGridManager(ATT_GridManager* newGridManager)
@@ -314,8 +311,18 @@ void ATT_BlockManager::AnalyseDataBase()
 					// Just add blockID to it
 					blockTypeMap.Find(row->Type)->BlockIDs.Add( FCString::Atoi(*name.ToString()) );
 				}
+
+				// If row is a zone add it to the zone map
+				if (row->Type == "Zone")
+				{
+					zoneIDMap.Add(row->Block_Name.ToString(), FCString::Atoi(*name.ToString()) );
+				}
 			}
 		}
+
+		// Set grid manager values for zones
+		zoneIDMap.GenerateValueArray(zoneViewModeIndex);
+		isZoneViewModeActive.SetNum(zoneViewModeIndex.Num(), true);
 
 		// Log all types once found.
 		TArray<FString> mapKey;

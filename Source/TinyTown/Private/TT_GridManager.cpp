@@ -27,14 +27,12 @@ void ATT_GridManager::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	// Refresh the grid only when the grid size has been changed. Enables moving the grid with refreshing all instances.
-	//if ( sizeX * sizeY != tileLocations.Num()) 
-	//{
+		// Refresh the grid only when the grid size has been changed. Enables moving the grid with refreshing all instances.
 		instanceGroupedSpriteComp->ClearInstances();
 		tileLocations.Empty();
 
 		SpawnTiles(sizeX, sizeY, GetActorLocation(), distanceBetweenTiles);
-	//}
+
 }
 
 void ATT_GridManager::BeginPlay()
@@ -160,34 +158,14 @@ void ATT_GridManager::SetTileColorFromZoneID(TArray<int> TileIDs, int ZoneID)
 {
 	if (TileIDs.Num() > 0)
 	{
-
 		TileClearState();
+
+		FLinearColor ZoneColour;
+		ZoneColour = BlockManager->GetBlockStatsFromBlockID(ZoneID)->Grid_Colour;
 
 		for (int i = 0; i < TileIDs.Num(); ++i)
 		{
-			FLinearColor ZoneColor;
-
-			switch (ZoneID)
-			{
-			case 0:
-				ZoneColor = ResidentialZoneTileColour;
-				UE_LOG(LogTemp, Warning, TEXT("ZoneID = 0 in SetTileColorFromZoneID. Setting colour = ResidentialZoneTileColour."))
-				break;
-
-			case 1:
-				ZoneColor = ResidentialZoneTileColour;
-				break;
-
-			case 2:
-				ZoneColor = CommercialZoneTileColour;
-				break;
-
-			case 3:
-				ZoneColor = IndustrialZoneTileColour;
-				break;
-			}
-
-			SetTileColor(TileIDs[i], ZoneColor);
+			SetTileColor(TileIDs[i], ZoneColour);
 		}
 	}
 }
@@ -235,41 +213,37 @@ void ATT_GridManager::TileClearState()
 
 void ATT_GridManager::ActivateZoneViewMode(int ViewMode)
 {
-	StopZoneViewMode();
-
-	switch (ViewMode)
+	if (!BlockManager)
 	{
-	default:
-		break;
-	case 0:
-		break;
-
-	case 1:
-		isViewResidential = true;
-		break;
-
-	case 2:
-		isViewCommercial = true;
-		break;
-
-	case 3:
-		isViewIndustrial = true;
-		break;
+		UE_LOG(LogTemp, Warning, TEXT("BlockManager hasn't been spawned from GridManager, cannot use view modes."));
+		return;
 	}
+	// Stop any active ViewModes
+	StopZoneViewMode();
+	
+	if (ViewMode < BlockManager->isZoneViewModeActive.Num())
+	{
+		// Activate new one
+		BlockManager->isZoneViewModeActive[ViewMode] = true;
+		isViewMode = true;
 
-	isViewMode = true;
-	GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.2f, true, 0.0f);
+		// Start ViewModeTick Timer
+		GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.2f, true, 0.0f);
+	}
 }
 
 void ATT_GridManager::StopZoneViewMode()
 {
+	// Stop ViewModeTick timer
 	GetWorldTimerManager().ClearTimer(TimerHandler_ViewMode);
 
-	isViewMode = false;
-	isViewResidential = false;
-	isViewCommercial = false;
-	isViewIndustrial = false;
+	// Deactivate all view modes
+	for (int i = 0; i < BlockManager->isZoneViewModeActive.Num(); i++)
+	{
+		BlockManager->isZoneViewModeActive[i] = false;
+	}
 
+	isViewMode = false;
 	TileClearState();
 }
 
@@ -284,39 +258,24 @@ void ATT_GridManager::ViewModeTick()
 	tempZoneTileIDs = BlockManager->GetSpawnedZoneTileIDs();
 	viewModeTiles.Empty();
 
+	// For each tile
 	for (int i = 0; i < tempZoneTileIDs.Num(); i++)
 	{
-		if (tempZoneTileIDs[i] != 0)
+		// Check which mode is activated
+		for (int viewModeIndex = 0; viewModeIndex < BlockManager->isZoneViewModeActive.Num(); viewModeIndex++)
 		{
-			// Checks for each Zone ID (see top of .h) check if view mode is active
-			
-			if (tempZoneTileIDs[i] == 1)
+			if (BlockManager->isZoneViewModeActive[viewModeIndex])
 			{
-				if (isViewResidential)
+				// Check if the zone on the tile corresponds to the active view mode
+				if (tempZoneTileIDs[i] == BlockManager->zoneViewModeIndex[viewModeIndex])
 				{
+					// Add the tile to view mode tile, & change its colour
 					viewModeTiles.Add(i);
-					SetTileColor(i, ResidentialZoneTileColour);
-				}
-			}
-
-			if (tempZoneTileIDs[i] == 2)
-			{
-				if (isViewCommercial)
-				{
-					viewModeTiles.Add(i);
-					SetTileColor(i, CommercialZoneTileColour);
-				}
-			}
-			
-			if (tempZoneTileIDs[i] == 3)
-			{
-				if (isViewIndustrial)
-				{
-					viewModeTiles.Add(i);
-					SetTileColor(i, IndustrialZoneTileColour);
+					SetTileColor(i, BlockManager->GetBlockStatsFromBlockID(BlockManager->zoneViewModeIndex[viewModeIndex])->Grid_Colour);
 				}
 			}
 		}
 	}
 }
+
 

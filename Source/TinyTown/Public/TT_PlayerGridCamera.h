@@ -101,7 +101,7 @@ protected:
 	 * @params isZone If true, will fetch block ID in data_Zone, not data_Block.
 	 */ 
 	UFUNCTION(BlueprintCallable)
-	void StartBuilding(int blockID, bool isZone);
+	void StartBuilding(int blockID);
 
 	/**
 	 * If the building is flagged as "Resizable", the player will instead be placing down a zone instead
