@@ -70,8 +70,11 @@ protected:
 	//Handles Camera Movement button inputs
 	void InputMoveButtonDown();
 	void InputMoveButtonUp();
+	
+	//Handles input to cancel a building
+	void InputCancel();
 
-	/** Linetrace from the camera to the grid and updates tile if they are hovered. */
+	/** Line trace from the camera to the grid and updates tile if they are hovered. */
 	void MouseTrace(); 
 
 	/** Moves the camera in XY direction multiplied by Sensitivity.
@@ -96,64 +99,69 @@ protected:
 	ATT_GridManager* GetGridManager(); 
 
 	/**
-	 * Spawns a block in edit mode (aka "ghostblock") to show the player where he is placing down the block.
+	 * Spawns a block in edit mode (aka "ghost block") to show the player where he is placing down the block.
 	 * @params blockID Data table index of the row corresponding to the block to spawn.
-	 * @params isZone If true, will fetch block ID in data_Zone, not data_Block.
 	 */ 
 	UFUNCTION(BlueprintCallable)
-	void StartBuilding(int blockID);
+	void StartBuildTool(int blockID);
 
-	/**
-	 * If the building is flagged as "Resizable", the player will instead be placing down a zone instead
-	 * of a block. This will avoid the building being placed down on first click and instead will require a drag & drop.
-	 */
-	void ActivateZoneBuilding();
+	/** Cancels the building of block if any. Ensures the temporary "ghost block" is destroyed. */
+	void StopBuildTool();
 
-	/**
-	* Finalises the block building or zone building process. Calls the BlockManager to build the block and ensures
-	* the temporary "ghostblock" is destroyed.
-	*/
-	void FinishBuilding();
-
-	/**
-	 * Cancels the building of block if any. Ensures the temporary "ghostblock" is destroyed.
-	 */
-	void CancelBuiding();
-
-	/**
-	 * Lerps the "ghostblock" on tick to ensure a smooth movement. If placing a zone, this will
-	 * update the grid to show what tiles are being affected.
+	/** Lerps the "ghost block" on tick to ensure a smooth movement. If placing a zone, this will update the grid to show what tiles are being affected.
 	 * @params deltaTime deltaTime value being passed through via the Tick function.
 	 */
-	void TickBuilding(float deltaTime);
+	void TickBuildTool(float deltaTime);
 
-	/**
-	 * Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
+	/** If the building is flagged as "Resizable", the player will instead be placing down a zone instead
+	 * of a block. This will avoid the building being placed down on first click and instead will require a drag & drop.
+	 */
+	void ConfirmBuildToolStartTile();
+
+	/** Finalises the block building or zone building process. Calls the BlockManager to build the block and ensures the temporary "ghost block" is destroyed. */
+	void ConfirmBuildTool();
+
+
+	/** Starts RemoveTool, will wait for the player to click a tile to call ConfirmRemoveToolStartTile(). */
+	UFUNCTION(BlueprintCallable)
+	void StartRemoveTool();
+
+	/** Fully Disables the RemoveTool, and cancels any tile deletion. */
+	void StopRemoveTool();
+
+	/** Used to refresh the zone selection. */
+	void TickRemoveTool();
+
+	/** This confirms the currently hovered tile to be the first tile of the RemoveTool selection zone. */
+	void ConfirmRemoveToolStartTile();
+
+	/** To be called when StartTile has been confirmed. This concludes the RemoveTool, deleting selected tile and disabling the tool. */
+	void ConfirmRemoveToolEndTile();
+
+	/** Instantly deletes whatever is placed on the currently hovered tile. */
+	void RemoveBlockUnderCursor();
+
+	/** Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
 	 * @params tileID TileID of the tile to clear/ owned by the block to delete.
-	 */ 
+	 */
 	void DeleteBlockOnTile(int tileID);
 
-	/**
-	 * Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
+
+	/** Calls ActivateZoneViewMode in GridManager.
+	 * @params ViewMode ViewMode ID (should be replaced by EBuildingType)
+	 */
+	UFUNCTION(BlueprintCallable)
+	void ToggleViewMode(int ViewMode);
+
+	/** Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
 	 * This function is very similar to the one in BlockManager to the exception of the for loop (<= instead of <).
 	 * @params tileA Corner A / StartTile of the zone.
 	 * @params tileB Opposite corner to A.
 	 */
 	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
-
-	/**
-	 * Calls ActivateZoneViewMode in GridManager.
-	 * @params ViewMode ViewMode ID (should be replaced by EBuildingType)
-	 */
-	UFUNCTION(BlueprintCallable)
-		void ToggleViewMode(int ViewMode);
-
-
-	//PROTOTYPE Build function
-	void DestroyBlockUnderCursor();
-
-
-/*---------- Variables -----------*/
+	
+	
+	/*---------- Variables -----------*/
 
 	/** Movement sensitivity for moving the camera with mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
@@ -220,6 +228,9 @@ protected:
 	float placingBlockMouseX; // X Mouse position at beginning of ghostBlock rotation
 	float placingBlockMouseY; // Y Mouse position at beginning of ghostBlock rotation
 
+	// Remove tool
+	TArray<int> tilesToBeRemoved;
+	FTimerHandle TimerHandle_RemoveTool;
 
 	/** Reference to the current GridManager, set by GetGridManager(). */
 	ATT_GridManager* GridManager; 
@@ -241,6 +252,9 @@ protected:
 	bool isPlacingDownBlock; // Indicates if the player is placing down a building
 	bool isRotatingBlock; // Indicates if the player is rotating a building while placing it down
 	bool isSettingBlockSize; // Indicates if the player is setting the size of a block while placing it down (drag)
+	bool isZoneBuildingCancelled; // Indicates whether block building should be restarted or totally cancelled.
+	bool isRemoveToolActive; // Indicates whether the RemoveTool is activated.
+	bool isRemoveToolSelecting; // Indicates whether the RemoveTool currently has selected tiles to remove or not.
 	int32 currentLinetracedTile; // Tile ID of the current line traced tile, if none returns -1
 	int32 lastLinetracedTile; // Tile ID of the last line traced tile
 

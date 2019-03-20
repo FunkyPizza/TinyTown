@@ -44,12 +44,15 @@ protected:
 	* @params Center Center point world location.
 	* @params Distance between each tiles in UE units.
 	*/
-	void SpawnTiles(int x, int y, FVector Center, float distance); 
+	void SpawnTiles(int x, int y, FVector center, float distance); 
 
 	/**
 	 * Spawns a BlockManager object (there can only be one at all times).
 	 */
 	void SpawnBlockManager();
+
+	/* Fetches zone colours from the data table and stores them in an array for use in this object. */
+	void FetchZoneColours();
 
 	/*---------- Variables -----------*/
 
@@ -95,8 +98,13 @@ protected:
 	/** Array of all the tiles affected by view modes. */
 	TArray<int> viewModeTiles;
 
+	TArray<int> playerTileSelection;
+
 	/* Indicates if any view mode is currently active. */
 	bool isViewMode;
+
+	/* Array of all zone colours. */
+	TArray<FLinearColor> zoneColours;
 
 	   	 
 public:	
@@ -110,28 +118,34 @@ public:
 
 	/** Tile Effect - Set this tile as hovered. */
 	UFUNCTION(BlueprintCallable)
-		void TileHovered(int TileID);
+		void TileHovered(int tileID);
 
 	/** Tile Effect -Set this tile as clicked. */
 	UFUNCTION(BlueprintCallable)
-		void TileClicked(int TileID);
+		void TileClicked(int tileID);
+
+	/** Tile Effect - Reset this tile to its original state (both colour and transform). */
+	void TileReset(int tileID);
 
 	/** Tile Effect - Set this array of tiles as Residential Zone. 
-	* @params TileIDs Array of all TileIDs in the zone.
-	* @params ZoneID Block ID of the zone, used to specify a colour.
+	* @params TileIDs Array of all TileIDs in the zone. 
+	* @params ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
 	*/
 	UFUNCTION(BlueprintCallable)
-		void SetTileColorFromZoneID(TArray<int> TileIDs, int ZoneID);
+		void SetTileColorFromZoneID(TArray<int> tileIDs, int zoneID);
 
 	/** Tile Effect - Set the tile a certain color. */
-	void SetTileColor(int TileID, FLinearColor Color);
+	void SetTileColor(int tileID, FLinearColor colour);
 
 	/** Tile Effect - Reset all altered tiles to their original state. */
 	UFUNCTION(BlueprintCallable)
 		void TileClearState();
 
-	/** Accessor - Public accessor for tile locations. */
-	FVector GetTileLocation(int TileID);
+
+	/** Accessor - Public accessor for tile locations. 
+	*	@params tileID TileID (instance index) of the tile.
+	*/
+	FVector GetTileLocation(int tileID);
 
 	/** Accessor - Returns the distance between each tile. */
 	float GetDistanceBetweenTiles();
@@ -142,9 +156,9 @@ public:
 	/**
 	 *  Activates zone view modes, displays the zone a certain colour on the grid.
 	 * Starts a timer to trigger ViewModeTick at a tick like rate.
-	 * @params ViewMode (0:Residential, 1:Commercial, 2:Industrial)
+	 * @params ViewMode Zone's internal index. A zone's int.ID depends on its position in the data table relative to other zones.
 	 */
-	void ActivateZoneViewMode(int ViewMode);
+	void ActivateZoneViewMode(int viewMode);
 
 	/** Deactivates all view modes, stops the timer and reset tile colours */
 	void StopZoneViewMode();
@@ -153,6 +167,9 @@ public:
 	* @TODO: Avoid accessing database on tick,  ~3ms when view mode active.
 	*/
 	void ViewModeTick();
+
+	void SetPlayerSelection(TArray<int> tileIDs);
+	void ClearPlayerSelection();
 
 
 	/*---------- Variables -----------*/

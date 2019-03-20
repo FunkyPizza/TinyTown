@@ -46,14 +46,14 @@ void ATT_GridManager::BeginPlay()
 
 /*---------- Accessor functions ----------*/
 
-FVector ATT_GridManager::GetTileLocation(int TileID)
+FVector ATT_GridManager::GetTileLocation(int tileID)
 {
 	FTransform tempTransform;
 	FVector tempVector;
 
-	if (TileID != -1)
+	if (tileID != -1)
 	{
-		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTransform, true);
+		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTransform, true);
 		tempVector = tempTransform.GetLocation();
 	}
 
@@ -73,7 +73,7 @@ FVector2D ATT_GridManager::GetGridSize()
 
 /*---------- Tile Spawning ----------*/
 
-void ATT_GridManager::SpawnTiles(int x, int y, FVector Center, float distance)
+void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 {
 	for (int i = 0; i < y; i++) 
 	{
@@ -81,7 +81,7 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector Center, float distance)
 		{
 
 			//Calculating new location (will spawn around center vector hence the very long expression). Taken from "2D Grid Execution Macro".
-			FVector newLocation = FVector(Center + (FVector(distance * 0.5f, distance * 0.5f, 0.0f) + (distance * (FVector((j - (float(x) / 2)), (i - (float(y) / 2)), 0.0f)))));
+			FVector newLocation = FVector(center + (FVector(distance * 0.5f, distance * 0.5f, 0.0f) + (distance * (FVector((j - (float(x) / 2)), (i - (float(y) / 2)), 0.0f)))));
 			tileLocations.Add(newLocation);
 
 			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
@@ -113,76 +113,99 @@ void ATT_GridManager::SpawnBlockManager()
 	}
 }
 
+void ATT_GridManager::FetchZoneColours()
+{
+	for (auto i : BlockManager->zoneViewModeIndex)
+	{
+		zoneColours.Add(BlockManager->GetBlockStatsFromBlockID(i)->Grid_Colour);
+	}	
+}
 
 /*---------- Tile functions ----------*/
 
-void ATT_GridManager::TileHovered(int TileID)
+void ATT_GridManager::TileHovered(int tileID)
 {
 	// Check if the tile is already hovered
-	if (!modifiedTiles.Contains(TileID) || viewModeTiles.Contains(TileID)) 
+	if (!modifiedTiles.Contains(tileID) || viewModeTiles.Contains(tileID)) 
 	{
 		TileClearState();
 		clickedTile = -1;
 
 		FTransform tempTileTransform;
-		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
+		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTileTransform, true);
 		FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.1f, 1.1f, 1.1f));
 
-		instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
+		instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform, true);
 
 		//Marks the tile as hovered or "modified"
-		modifiedTiles.Add(TileID);
+		modifiedTiles.Add(tileID);
 	}
 }
 
-void ATT_GridManager::TileClicked(int TileID)
+void ATT_GridManager::TileClicked(int tileID)
 {
 	//Check the tile is hovered and hasn't been clicked
-	if (modifiedTiles.Contains(TileID) && (clickedTile == -1)) 
+	if (modifiedTiles.Contains(tileID) && (clickedTile == -1)) 
 	{
 		TileClearState();
 
 		FTransform tempTileTransform;
-		instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
+		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTileTransform, true);
 		FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(0.8f, 0.8f, 0.8f));
 
-		instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
+		instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform, true);
 
 		//Marks the tile as hovered or "modified" and as clicked
-		int32 clickedTile = TileID;
+		int32 clickedTile = tileID;
 		modifiedTiles.Add(clickedTile);
 	}
 }
 
-void ATT_GridManager::SetTileColorFromZoneID(TArray<int> TileIDs, int ZoneID)
+void ATT_GridManager::TileReset(int tileID)
 {
-	if (TileIDs.Num() > 0)
+	FTransform tempTileTransform;
+	instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTileTransform, true);
+	FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
+
+	instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform, true);
+	instanceGroupedSpriteComp->UpdateInstanceColor(tileID, FLinearColor::White, true);
+}
+
+void ATT_GridManager::SetTileColorFromZoneID(TArray<int> tileIDs, int zoneID)
+{
+	if (tileIDs.Num() > 0)
 	{
 		TileClearState();
 
 		FLinearColor ZoneColour;
-		ZoneColour = BlockManager->GetBlockStatsFromBlockID(ZoneID)->Grid_Colour;
+		ZoneColour = FVector(0.1, 0.1, 0.1);
 
-		for (int i = 0; i < TileIDs.Num(); ++i)
+		if(zoneID != -1)
+		{ 
+			ZoneColour = BlockManager->GetBlockStatsFromBlockID(zoneID)->Grid_Colour;
+		}
+
+		for (int i = 0; i < tileIDs.Num(); ++i)
 		{
-			SetTileColor(TileIDs[i], ZoneColour);
+				SetTileColor(tileIDs[i], ZoneColour);
 		}
 	}
 }
 
-void ATT_GridManager::SetTileColor(int TileID, FLinearColor Color)
+void ATT_GridManager::SetTileColor(int tileID, FLinearColor colour)
 {
-	instanceGroupedSpriteComp->UpdateInstanceColor(TileID, Color);
-	modifiedTiles.Add(TileID);
+
+	instanceGroupedSpriteComp->UpdateInstanceColor(tileID, colour);
+	modifiedTiles.Add(tileID);
 }
 
 void ATT_GridManager::TileClearState()
 {
 	if (modifiedTiles.Num() > 0) 
 	{
-		for (int i = 0; i < modifiedTiles.Num(); ++i) 
-		{			
-			int TileID = modifiedTiles[i];
+			for (int i = 0; i < modifiedTiles.Num(); ++i)
+			{
+				int TileID = modifiedTiles[i];
 
 				FTransform tempTileTransform;
 				instanceGroupedSpriteComp->GetInstanceTransform(TileID, tempTileTransform, true);
@@ -190,14 +213,14 @@ void ATT_GridManager::TileClearState()
 
 				instanceGroupedSpriteComp->UpdateInstanceTransform(TileID, newTransform, true);
 
-			if (!viewModeTiles.Contains(TileID))
-			{
-				instanceGroupedSpriteComp->UpdateInstanceColor(TileID, FLinearColor::White, true);
+				if (!viewModeTiles.Contains(TileID))
+				{
+					instanceGroupedSpriteComp->UpdateInstanceColor(TileID, FLinearColor::White, true);
+				}
 			}
-		}
-		modifiedTiles.Empty();
+			modifiedTiles.Empty();
 	}
-	
+
 	// If no view modes active, reset all tiles that were affected 
 	if (!isViewMode)
 	{
@@ -211,24 +234,26 @@ void ATT_GridManager::TileClearState()
 
 /*---------- View modes functions ----------*/
 
-void ATT_GridManager::ActivateZoneViewMode(int ViewMode)
+void ATT_GridManager::ActivateZoneViewMode(int viewMode)
 {
 	if (!BlockManager)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BlockManager hasn't been spawned from GridManager, cannot use view modes."));
 		return;
 	}
-	// Stop any active ViewModes
+
+	// Stop any active ViewModes & Refresh zoneColour from data table
 	StopZoneViewMode();
-	
-	if (ViewMode < BlockManager->isZoneViewModeActive.Num())
+	FetchZoneColours();
+
+	if (viewMode < BlockManager->isZoneViewModeActive.Num())
 	{
 		// Activate new one
-		BlockManager->isZoneViewModeActive[ViewMode] = true;
+		BlockManager->isZoneViewModeActive[viewMode] = true;
 		isViewMode = true;
 
 		// Start ViewModeTick Timer
-		GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.2f, true, 0.0f);
+		GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.1f, true, 0.0f);
 	}
 }
 
@@ -258,24 +283,40 @@ void ATT_GridManager::ViewModeTick()
 	tempZoneTileIDs = BlockManager->GetSpawnedZoneTileIDs();
 	viewModeTiles.Empty();
 
-	// For each tile
 	for (int i = 0; i < tempZoneTileIDs.Num(); i++)
 	{
-		// Check which mode is activated
-		for (int viewModeIndex = 0; viewModeIndex < BlockManager->isZoneViewModeActive.Num(); viewModeIndex++)
+		if (!playerTileSelection.Contains(i))
 		{
-			if (BlockManager->isZoneViewModeActive[viewModeIndex])
+			// Check which mode is activated
+			for (int viewModeIndex = 0; viewModeIndex < BlockManager->isZoneViewModeActive.Num(); viewModeIndex++)
 			{
-				// Check if the zone on the tile corresponds to the active view mode
-				if (tempZoneTileIDs[i] == BlockManager->zoneViewModeIndex[viewModeIndex])
+				if (BlockManager->isZoneViewModeActive[viewModeIndex])
 				{
-					// Add the tile to view mode tile, & change its colour
-					viewModeTiles.Add(i);
-					SetTileColor(i, BlockManager->GetBlockStatsFromBlockID(BlockManager->zoneViewModeIndex[viewModeIndex])->Grid_Colour);
+					// Check if the zone on the tile corresponds to the active view mode
+					if (tempZoneTileIDs[i] == BlockManager->zoneViewModeIndex[viewModeIndex])
+					{
+						// Add the tile to view mode tile, & change its colour
+						viewModeTiles.Add(i);
+						SetTileColor(i, zoneColours[viewModeIndex]);
+					}
 				}
 			}
 		}
 	}
 }
 
+void ATT_GridManager::SetPlayerSelection(TArray<int> tileIDs)
+{
+	playerTileSelection.Empty();
+	playerTileSelection = tileIDs;
+}
+
+void ATT_GridManager::ClearPlayerSelection()
+{
+	for (auto i : playerTileSelection)
+	{
+		TileReset(i);
+	}
+	playerTileSelection.Empty();
+}
 
