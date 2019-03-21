@@ -1,0 +1,34 @@
+digraph "ATT_GridManager::GetGridSize"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node19 [label="ATT_GridManager::GetGridSize",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Accessor - Returns the size of the grid in a 2D Vector."];
+  Node19 -> Node20 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node20 [label="ATT_BlockManager::SetGrid\lManager",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#adb56f90bbc291b799f38e91d26d6f003",tooltip="Sets the GridManager variable and sets the size of all tile arrays."];
+  Node20 -> Node21 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node21 [label="ATT_GridManager::SpawnBlock\lManager",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#aa5645338890f95f2d400420c29f82952",tooltip="Spawns a BlockManager object (there can only be one at all times)."];
+  Node19 -> Node22 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node22 [label="ATT_BlockManager::GetZone\lTileIDsFromZoneParameters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a5b89998b7b010e253761617f03362b03",tooltip="Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectan..."];
+  Node22 -> Node23 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node23 [label="ATT_BlockManager::SpawnBlock",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a5276646c418b0ef0a3fa7253144bbc74",tooltip="Calculate the zone used by the block & assign the tile arrays to the block."];
+  Node23 -> Node24 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node24 [label="ATT_BlockManager::SpawnBlock\lFromParameters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a38f27c6297567c4120a09b103b18d7fe",tooltip="Gets a random blockID corresponding to parameters in the data table."];
+  Node23 -> Node25 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node25 [label="ATT_PlayerGridCamera\l::ConfirmBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aca622600a2b7f3a52b001c34a0da537b",tooltip="Finalises the block building or zone building process."];
+  Node19 -> Node26 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node26 [label="ATT_BlockManager::GetZone\lStartTileFromZoneSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a59bada3b5d0d0f9d55fa6ef89133849b",tooltip="Returns the TileID of the corner tile opposite to tileB in a zone defined by parameters (see top of p..."];
+  Node26 -> Node23 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node19 -> Node27 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node27 [label="ATT_BlockManager::GetZone\lEndTileFromZoneSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#ae317f6c25bbb2a33a510ac726fe267ab",tooltip="Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of p..."];
+  Node27 -> Node23 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node19 -> Node28 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node28 [label="ATT_PlayerGridCamera\l::GetZoneTileIDsFromZoneParameters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#afb96fd6854de63d2871cff6402622d9f",tooltip="Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectan..."];
+  Node28 -> Node29 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node29 [label="ATT_PlayerGridCamera\l::TickBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a67c2ba8b8b3f86ddddf25f3d11b70c8f",tooltip="Lerps the \"ghost block\" on tick to ensure a smooth movement."];
+  Node28 -> Node30 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node30 [label="ATT_PlayerGridCamera\l::TickRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a1d0784f96f603f5dae27ff61e329c527",tooltip="Used to refresh the zone selection."];
+  Node30 -> Node31 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node31 [label="ATT_PlayerGridCamera\l::StartRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aa5e54106a559060b452e8f39ac2b83c4",tooltip="Starts RemoveTool, will wait for the player to click a tile to call ConfirmRemoveToolStartTile()."];
+}

@@ -1,0 +1,24 @@
+digraph "ATT_BlockManager::GetBlockStatsFromBlockID"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node29 [label="ATT_BlockManager::GetBlock\lStatsFromBlockID",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Returns data of block from its BlockID (see TT_Struct_Block)."];
+  Node29 -> Node30 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node30 [label="ATT_BlockManager::SpawnBlock",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a5276646c418b0ef0a3fa7253144bbc74",tooltip="Calculate the zone used by the block & assign the tile arrays to the block."];
+  Node30 -> Node31 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node31 [label="ATT_BlockManager::SpawnBlock\lFromParameters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a38f27c6297567c4120a09b103b18d7fe",tooltip="Gets a random blockID corresponding to parameters in the data table."];
+  Node30 -> Node32 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node32 [label="ATT_PlayerGridCamera\l::ConfirmBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aca622600a2b7f3a52b001c34a0da537b",tooltip="Finalises the block building or zone building process."];
+  Node29 -> Node33 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node33 [label="ATT_GridManager::SetTile\lColorFromZoneID",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#acdaeb76af04a73d65ea6c249b3bace21",tooltip="Tile Effect - Set this array of tiles as Residential Zone."];
+  Node33 -> Node34 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node34 [label="ATT_PlayerGridCamera\l::TickBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a67c2ba8b8b3f86ddddf25f3d11b70c8f",tooltip="Lerps the \"ghost block\" on tick to ensure a smooth movement."];
+  Node33 -> Node35 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node35 [label="ATT_PlayerGridCamera\l::TickRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a1d0784f96f603f5dae27ff61e329c527",tooltip="Used to refresh the zone selection."];
+  Node35 -> Node36 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node36 [label="ATT_PlayerGridCamera\l::StartRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aa5e54106a559060b452e8f39ac2b83c4",tooltip="Starts RemoveTool, will wait for the player to click a tile to call ConfirmRemoveToolStartTile()."];
+  Node29 -> Node37 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node37 [label="ATT_PlayerGridCamera\l::StartBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4b6f91d32b63d387425d22faa853895a",tooltip="Spawns a block in edit mode (aka \"ghost block\") to show the player where he is placing down the block..."];
+}

@@ -1,0 +1,12 @@
+digraph "ATT_BlockManager::SetTileArraysSize"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node73 [label="ATT_BlockManager::SetTile\lArraysSize",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Resize all the tile arrays (responsible of holding tile information, such as if it is used,..."];
+  Node73 -> Node74 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node74 [label="ATT_BlockManager::SetGrid\lManager",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#adb56f90bbc291b799f38e91d26d6f003",tooltip="Sets the GridManager variable and sets the size of all tile arrays."];
+  Node74 -> Node75 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node75 [label="ATT_GridManager::SpawnBlock\lManager",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#aa5645338890f95f2d400420c29f82952",tooltip="Spawns a BlockManager object (there can only be one at all times)."];
+}

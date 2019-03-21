@@ -1,0 +1,384 @@
+\hypertarget{class_a_t_t___grid_manager}{}\section{A\+T\+T\+\_\+\+Grid\+Manager Class Reference}
+\label{class_a_t_t___grid_manager}\index{ATT\_GridManager@{ATT\_GridManager}}
+Inheritance diagram for A\+T\+T\+\_\+\+Grid\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_a_t_t___grid_manager}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a1866eb17b7f52718ed61ff5664453f8a}\label{class_a_t_t___grid_manager_a1866eb17b7f52718ed61ff5664453f8a}} 
+virtual void {\bfseries On\+Construction} (const F\+Transform \&Transform) override
+\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_ae67df470fb8fde84f2fd67b3799a04d8}{Tile\+Hovered}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Tile Effect -\/ Set this tile as hovered. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a6f460da9a1912ed31e2e5c9959b447ce}{Tile\+Clicked}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Tile Effect -\/Set this tile as clicked. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a7ff2d0e2f13412c3d0aba2393f9f7e5f}{Tile\+Reset}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Tile Effect -\/ Reset this tile to its original state (both colour and transform). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_acdaeb76af04a73d65ea6c249b3bace21}{Set\+Tile\+Color\+From\+Zone\+ID}} (T\+Array$<$ int $>$ tile\+I\+Ds, int zone\+ID)
+\begin{DoxyCompactList}\small\item\em Tile Effect -\/ Set this array of tiles as Residential Zone. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a6e53d6048a017a5b3b799a001103ed04}{Set\+Tile\+Color}} (int tile\+ID, F\+Linear\+Color colour)
+\begin{DoxyCompactList}\small\item\em Tile Effect -\/ Set the tile a certain color. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a5bcea6c5c60adcfb537a996c0eede4a5}{Tile\+Clear\+State}} ()
+\begin{DoxyCompactList}\small\item\em Tile Effect -\/ Reset all altered tiles to their original state. \end{DoxyCompactList}\item 
+F\+Vector \mbox{\hyperlink{class_a_t_t___grid_manager_a8498f5d3bf51947e60b9604cc8a6ae37}{Get\+Tile\+Location}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Accessor -\/ Public accessor for tile locations. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___grid_manager_ac48caa79e0a7d2255484da80e5e563d3}{Get\+Distance\+Between\+Tiles}} ()
+\begin{DoxyCompactList}\small\item\em Accessor -\/ Returns the distance between each tile. \end{DoxyCompactList}\item 
+F\+Vector2D \mbox{\hyperlink{class_a_t_t___grid_manager_ac32858e31de063415fcb5131962d4a59}{Get\+Grid\+Size}} ()
+\begin{DoxyCompactList}\small\item\em Accessor -\/ Returns the size of the grid in a 2D Vector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a209c380bfc8c559954b0898bef309038}{Activate\+Zone\+View\+Mode}} (int view\+Mode)
+\begin{DoxyCompactList}\small\item\em Activates zone view modes, displays the zone a certain colour on the grid. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a508f83eb4ba58bdb100f000003be810b}\label{class_a_t_t___grid_manager_a508f83eb4ba58bdb100f000003be810b}} 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a508f83eb4ba58bdb100f000003be810b}{Stop\+Zone\+View\+Mode}} ()
+\begin{DoxyCompactList}\small\item\em Deactivates all view modes, stops the timer and reset tile colours. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_af9a2760978252820113e0c370b62f234}{View\+Mode\+Tick}} ()
+\begin{DoxyCompactList}\small\item\em Depending on the activated view mode, will fetch the zone\textquotesingle{}s tile and apply an effect on them. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a8003c640783e0bf93b4bfe32f44a805d}\label{class_a_t_t___grid_manager_a8003c640783e0bf93b4bfe32f44a805d}} 
+void {\bfseries Set\+Player\+Selection} (T\+Array$<$ int $>$ tile\+I\+Ds)
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a81c6abf3e305d351a7cc0157a485c23e}\label{class_a_t_t___grid_manager_a81c6abf3e305d351a7cc0157a485c23e}} 
+void {\bfseries Clear\+Player\+Selection} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a828e77c965c9f6c67046d9df6a128300}\label{class_a_t_t___grid_manager_a828e77c965c9f6c67046d9df6a128300}} 
+U\+Paper\+Grouped\+Sprite\+Component $\ast$ {\bfseries instance\+Grouped\+Sprite\+Comp}
+\item 
+\mbox{\hyperlink{class_a_t_t___block_manager}{A\+T\+T\+\_\+\+Block\+Manager}} $\ast$ \mbox{\hyperlink{class_a_t_t___grid_manager_ad4f5e3050493fe0ed39bee5bb9f93182}{Block\+Manager}}
+\begin{DoxyCompactList}\small\item\em Reference to the block manager spawned with \mbox{\hyperlink{class_a_t_t___grid_manager_aa5645338890f95f2d400420c29f82952}{Spawn\+Block\+Manager()}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a869f6ccb25d2005cc5878daed6b7b811}\label{class_a_t_t___grid_manager_a869f6ccb25d2005cc5878daed6b7b811}} 
+virtual void {\bfseries Begin\+Play} () override
+\item 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_a76f1004ca0eab1f77d1591fb85caeb33}{Spawn\+Tiles}} (int x, int y, F\+Vector center, float distance)
+\begin{DoxyCompactList}\small\item\em Spawns a grid of tile instances separated by distance in a x by y grid, centered around Center. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_aa5645338890f95f2d400420c29f82952}\label{class_a_t_t___grid_manager_aa5645338890f95f2d400420c29f82952}} 
+void \mbox{\hyperlink{class_a_t_t___grid_manager_aa5645338890f95f2d400420c29f82952}{Spawn\+Block\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Spawns a Block\+Manager object (there can only be one at all times). \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a37d3e785443fc21f1f64598c2bdb1977}\label{class_a_t_t___grid_manager_a37d3e785443fc21f1f64598c2bdb1977}} 
+void {\bfseries Fetch\+Zone\+Colours} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a46566a931492e920d15b0598970124d1}\label{class_a_t_t___grid_manager_a46566a931492e920d15b0598970124d1}} 
+U\+Scene\+Component $\ast$ {\bfseries Root}
+\item 
+T\+Subclass\+Of$<$ \mbox{\hyperlink{class_a_t_t___block_manager}{A\+T\+T\+\_\+\+Block\+Manager}} $>$ \mbox{\hyperlink{class_a_t_t___grid_manager_afc01cb2845f708bd5f7d5c957396a8c4}{Block\+Manager\+Class}}
+\begin{DoxyCompactList}\small\item\em Blueprint class of Block\+Manager to spawn with Spawn\+Bloack\+Manager(). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___grid_manager_aff731d4ed219d936d3df519f6dcf26e4}{sizeX}}
+\begin{DoxyCompactList}\small\item\em Size of the grid in tiles on the X axis. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___grid_manager_a76649cfa84681fd01e10dc0b5de9717a}{sizeY}}
+\begin{DoxyCompactList}\small\item\em Size of the grid in tiles on the Y axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___grid_manager_a0c71cee44077741507626b57002b5c40}{distance\+Between\+Tiles}}
+\begin{DoxyCompactList}\small\item\em Distance that separate each tile from one another. \end{DoxyCompactList}\item 
+U\+Paper\+Sprite $\ast$ \mbox{\hyperlink{class_a_t_t___grid_manager_a2d63415b034d3f4955f73796a51f7155}{tile\+Sprite\+Normal}}
+\begin{DoxyCompactList}\small\item\em Default sprite for a tile. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___grid_manager_a017d3614b518aa1ab7560753dc0b7f35}{tile\+Hovered\+Z\+Offset}}
+\begin{DoxyCompactList}\small\item\em Z offset for hovered tiles. \end{DoxyCompactList}\item 
+T\+Array$<$ F\+Vector $>$ \mbox{\hyperlink{class_a_t_t___grid_manager_a31d6d9555ca13c2a396c1d6c9960c324}{tile\+Locations}}
+\begin{DoxyCompactList}\small\item\em Array of all spawned tile instances locations. \end{DoxyCompactList}\item 
+int32 \mbox{\hyperlink{class_a_t_t___grid_manager_a280e5772f55941219c918dcfe1c9dd5d}{clicked\+Tile}}
+\begin{DoxyCompactList}\small\item\em Tile\+ID of the currently clicked tile. \end{DoxyCompactList}\item 
+T\+Array$<$ int32 $>$ \mbox{\hyperlink{class_a_t_t___grid_manager_a74b524fdfe1491c3f7184fae52b2e37d}{modified\+Tiles}}
+\begin{DoxyCompactList}\small\item\em Array of all tiles that have been altered. \end{DoxyCompactList}\item 
+F\+Timer\+Handle \mbox{\hyperlink{class_a_t_t___grid_manager_ad1283266d72303c6d790bbec2f0277d1}{Timer\+Handler\+\_\+\+View\+Mode}}
+\begin{DoxyCompactList}\small\item\em Timer responsible of the view mode tile refreshing. \end{DoxyCompactList}\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___grid_manager_af541d9efe0df837396a4ffafcebd6205}{view\+Mode\+Tiles}}
+\begin{DoxyCompactList}\small\item\em Array of all the tiles affected by view modes. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_afdf71501f6323d85119e648e4c2ea78b}\label{class_a_t_t___grid_manager_afdf71501f6323d85119e648e4c2ea78b}} 
+T\+Array$<$ int $>$ {\bfseries player\+Tile\+Selection}
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a8ea034d7d15b41e20a4a0fc3839cfc79}\label{class_a_t_t___grid_manager_a8ea034d7d15b41e20a4a0fc3839cfc79}} 
+bool {\bfseries is\+View\+Mode}
+\item 
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a891d98b1959ef1ac4b56e750a87501b8}\label{class_a_t_t___grid_manager_a891d98b1959ef1ac4b56e750a87501b8}} 
+T\+Array$<$ F\+Linear\+Color $>$ {\bfseries zone\+Colours}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a209c380bfc8c559954b0898bef309038}\label{class_a_t_t___grid_manager_a209c380bfc8c559954b0898bef309038}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!ActivateZoneViewMode@{ActivateZoneViewMode}}
+\index{ActivateZoneViewMode@{ActivateZoneViewMode}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{ActivateZoneViewMode()}{ActivateZoneViewMode()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Activate\+Zone\+View\+Mode (\begin{DoxyParamCaption}\item[{int}]{view\+Mode }\end{DoxyParamCaption})}
+
+
+
+Activates zone view modes, displays the zone a certain colour on the grid. 
+
+Starts a timer to trigger View\+Mode\+Tick at a tick like rate. 
+\begin{DoxyParams}{Parameters}
+{\em View\+Mode} & Zone\textquotesingle{}s internal index. A zone\textquotesingle{}s int.\+ID depends on its position in the data table relative to other zones. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___grid_manager_ac48caa79e0a7d2255484da80e5e563d3}\label{class_a_t_t___grid_manager_ac48caa79e0a7d2255484da80e5e563d3}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!GetDistanceBetweenTiles@{GetDistanceBetweenTiles}}
+\index{GetDistanceBetweenTiles@{GetDistanceBetweenTiles}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{GetDistanceBetweenTiles()}{GetDistanceBetweenTiles()}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Grid\+Manager\+::\+Get\+Distance\+Between\+Tiles (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Accessor -\/ Returns the distance between each tile. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_ac32858e31de063415fcb5131962d4a59}\label{class_a_t_t___grid_manager_ac32858e31de063415fcb5131962d4a59}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!GetGridSize@{GetGridSize}}
+\index{GetGridSize@{GetGridSize}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{GetGridSize()}{GetGridSize()}}
+{\footnotesize\ttfamily F\+Vector2D A\+T\+T\+\_\+\+Grid\+Manager\+::\+Get\+Grid\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Accessor -\/ Returns the size of the grid in a 2D Vector. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a8498f5d3bf51947e60b9604cc8a6ae37}\label{class_a_t_t___grid_manager_a8498f5d3bf51947e60b9604cc8a6ae37}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!GetTileLocation@{GetTileLocation}}
+\index{GetTileLocation@{GetTileLocation}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{GetTileLocation()}{GetTileLocation()}}
+{\footnotesize\ttfamily F\+Vector A\+T\+T\+\_\+\+Grid\+Manager\+::\+Get\+Tile\+Location (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Accessor -\/ Public accessor for tile locations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tile\+ID} & Tile\+ID (instance index) of the tile. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a6e53d6048a017a5b3b799a001103ed04}\label{class_a_t_t___grid_manager_a6e53d6048a017a5b3b799a001103ed04}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!SetTileColor@{SetTileColor}}
+\index{SetTileColor@{SetTileColor}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{SetTileColor()}{SetTileColor()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Set\+Tile\+Color (\begin{DoxyParamCaption}\item[{int}]{tile\+ID,  }\item[{F\+Linear\+Color}]{colour }\end{DoxyParamCaption})}
+
+
+
+Tile Effect -\/ Set the tile a certain color. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_acdaeb76af04a73d65ea6c249b3bace21}\label{class_a_t_t___grid_manager_acdaeb76af04a73d65ea6c249b3bace21}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!SetTileColorFromZoneID@{SetTileColorFromZoneID}}
+\index{SetTileColorFromZoneID@{SetTileColorFromZoneID}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{SetTileColorFromZoneID()}{SetTileColorFromZoneID()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Set\+Tile\+Color\+From\+Zone\+ID (\begin{DoxyParamCaption}\item[{T\+Array$<$ int $>$}]{tile\+I\+Ds,  }\item[{int}]{zone\+ID }\end{DoxyParamCaption})}
+
+
+
+Tile Effect -\/ Set this array of tiles as Residential Zone. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Tile\+I\+Ds} & Array of all Tile\+I\+Ds in the zone. \\
+\hline
+{\em Zone\+ID} & Block ID of the zone, used to specify a colour. If -\/1, colour will be Charcoal Grey. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a76f1004ca0eab1f77d1591fb85caeb33}\label{class_a_t_t___grid_manager_a76f1004ca0eab1f77d1591fb85caeb33}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!SpawnTiles@{SpawnTiles}}
+\index{SpawnTiles@{SpawnTiles}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{SpawnTiles()}{SpawnTiles()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Spawn\+Tiles (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y,  }\item[{F\+Vector}]{center,  }\item[{float}]{distance }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Spawns a grid of tile instances separated by distance in a x by y grid, centered around Center. 
+
+Calculates all tiles locations \& stores them in tile\+Locations, then spawns the instances using tile\+Sprite\+Normal. The tiles will be spawned around a center point. 
+\begin{DoxyParams}{Parameters}
+{\em x} & Size X in tiles of the grid. \\
+\hline
+{\em y} & Size Y in tiles of the grid. \\
+\hline
+{\em Center} & Center point world location. \\
+\hline
+{\em Distance} & between each tiles in UE units. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a5bcea6c5c60adcfb537a996c0eede4a5}\label{class_a_t_t___grid_manager_a5bcea6c5c60adcfb537a996c0eede4a5}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!TileClearState@{TileClearState}}
+\index{TileClearState@{TileClearState}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{TileClearState()}{TileClearState()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Tile\+Clear\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Tile Effect -\/ Reset all altered tiles to their original state. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a6f460da9a1912ed31e2e5c9959b447ce}\label{class_a_t_t___grid_manager_a6f460da9a1912ed31e2e5c9959b447ce}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!TileClicked@{TileClicked}}
+\index{TileClicked@{TileClicked}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{TileClicked()}{TileClicked()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Tile\+Clicked (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Tile Effect -\/Set this tile as clicked. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_ae67df470fb8fde84f2fd67b3799a04d8}\label{class_a_t_t___grid_manager_ae67df470fb8fde84f2fd67b3799a04d8}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!TileHovered@{TileHovered}}
+\index{TileHovered@{TileHovered}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{TileHovered()}{TileHovered()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Tile\+Hovered (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Tile Effect -\/ Set this tile as hovered. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a7ff2d0e2f13412c3d0aba2393f9f7e5f}\label{class_a_t_t___grid_manager_a7ff2d0e2f13412c3d0aba2393f9f7e5f}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!TileReset@{TileReset}}
+\index{TileReset@{TileReset}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{TileReset()}{TileReset()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+Tile\+Reset (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Tile Effect -\/ Reset this tile to its original state (both colour and transform). 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_af9a2760978252820113e0c370b62f234}\label{class_a_t_t___grid_manager_af9a2760978252820113e0c370b62f234}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!ViewModeTick@{ViewModeTick}}
+\index{ViewModeTick@{ViewModeTick}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{ViewModeTick()}{ViewModeTick()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Grid\+Manager\+::\+View\+Mode\+Tick (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Depending on the activated view mode, will fetch the zone\textquotesingle{}s tile and apply an effect on them. 
+
+@\+T\+O\+DO\+: Avoid accessing database on tick, $\sim$3ms when view mode active. 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_a_t_t___grid_manager_ad4f5e3050493fe0ed39bee5bb9f93182}\label{class_a_t_t___grid_manager_ad4f5e3050493fe0ed39bee5bb9f93182}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!BlockManager@{BlockManager}}
+\index{BlockManager@{BlockManager}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{BlockManager}{BlockManager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_a_t_t___block_manager}{A\+T\+T\+\_\+\+Block\+Manager}}$\ast$ A\+T\+T\+\_\+\+Grid\+Manager\+::\+Block\+Manager}
+
+
+
+Reference to the block manager spawned with \mbox{\hyperlink{class_a_t_t___grid_manager_aa5645338890f95f2d400420c29f82952}{Spawn\+Block\+Manager()}}. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_afc01cb2845f708bd5f7d5c957396a8c4}\label{class_a_t_t___grid_manager_afc01cb2845f708bd5f7d5c957396a8c4}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!BlockManagerClass@{BlockManagerClass}}
+\index{BlockManagerClass@{BlockManagerClass}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{BlockManagerClass}{BlockManagerClass}}
+{\footnotesize\ttfamily T\+Subclass\+Of$<$\mbox{\hyperlink{class_a_t_t___block_manager}{A\+T\+T\+\_\+\+Block\+Manager}}$>$ A\+T\+T\+\_\+\+Grid\+Manager\+::\+Block\+Manager\+Class\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Blueprint class of Block\+Manager to spawn with Spawn\+Bloack\+Manager(). 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a280e5772f55941219c918dcfe1c9dd5d}\label{class_a_t_t___grid_manager_a280e5772f55941219c918dcfe1c9dd5d}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!clickedTile@{clickedTile}}
+\index{clickedTile@{clickedTile}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{clickedTile}{clickedTile}}
+{\footnotesize\ttfamily int32 A\+T\+T\+\_\+\+Grid\+Manager\+::clicked\+Tile\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Tile\+ID of the currently clicked tile. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a0c71cee44077741507626b57002b5c40}\label{class_a_t_t___grid_manager_a0c71cee44077741507626b57002b5c40}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!distanceBetweenTiles@{distanceBetweenTiles}}
+\index{distanceBetweenTiles@{distanceBetweenTiles}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{distanceBetweenTiles}{distanceBetweenTiles}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Grid\+Manager\+::distance\+Between\+Tiles\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Distance that separate each tile from one another. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a74b524fdfe1491c3f7184fae52b2e37d}\label{class_a_t_t___grid_manager_a74b524fdfe1491c3f7184fae52b2e37d}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!modifiedTiles@{modifiedTiles}}
+\index{modifiedTiles@{modifiedTiles}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{modifiedTiles}{modifiedTiles}}
+{\footnotesize\ttfamily T\+Array$<$int32$>$ A\+T\+T\+\_\+\+Grid\+Manager\+::modified\+Tiles\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Array of all tiles that have been altered. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_aff731d4ed219d936d3df519f6dcf26e4}\label{class_a_t_t___grid_manager_aff731d4ed219d936d3df519f6dcf26e4}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!sizeX@{sizeX}}
+\index{sizeX@{sizeX}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{sizeX}{sizeX}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Grid\+Manager\+::sizeX\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Size of the grid in tiles on the X axis. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a76649cfa84681fd01e10dc0b5de9717a}\label{class_a_t_t___grid_manager_a76649cfa84681fd01e10dc0b5de9717a}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!sizeY@{sizeY}}
+\index{sizeY@{sizeY}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{sizeY}{sizeY}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Grid\+Manager\+::sizeY\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Size of the grid in tiles on the Y axis. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a017d3614b518aa1ab7560753dc0b7f35}\label{class_a_t_t___grid_manager_a017d3614b518aa1ab7560753dc0b7f35}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!tileHoveredZOffset@{tileHoveredZOffset}}
+\index{tileHoveredZOffset@{tileHoveredZOffset}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{tileHoveredZOffset}{tileHoveredZOffset}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Grid\+Manager\+::tile\+Hovered\+Z\+Offset\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Z offset for hovered tiles. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a31d6d9555ca13c2a396c1d6c9960c324}\label{class_a_t_t___grid_manager_a31d6d9555ca13c2a396c1d6c9960c324}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!tileLocations@{tileLocations}}
+\index{tileLocations@{tileLocations}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{tileLocations}{tileLocations}}
+{\footnotesize\ttfamily T\+Array$<$F\+Vector$>$ A\+T\+T\+\_\+\+Grid\+Manager\+::tile\+Locations\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Array of all spawned tile instances locations. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_a2d63415b034d3f4955f73796a51f7155}\label{class_a_t_t___grid_manager_a2d63415b034d3f4955f73796a51f7155}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!tileSpriteNormal@{tileSpriteNormal}}
+\index{tileSpriteNormal@{tileSpriteNormal}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{tileSpriteNormal}{tileSpriteNormal}}
+{\footnotesize\ttfamily U\+Paper\+Sprite$\ast$ A\+T\+T\+\_\+\+Grid\+Manager\+::tile\+Sprite\+Normal\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Default sprite for a tile. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_ad1283266d72303c6d790bbec2f0277d1}\label{class_a_t_t___grid_manager_ad1283266d72303c6d790bbec2f0277d1}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!TimerHandler\_ViewMode@{TimerHandler\_ViewMode}}
+\index{TimerHandler\_ViewMode@{TimerHandler\_ViewMode}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{TimerHandler\_ViewMode}{TimerHandler\_ViewMode}}
+{\footnotesize\ttfamily F\+Timer\+Handle A\+T\+T\+\_\+\+Grid\+Manager\+::\+Timer\+Handler\+\_\+\+View\+Mode\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Timer responsible of the view mode tile refreshing. 
+
+\mbox{\Hypertarget{class_a_t_t___grid_manager_af541d9efe0df837396a4ffafcebd6205}\label{class_a_t_t___grid_manager_af541d9efe0df837396a4ffafcebd6205}} 
+\index{ATT\_GridManager@{ATT\_GridManager}!viewModeTiles@{viewModeTiles}}
+\index{viewModeTiles@{viewModeTiles}!ATT\_GridManager@{ATT\_GridManager}}
+\subsubsection{\texorpdfstring{viewModeTiles}{viewModeTiles}}
+{\footnotesize\ttfamily T\+Array$<$int$>$ A\+T\+T\+\_\+\+Grid\+Manager\+::view\+Mode\+Tiles\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Array of all the tiles affected by view modes. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Public/T\+T\+\_\+\+Grid\+Manager.\+h\item 
+Private/T\+T\+\_\+\+Grid\+Manager.\+cpp\end{DoxyCompactItemize}

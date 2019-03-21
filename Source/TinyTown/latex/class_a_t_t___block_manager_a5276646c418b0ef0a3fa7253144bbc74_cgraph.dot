@@ -1,0 +1,25 @@
+digraph "ATT_BlockManager::SpawnBlock"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node76 [label="ATT_BlockManager::SpawnBlock",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Calculate the zone used by the block & assign the tile arrays to the block."];
+  Node76 -> Node77 [color="midnightblue",fontsize="10",style="solid"];
+  Node77 [label="ATT_GridManager::GetTile\lLocation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a8498f5d3bf51947e60b9604cc8a6ae37",tooltip="Accessor - Public accessor for tile locations."];
+  Node76 -> Node78 [color="midnightblue",fontsize="10",style="solid"];
+  Node78 [label="ATT_BlockManager::GetBlock\lStatsFromBlockID",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a9cfa474a85d9f0843d92db0622ece18b",tooltip="Returns data of block from its BlockID (see TT_Struct_Block)."];
+  Node76 -> Node79 [color="midnightblue",fontsize="10",style="solid"];
+  Node79 [label="ATT_BlockManager::GetZone\lStartTileFromZoneSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a59bada3b5d0d0f9d55fa6ef89133849b",tooltip="Returns the TileID of the corner tile opposite to tileB in a zone defined by parameters (see top of p..."];
+  Node79 -> Node80 [color="midnightblue",fontsize="10",style="solid"];
+  Node80 [label="ATT_GridManager::GetGridSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#ac32858e31de063415fcb5131962d4a59",tooltip="Accessor - Returns the size of the grid in a 2D Vector."];
+  Node76 -> Node81 [color="midnightblue",fontsize="10",style="solid"];
+  Node81 [label="ATT_BlockManager::GetZone\lEndTileFromZoneSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#ae317f6c25bbb2a33a510ac726fe267ab",tooltip="Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of p..."];
+  Node81 -> Node80 [color="midnightblue",fontsize="10",style="solid"];
+  Node76 -> Node82 [color="midnightblue",fontsize="10",style="solid"];
+  Node82 [label="ATT_BlockManager::GetZone\lTileIDsFromZoneParameters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a5b89998b7b010e253761617f03362b03",tooltip="Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectan..."];
+  Node82 -> Node80 [color="midnightblue",fontsize="10",style="solid"];
+  Node82 -> Node83 [color="midnightblue",fontsize="10",style="solid"];
+  Node83 [label="ATT_GridManager::GetDistance\lBetweenTiles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#ac48caa79e0a7d2255484da80e5e563d3",tooltip="Accessor - Returns the distance between each tile."];
+  Node82 -> Node77 [color="midnightblue",fontsize="10",style="solid"];
+}

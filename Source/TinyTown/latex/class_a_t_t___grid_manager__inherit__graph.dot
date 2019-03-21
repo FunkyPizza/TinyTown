@@ -1,0 +1,9 @@
+digraph "ATT_GridManager"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="{ATT_GridManager\n|+ instanceGroupedSpriteComp\l+ BlockManager\l# Root\l# BlockManagerClass\l# sizeX\l# sizeY\l# distanceBetweenTiles\l# tileSpriteNormal\l# tileHoveredZOffset\l# tileLocations\l# clickedTile\l# modifiedTiles\l# TimerHandler_ViewMode\l# viewModeTiles\l# playerTileSelection\l# isViewMode\l# zoneColours\l|+ ATT_GridManager()\l+ OnConstruction()\l+ TileHovered()\l+ TileClicked()\l+ TileReset()\l+ SetTileColorFromZoneID()\l+ SetTileColor()\l+ TileClearState()\l+ GetTileLocation()\l+ GetDistanceBetweenTiles()\land 6 more...\l# BeginPlay()\l# SpawnTiles()\l# SpawnBlockManager()\l# FetchZoneColours()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node1 [label="{AActor\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

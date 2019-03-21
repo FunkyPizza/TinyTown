@@ -1,0 +1,435 @@
+\hypertarget{class_a_t_t___block_manager}{}\section{A\+T\+T\+\_\+\+Block\+Manager Class Reference}
+\label{class_a_t_t___block_manager}\index{ATT\_BlockManager@{ATT\_BlockManager}}
+Inheritance diagram for A\+T\+T\+\_\+\+Block\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_a_t_t___block_manager}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_adb56f90bbc291b799f38e91d26d6f003}{Set\+Grid\+Manager}} (\mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}} $\ast$new\+Grid\+Manager)
+\begin{DoxyCompactList}\small\item\em Sets the Grid\+Manager variable and sets the size of all tile arrays. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a5276646c418b0ef0a3fa7253144bbc74}{Spawn\+Block}} (int block\+ID, F\+Rotator block\+Rotation, int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Calculate the zone used by the block \& assign the tile arrays to the block. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a38f27c6297567c4120a09b103b18d7fe}{Spawn\+Block\+From\+Parameters}} (int tile\+ID, F\+Rotator block\+Rotation, F\+String building\+Type, int efficiency, int sizeX, int sizeY)
+\begin{DoxyCompactList}\small\item\em Gets a random block\+ID corresponding to parameters in the data table. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a4389a110be093fdec1e1e56e847f93a5}{Delete\+Block\+On\+Tile}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Delete block that owns the tile selected \& clears all tiles that belonged to that block. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a0023c00d2796cb3b7aaf3f09b496958a}{Create\+Zone\+On\+Tiles}} (T\+Array$<$ int $>$ tile\+I\+Ds, int zone\+ID)
+\begin{DoxyCompactList}\small\item\em Assigns elements of the spawned\+Zone\+ID array to a certain Zone\+ID. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a90878ae6eacd58d3d256aa36da109f25}{Delete\+Zone\+On\+Tile}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Clears the tile of any zone\+I\+Ds. \end{DoxyCompactList}\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___block_manager_a5b89998b7b010e253761617f03362b03}{Get\+Zone\+Tile\+I\+Ds\+From\+Zone\+Parameters}} (int tileA, int tileB)
+\begin{DoxyCompactList}\small\item\em Returns all the tiles included in the zone delimited by tileA \& tileB (opposing corners of the rectangular zone). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___block_manager_a59bada3b5d0d0f9d55fa6ef89133849b}{Get\+Zone\+Start\+Tile\+From\+Zone\+Size}} (int tileB, int sizeX, int sizeY, bool is\+Modulo\+Half\+Pi)
+\begin{DoxyCompactList}\small\item\em Returns the Tile\+ID of the corner tile opposite to tileB in a zone defined by parameters (see top of page for zone explanation). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___block_manager_ae317f6c25bbb2a33a510ac726fe267ab}{Get\+Zone\+End\+Tile\+From\+Zone\+Size}} (int tileA, int sizeX, int sizeY, bool is\+Modulo\+Half\+Pi)
+\begin{DoxyCompactList}\small\item\em Returns the Tile\+ID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_f_t_t___struct___block}{F\+T\+T\+\_\+\+Struct\+\_\+\+Block}} $\ast$ \mbox{\hyperlink{class_a_t_t___block_manager_a9cfa474a85d9f0843d92db0622ece18b}{Get\+Block\+Stats\+From\+Block\+ID}} (int block\+ID)
+\begin{DoxyCompactList}\small\item\em Returns data of block from its Block\+ID (see T\+T\+\_\+\+Struct\+\_\+\+Block). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___block_manager_a22d66a18c0280754b1fab6f762cf5c41}{Get\+Random\+Block\+I\+D\+From\+Parameter}} (F\+String building\+Type, int efficiency, int sizeX, int sizeY)
+\begin{DoxyCompactList}\small\item\em Returns a random block\+ID corresponding to parameters in the data table. \end{DoxyCompactList}\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___block_manager_ad335183570cf8369ab2f98e0a29dfd12}{Get\+All\+Block\+I\+Ds\+From\+Parameter}} (F\+String building\+Type, int efficiency, int sizeX, int sizeY)
+\begin{DoxyCompactList}\small\item\em Returns an array of all the block\+ID corresponding to parameters in the data table. \end{DoxyCompactList}\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___block_manager_a079396c2d33f294f60dac358efec9688}{Get\+Spawned\+Zone\+Tile\+I\+Ds}} ()
+\begin{DoxyCompactList}\small\item\em Accessor -\/ Returns the array of spawned zone where index = index of the tile. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}} $\ast$ \mbox{\hyperlink{class_a_t_t___block_manager_a2b29cc812d4cf3c2e052ea9e029317e6}{Grid\+Manager}}
+\begin{DoxyCompactList}\small\item\em Reference to the Grid\+Manager who created this block manager. \end{DoxyCompactList}\item 
+T\+Subclass\+Of$<$ A\+Actor $>$ \mbox{\hyperlink{class_a_t_t___block_manager_a7c55f65ebd34d244ba5a76b2318201d4}{Block\+To\+Spawn}}
+\begin{DoxyCompactList}\small\item\em Blueprint reference of the class of block to spawn. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___block_manager_a56e4a129bed022865618a51abc81f760}\label{class_a_t_t___block_manager_a56e4a129bed022865618a51abc81f760}} 
+T\+Map$<$ F\+String, int $>$ {\bfseries zone\+I\+D\+Map}
+\item 
+\mbox{\Hypertarget{class_a_t_t___block_manager_afc8054b4dcef553361820460a59acd12}\label{class_a_t_t___block_manager_afc8054b4dcef553361820460a59acd12}} 
+T\+Array$<$ bool $>$ {\bfseries is\+Zone\+View\+Mode\+Active}
+\item 
+\mbox{\Hypertarget{class_a_t_t___block_manager_aacfa887d0c30b88c93a5a3da465c0c98}\label{class_a_t_t___block_manager_aacfa887d0c30b88c93a5a3da465c0c98}} 
+T\+Array$<$ int $>$ {\bfseries zone\+View\+Mode\+Index}
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___block_manager_a3f2f917dd10eba28b0981665376b4965}\label{class_a_t_t___block_manager_a3f2f917dd10eba28b0981665376b4965}} 
+virtual void {\bfseries Begin\+Play} () override
+\item 
+\mbox{\Hypertarget{class_a_t_t___block_manager_ae8bbff020ef51ef24a0ae56a3c8d5bb4}\label{class_a_t_t___block_manager_ae8bbff020ef51ef24a0ae56a3c8d5bb4}} 
+U\+Data\+Table $\ast$ \mbox{\hyperlink{class_a_t_t___block_manager_ae8bbff020ef51ef24a0ae56a3c8d5bb4}{Get\+Block\+Data\+Table}} ()
+\begin{DoxyCompactList}\small\item\em Returns the data table located at static path (see definition). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a7fa064dc4454af3ba9312722c35ddef0}{Analyse\+Data\+Base}} ()
+\begin{DoxyCompactList}\small\item\em This function sorts the data base into a F\+Map. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a9099e50a423a43479b86e9f7fc093565}{Set\+Tile\+Arrays\+Size}} (int new\+Array\+Size)
+\begin{DoxyCompactList}\small\item\em Resize all the tile arrays (responsible of holding tile information, such as if it is used, what is it used by etc ...) to the number of tiles there are in the level. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___block_manager_a93d498beaf84adad9978e38a3a40b9eb}{Clear\+Tile\+Arrays\+At\+Index}} (int index)
+\begin{DoxyCompactList}\small\item\em Clear any value in tile arrays at the specified index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___block_manager_ac6ae544742005ddb2e1c06c410baca28}{spawned\+Block\+ID}}
+\begin{DoxyCompactList}\small\item\em Tile Array -\/ Array of spawned block I\+Ds where index = index of the tile. \end{DoxyCompactList}\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___block_manager_a269425e55c82c98da284574df45661aa}{spawned\+Zone\+ID}}
+\begin{DoxyCompactList}\small\item\em Tile Array -\/ Array of spawned zone I\+Ds where index = index of the tile. \end{DoxyCompactList}\item 
+T\+Array$<$ \mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}} $\ast$ $>$ \mbox{\hyperlink{class_a_t_t___block_manager_a45055309e12920b3da85a5e73a6120e8}{spawned\+Blocks}}
+\begin{DoxyCompactList}\small\item\em Tile Array -\/ Array of spawned blocks where index = index of the tile. \end{DoxyCompactList}\item 
+U\+Data\+Table $\ast$ \mbox{\hyperlink{class_a_t_t___block_manager_a134b72a88646f42d4594c6849bc1522b}{data\+\_\+\+Block}}
+\begin{DoxyCompactList}\small\item\em Data table holding data of all the blocks. \end{DoxyCompactList}\item 
+T\+Map$<$ F\+String, \mbox{\hyperlink{struct_f_t_t___struct___block_type}{F\+T\+T\+\_\+\+Struct\+\_\+\+Block\+Type}} $>$ \mbox{\hyperlink{class_a_t_t___block_manager_a753f85e8fd937b5ff38dce1ec35dbf5f}{block\+Type\+Map}}
+\begin{DoxyCompactList}\small\item\em This map sorts all blocks by types, each key is a type (string) containing an array of Block\+ID (int). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a7fa064dc4454af3ba9312722c35ddef0}\label{class_a_t_t___block_manager_a7fa064dc4454af3ba9312722c35ddef0}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!AnalyseDataBase@{AnalyseDataBase}}
+\index{AnalyseDataBase@{AnalyseDataBase}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{AnalyseDataBase()}{AnalyseDataBase()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Analyse\+Data\+Base (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+This function sorts the data base into a F\+Map. 
+
+It separates all different block types and gather all block\+I\+Ds from the same type in the same place. \mbox{\Hypertarget{class_a_t_t___block_manager_a93d498beaf84adad9978e38a3a40b9eb}\label{class_a_t_t___block_manager_a93d498beaf84adad9978e38a3a40b9eb}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!ClearTileArraysAtIndex@{ClearTileArraysAtIndex}}
+\index{ClearTileArraysAtIndex@{ClearTileArraysAtIndex}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{ClearTileArraysAtIndex()}{ClearTileArraysAtIndex()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Clear\+Tile\+Arrays\+At\+Index (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Clear any value in tile arrays at the specified index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index of the tile to clear (index = instance index of the tile) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a0023c00d2796cb3b7aaf3f09b496958a}\label{class_a_t_t___block_manager_a0023c00d2796cb3b7aaf3f09b496958a}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!CreateZoneOnTiles@{CreateZoneOnTiles}}
+\index{CreateZoneOnTiles@{CreateZoneOnTiles}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{CreateZoneOnTiles()}{CreateZoneOnTiles()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Create\+Zone\+On\+Tiles (\begin{DoxyParamCaption}\item[{T\+Array$<$ int $>$}]{tile\+I\+Ds,  }\item[{int}]{zone\+ID }\end{DoxyParamCaption})}
+
+
+
+Assigns elements of the spawned\+Zone\+ID array to a certain Zone\+ID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tile\+I\+Ds} & Tile\+I\+Ds of the zone\textquotesingle{}s tiles. \\
+\hline
+{\em zone\+ID} & ID of the zone to assign the tiles to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a4389a110be093fdec1e1e56e847f93a5}\label{class_a_t_t___block_manager_a4389a110be093fdec1e1e56e847f93a5}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!DeleteBlockOnTile@{DeleteBlockOnTile}}
+\index{DeleteBlockOnTile@{DeleteBlockOnTile}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{DeleteBlockOnTile()}{DeleteBlockOnTile()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Delete\+Block\+On\+Tile (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Delete block that owns the tile selected \& clears all tiles that belonged to that block. 
+
+Calls Destroy\+Block in the block. If the tile has no block, calls Delete\+Zone\+On\+Tile. 
+\begin{DoxyParams}{Parameters}
+{\em tile\+ID} & Tile\+ID of the tile to clear/ owned by the block to delete. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a90878ae6eacd58d3d256aa36da109f25}\label{class_a_t_t___block_manager_a90878ae6eacd58d3d256aa36da109f25}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!DeleteZoneOnTile@{DeleteZoneOnTile}}
+\index{DeleteZoneOnTile@{DeleteZoneOnTile}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{DeleteZoneOnTile()}{DeleteZoneOnTile()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Delete\+Zone\+On\+Tile (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Clears the tile of any zone\+I\+Ds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tile\+ID} & Tile\+ID of the tile to clear of a zone. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_ad335183570cf8369ab2f98e0a29dfd12}\label{class_a_t_t___block_manager_ad335183570cf8369ab2f98e0a29dfd12}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetAllBlockIDsFromParameter@{GetAllBlockIDsFromParameter}}
+\index{GetAllBlockIDsFromParameter@{GetAllBlockIDsFromParameter}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetAllBlockIDsFromParameter()}{GetAllBlockIDsFromParameter()}}
+{\footnotesize\ttfamily T\+Array$<$ int $>$ A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+All\+Block\+I\+Ds\+From\+Parameter (\begin{DoxyParamCaption}\item[{F\+String}]{building\+Type,  }\item[{int}]{efficiency,  }\item[{int}]{sizeX,  }\item[{int}]{sizeY }\end{DoxyParamCaption})}
+
+
+
+Returns an array of all the block\+ID corresponding to parameters in the data table. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em building\+Type} & Type of building to look for (see E\+Building\+Type). \\
+\hline
+{\em efficiency} & Level of the building to look for (1-\/3) \\
+\hline
+{\em sizeX} & X size of block\textquotesingle{}s zone (how big is the block in tiles) \\
+\hline
+{\em sizeY} & Y size of block\textquotesingle{}s zone (how big is the block in tiles) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a9cfa474a85d9f0843d92db0622ece18b}\label{class_a_t_t___block_manager_a9cfa474a85d9f0843d92db0622ece18b}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetBlockStatsFromBlockID@{GetBlockStatsFromBlockID}}
+\index{GetBlockStatsFromBlockID@{GetBlockStatsFromBlockID}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetBlockStatsFromBlockID()}{GetBlockStatsFromBlockID()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_f_t_t___struct___block}{F\+T\+T\+\_\+\+Struct\+\_\+\+Block}} $\ast$ A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+Block\+Stats\+From\+Block\+ID (\begin{DoxyParamCaption}\item[{int}]{block\+ID }\end{DoxyParamCaption})}
+
+
+
+Returns data of block from its Block\+ID (see T\+T\+\_\+\+Struct\+\_\+\+Block). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em block\+ID} & Data table index of the row corresponding to the block to spawn. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a22d66a18c0280754b1fab6f762cf5c41}\label{class_a_t_t___block_manager_a22d66a18c0280754b1fab6f762cf5c41}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetRandomBlockIDFromParameter@{GetRandomBlockIDFromParameter}}
+\index{GetRandomBlockIDFromParameter@{GetRandomBlockIDFromParameter}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetRandomBlockIDFromParameter()}{GetRandomBlockIDFromParameter()}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+Random\+Block\+I\+D\+From\+Parameter (\begin{DoxyParamCaption}\item[{F\+String}]{building\+Type,  }\item[{int}]{efficiency,  }\item[{int}]{sizeX,  }\item[{int}]{sizeY }\end{DoxyParamCaption})}
+
+
+
+Returns a random block\+ID corresponding to parameters in the data table. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em building\+Type} & Type of building to look for (see E\+Building\+Type). \\
+\hline
+{\em efficiency} & Level of the building to look for (1-\/3) \\
+\hline
+{\em sizeX} & X size of block\textquotesingle{}s zone (how big is the block in tiles) \\
+\hline
+{\em sizeY} & Y size of block\textquotesingle{}s zone (how big is the block in tiles) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a079396c2d33f294f60dac358efec9688}\label{class_a_t_t___block_manager_a079396c2d33f294f60dac358efec9688}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetSpawnedZoneTileIDs@{GetSpawnedZoneTileIDs}}
+\index{GetSpawnedZoneTileIDs@{GetSpawnedZoneTileIDs}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetSpawnedZoneTileIDs()}{GetSpawnedZoneTileIDs()}}
+{\footnotesize\ttfamily T\+Array$<$ int $>$ A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+Spawned\+Zone\+Tile\+I\+Ds (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Accessor -\/ Returns the array of spawned zone where index = index of the tile. 
+
+\mbox{\Hypertarget{class_a_t_t___block_manager_ae317f6c25bbb2a33a510ac726fe267ab}\label{class_a_t_t___block_manager_ae317f6c25bbb2a33a510ac726fe267ab}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetZoneEndTileFromZoneSize@{GetZoneEndTileFromZoneSize}}
+\index{GetZoneEndTileFromZoneSize@{GetZoneEndTileFromZoneSize}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetZoneEndTileFromZoneSize()}{GetZoneEndTileFromZoneSize()}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+Zone\+End\+Tile\+From\+Zone\+Size (\begin{DoxyParamCaption}\item[{int}]{tileA,  }\item[{int}]{sizeX,  }\item[{int}]{sizeY,  }\item[{bool}]{is\+Modulo\+Half\+Pi }\end{DoxyParamCaption})}
+
+
+
+Returns the Tile\+ID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tileA} & Corner A / Start\+Tile of the zone. \\
+\hline
+{\em sizeX} & X size of block\textquotesingle{}s zone (how big is the block in tiles). \\
+\hline
+{\em sizeY} & Y size of block\textquotesingle{}s zone (how big is the block in tiles). \\
+\hline
+{\em is\+Modulo\+Half\+Pi} & If true, sizeX = sizeY \& sizeY = sizeX (depending on the block\textquotesingle{}s orientation). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a59bada3b5d0d0f9d55fa6ef89133849b}\label{class_a_t_t___block_manager_a59bada3b5d0d0f9d55fa6ef89133849b}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetZoneStartTileFromZoneSize@{GetZoneStartTileFromZoneSize}}
+\index{GetZoneStartTileFromZoneSize@{GetZoneStartTileFromZoneSize}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetZoneStartTileFromZoneSize()}{GetZoneStartTileFromZoneSize()}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+Zone\+Start\+Tile\+From\+Zone\+Size (\begin{DoxyParamCaption}\item[{int}]{tileB,  }\item[{int}]{sizeX,  }\item[{int}]{sizeY,  }\item[{bool}]{is\+Modulo\+Half\+Pi }\end{DoxyParamCaption})}
+
+
+
+Returns the Tile\+ID of the corner tile opposite to tileB in a zone defined by parameters (see top of page for zone explanation). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tileB} & Corner B / End\+Tile of the zone. \\
+\hline
+{\em sizeX} & X size of block\textquotesingle{}s zone (how big is the block in tiles). \\
+\hline
+{\em sizeY} & Y size of block\textquotesingle{}s zone (how big is the block in tiles). \\
+\hline
+{\em is\+Modulo\+Half\+Pi} & If true, sizeX = sizeY \& sizeY = sizeX (depending on the block\textquotesingle{}s orientation). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a5b89998b7b010e253761617f03362b03}\label{class_a_t_t___block_manager_a5b89998b7b010e253761617f03362b03}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GetZoneTileIDsFromZoneParameters@{GetZoneTileIDsFromZoneParameters}}
+\index{GetZoneTileIDsFromZoneParameters@{GetZoneTileIDsFromZoneParameters}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GetZoneTileIDsFromZoneParameters()}{GetZoneTileIDsFromZoneParameters()}}
+{\footnotesize\ttfamily T\+Array$<$ int $>$ A\+T\+T\+\_\+\+Block\+Manager\+::\+Get\+Zone\+Tile\+I\+Ds\+From\+Zone\+Parameters (\begin{DoxyParamCaption}\item[{int}]{tileA,  }\item[{int}]{tileB }\end{DoxyParamCaption})}
+
+
+
+Returns all the tiles included in the zone delimited by tileA \& tileB (opposing corners of the rectangular zone). 
+
+(see top of page for zone explanation) 
+\begin{DoxyParams}{Parameters}
+{\em tileA} & Corner A / Start\+Tile of the zone. \\
+\hline
+{\em tileB} & Opposite corner to A. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_adb56f90bbc291b799f38e91d26d6f003}\label{class_a_t_t___block_manager_adb56f90bbc291b799f38e91d26d6f003}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!SetGridManager@{SetGridManager}}
+\index{SetGridManager@{SetGridManager}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{SetGridManager()}{SetGridManager()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Set\+Grid\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}} $\ast$}]{new\+Grid\+Manager }\end{DoxyParamCaption})}
+
+
+
+Sets the Grid\+Manager variable and sets the size of all tile arrays. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Grid\+Manager} & New value of Grid\+Manager \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a9099e50a423a43479b86e9f7fc093565}\label{class_a_t_t___block_manager_a9099e50a423a43479b86e9f7fc093565}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!SetTileArraysSize@{SetTileArraysSize}}
+\index{SetTileArraysSize@{SetTileArraysSize}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{SetTileArraysSize()}{SetTileArraysSize()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Set\+Tile\+Arrays\+Size (\begin{DoxyParamCaption}\item[{int}]{new\+Array\+Size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Resize all the tile arrays (responsible of holding tile information, such as if it is used, what is it used by etc ...) to the number of tiles there are in the level. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Number\+Of\+Tiles} & Number to resize the arrays to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a5276646c418b0ef0a3fa7253144bbc74}\label{class_a_t_t___block_manager_a5276646c418b0ef0a3fa7253144bbc74}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!SpawnBlock@{SpawnBlock}}
+\index{SpawnBlock@{SpawnBlock}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{SpawnBlock()}{SpawnBlock()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Spawn\+Block (\begin{DoxyParamCaption}\item[{int}]{block\+ID,  }\item[{F\+Rotator}]{block\+Rotation,  }\item[{int}]{tile\+ID }\end{DoxyParamCaption})}
+
+
+
+Calculate the zone used by the block \& assign the tile arrays to the block. 
+
+Spawn \& initialize the block (passes through data table data, tile belonging to the block etc ..) 
+\begin{DoxyParams}{Parameters}
+{\em block\+ID} & Data table index of the row corresponding to the block to spawn. \\
+\hline
+{\em block\+Rotation} & Orientation of the block. (Can only be \% Pi/2 (0°, 90°, 180°)). \\
+\hline
+{\em tile\+ID} & Index of the tile to spawn the block around. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a38f27c6297567c4120a09b103b18d7fe}\label{class_a_t_t___block_manager_a38f27c6297567c4120a09b103b18d7fe}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!SpawnBlockFromParameters@{SpawnBlockFromParameters}}
+\index{SpawnBlockFromParameters@{SpawnBlockFromParameters}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{SpawnBlockFromParameters()}{SpawnBlockFromParameters()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Block\+Manager\+::\+Spawn\+Block\+From\+Parameters (\begin{DoxyParamCaption}\item[{int}]{tile\+ID,  }\item[{F\+Rotator}]{block\+Rotation,  }\item[{F\+String}]{building\+Type,  }\item[{int}]{efficiency,  }\item[{int}]{sizeX,  }\item[{int}]{sizeY }\end{DoxyParamCaption})}
+
+
+
+Gets a random block\+ID corresponding to parameters in the data table. 
+
+Calls Spawn\+Block to finalise the spawning. 
+\begin{DoxyParams}{Parameters}
+{\em tile\+ID} & Data table index of the row corresponding to the block. \\
+\hline
+{\em block\+Rotation} & Orientation of the block. (Can only be \% Pi/2 (0°, 90°, 180°)). \\
+\hline
+{\em building\+Type} & Type of building to look for (should be replaced by E\+Building\+Type). \\
+\hline
+{\em efficiency} & Level of the building to look for (1-\/3) \\
+\hline
+{\em sizeX} & X size of block\textquotesingle{}s zone (how big is the block in tiles) \\
+\hline
+{\em sizeY} & Y size of block\textquotesingle{}s zone (how big is the block in tiles) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_a_t_t___block_manager_a7c55f65ebd34d244ba5a76b2318201d4}\label{class_a_t_t___block_manager_a7c55f65ebd34d244ba5a76b2318201d4}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!BlockToSpawn@{BlockToSpawn}}
+\index{BlockToSpawn@{BlockToSpawn}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{BlockToSpawn}{BlockToSpawn}}
+{\footnotesize\ttfamily T\+Subclass\+Of$<$A\+Actor$>$ A\+T\+T\+\_\+\+Block\+Manager\+::\+Block\+To\+Spawn}
+
+
+
+Blueprint reference of the class of block to spawn. 
+
+\mbox{\Hypertarget{class_a_t_t___block_manager_a753f85e8fd937b5ff38dce1ec35dbf5f}\label{class_a_t_t___block_manager_a753f85e8fd937b5ff38dce1ec35dbf5f}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!blockTypeMap@{blockTypeMap}}
+\index{blockTypeMap@{blockTypeMap}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{blockTypeMap}{blockTypeMap}}
+{\footnotesize\ttfamily T\+Map$<$F\+String, \mbox{\hyperlink{struct_f_t_t___struct___block_type}{F\+T\+T\+\_\+\+Struct\+\_\+\+Block\+Type}}$>$ A\+T\+T\+\_\+\+Block\+Manager\+::block\+Type\+Map\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+This map sorts all blocks by types, each key is a type (string) containing an array of Block\+ID (int). 
+
+Note to self\+: I had to include Global.\+h in this header to get the struct\textquotesingle{}s array size (even if = 0) \mbox{\Hypertarget{class_a_t_t___block_manager_a134b72a88646f42d4594c6849bc1522b}\label{class_a_t_t___block_manager_a134b72a88646f42d4594c6849bc1522b}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!data\_Block@{data\_Block}}
+\index{data\_Block@{data\_Block}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{data\_Block}{data\_Block}}
+{\footnotesize\ttfamily U\+Data\+Table$\ast$ A\+T\+T\+\_\+\+Block\+Manager\+::data\+\_\+\+Block\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Data table holding data of all the blocks. 
+
+\mbox{\Hypertarget{class_a_t_t___block_manager_a2b29cc812d4cf3c2e052ea9e029317e6}\label{class_a_t_t___block_manager_a2b29cc812d4cf3c2e052ea9e029317e6}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!GridManager@{GridManager}}
+\index{GridManager@{GridManager}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{GridManager}{GridManager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}}$\ast$ A\+T\+T\+\_\+\+Block\+Manager\+::\+Grid\+Manager}
+
+
+
+Reference to the Grid\+Manager who created this block manager. 
+
+\mbox{\Hypertarget{class_a_t_t___block_manager_ac6ae544742005ddb2e1c06c410baca28}\label{class_a_t_t___block_manager_ac6ae544742005ddb2e1c06c410baca28}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!spawnedBlockID@{spawnedBlockID}}
+\index{spawnedBlockID@{spawnedBlockID}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{spawnedBlockID}{spawnedBlockID}}
+{\footnotesize\ttfamily T\+Array$<$int$>$ A\+T\+T\+\_\+\+Block\+Manager\+::spawned\+Block\+ID\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Tile Array -\/ Array of spawned block I\+Ds where index = index of the tile. 
+
+\mbox{\Hypertarget{class_a_t_t___block_manager_a45055309e12920b3da85a5e73a6120e8}\label{class_a_t_t___block_manager_a45055309e12920b3da85a5e73a6120e8}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!spawnedBlocks@{spawnedBlocks}}
+\index{spawnedBlocks@{spawnedBlocks}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{spawnedBlocks}{spawnedBlocks}}
+{\footnotesize\ttfamily T\+Array$<$\mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}}$\ast$$>$ A\+T\+T\+\_\+\+Block\+Manager\+::spawned\+Blocks\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Tile Array -\/ Array of spawned blocks where index = index of the tile. 
+
+\mbox{\Hypertarget{class_a_t_t___block_manager_a269425e55c82c98da284574df45661aa}\label{class_a_t_t___block_manager_a269425e55c82c98da284574df45661aa}} 
+\index{ATT\_BlockManager@{ATT\_BlockManager}!spawnedZoneID@{spawnedZoneID}}
+\index{spawnedZoneID@{spawnedZoneID}!ATT\_BlockManager@{ATT\_BlockManager}}
+\subsubsection{\texorpdfstring{spawnedZoneID}{spawnedZoneID}}
+{\footnotesize\ttfamily T\+Array$<$int$>$ A\+T\+T\+\_\+\+Block\+Manager\+::spawned\+Zone\+ID\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Tile Array -\/ Array of spawned zone I\+Ds where index = index of the tile. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Public/T\+T\+\_\+\+Block\+Manager.\+h\item 
+Private/T\+T\+\_\+\+Block\+Manager.\+cpp\end{DoxyCompactItemize}

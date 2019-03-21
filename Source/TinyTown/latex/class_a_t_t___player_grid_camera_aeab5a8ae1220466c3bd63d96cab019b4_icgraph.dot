@@ -1,0 +1,14 @@
+digraph "ATT_PlayerGridCamera::StopBuildTool"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node101 [label="ATT_PlayerGridCamera\l::StopBuildTool",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Cancels the building of block if any."];
+  Node101 -> Node102 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node102 [label="ATT_PlayerGridCamera\l::StartBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4b6f91d32b63d387425d22faa853895a",tooltip="Spawns a block in edit mode (aka \"ghost block\") to show the player where he is placing down the block..."];
+  Node101 -> Node103 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node103 [label="ATT_PlayerGridCamera\l::ConfirmBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aca622600a2b7f3a52b001c34a0da537b",tooltip="Finalises the block building or zone building process."];
+  Node101 -> Node104 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node104 [label="ATT_PlayerGridCamera\l::StartRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aa5e54106a559060b452e8f39ac2b83c4",tooltip="Starts RemoveTool, will wait for the player to click a tile to call ConfirmRemoveToolStartTile()."];
+}

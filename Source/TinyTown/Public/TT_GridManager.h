@@ -39,10 +39,10 @@ protected:
 	* Spawns a grid of tile instances separated by distance in a x by y grid, centered around Center.
 	* Calculates all tiles locations & stores them in tileLocations, then spawns the instances using tileSpriteNormal.
 	* The tiles will be spawned around a center point.
-	* @params x Size X in tiles of the grid.
-	* @params y Size Y in tiles of the grid.
-	* @params Center Center point world location.
-	* @params Distance between each tiles in UE units.
+	* @param x Size X in tiles of the grid.
+	* @param y Size Y in tiles of the grid.
+	* @param Center Center point world location.
+	* @param Distance between each tiles in UE units.
 	*/
 	void SpawnTiles(int x, int y, FVector center, float distance); 
 
@@ -128,8 +128,8 @@ public:
 	void TileReset(int tileID);
 
 	/** Tile Effect - Set this array of tiles as Residential Zone. 
-	* @params TileIDs Array of all TileIDs in the zone. 
-	* @params ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
+	* @param TileIDs Array of all TileIDs in the zone. 
+	* @param ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
 	*/
 	UFUNCTION(BlueprintCallable)
 		void SetTileColorFromZoneID(TArray<int> tileIDs, int zoneID);
@@ -143,7 +143,7 @@ public:
 
 
 	/** Accessor - Public accessor for tile locations. 
-	*	@params tileID TileID (instance index) of the tile.
+	*	@param tileID TileID (instance index) of the tile.
 	*/
 	FVector GetTileLocation(int tileID);
 
@@ -156,7 +156,7 @@ public:
 	/**
 	 *  Activates zone view modes, displays the zone a certain colour on the grid.
 	 * Starts a timer to trigger ViewModeTick at a tick like rate.
-	 * @params ViewMode Zone's internal index. A zone's int.ID depends on its position in the data table relative to other zones.
+	 * @param ViewMode Zone's internal index. A zone's int.ID depends on its position in the data table relative to other zones.
 	 */
 	void ActivateZoneViewMode(int viewMode);
 

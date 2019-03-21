@@ -1,0 +1,14 @@
+digraph "ATT_BlockManager::GetSpawnedZoneTileIDs"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node43 [label="ATT_BlockManager::GetSpawned\lZoneTileIDs",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Accessor - Returns the array of spawned zone where index = index of the tile."];
+  Node43 -> Node44 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node44 [label="ATT_GridManager::ViewModeTick",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#af9a2760978252820113e0c370b62f234",tooltip="Depending on the activated view mode, will fetch the zone's tile and apply an effect on them."];
+  Node44 -> Node45 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node45 [label="ATT_GridManager::Activate\lZoneViewMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a209c380bfc8c559954b0898bef309038",tooltip="Activates zone view modes, displays the zone a certain colour on the grid."];
+  Node45 -> Node46 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node46 [label="ATT_PlayerGridCamera\l::ToggleViewMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4a5097bfe8542f4065317a50725d25a7",tooltip="Calls ActivateZoneViewMode in GridManager."];
+}

@@ -39,12 +39,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	/** Handles camera movements via keyboard
-	* @params notused This parameter enables the function to be bound to an AxisInput. It is not used.
+	* @param notused This parameter enables the function to be bound to an AxisInput. It is not used.
 	*/
 	void InputKeyboardMovements(float notused);
 
 	/** Handles camera rotation via keyboard.
-* @params notused This parameter enables the function to be bound to an AxisInput. It is not used.
+* @param notused This parameter enables the function to be bound to an AxisInput. It is not used.
 */
 	void InputKeyboardRotation(float notused);
 
@@ -55,7 +55,7 @@ protected:
 	void InputCameraRotation(); 
 
 	/** Handles zoom via mouse. Zooms in or out step by step, steps being defined in BeginPlay.
-	* @params value If <0 will zoom out, else if >0 will zoom in.
+	* @param value If <0 will zoom out, else if >0 will zoom in.
 	*/
 	void InputCameraZoom(float value); 
 
@@ -78,17 +78,17 @@ protected:
 	void MouseTrace(); 
 
 	/** Moves the camera in XY direction multiplied by Sensitivity.
-	* @params x Direction X to move in (-1 < X < 1).
-	* @params y Direction Y to move in (-1 < x < 1).
-	* @params sensitivity Used to scale movement speed (defined by blueprint variable).
+	* @param x Direction X to move in (-1 < X < 1).
+	* @param y Direction Y to move in (-1 < x < 1).
+	* @param sensitivity Used to scale movement speed (defined by blueprint variable).
 	*/
 	void MoveCamera(float x, float y, float sensitivity); 
 
 	/** Rotates the camera around Y and Z axis multiplied by Sensitivity
-	* @params x Amount of Yaw to add.
-	* @params y Amount of Pitch to add.
-	* @params xSensitivity Used to scale Yaw rotation speed (defined by blueprint variable).
-	* @params ySensitivity Used to scale Pitch rotation speed (defined by blueprint variable).
+	* @param x Amount of Yaw to add.
+	* @param y Amount of Pitch to add.
+	* @param xSensitivity Used to scale Yaw rotation speed (defined by blueprint variable).
+	* @param ySensitivity Used to scale Pitch rotation speed (defined by blueprint variable).
 	*/
 	void RotateCamera(float x, float y, float xSensitivity, float ySensitivity);
 
@@ -100,7 +100,7 @@ protected:
 
 	/**
 	 * Spawns a block in edit mode (aka "ghost block") to show the player where he is placing down the block.
-	 * @params blockID Data table index of the row corresponding to the block to spawn.
+	 * @param blockID Data table index of the row corresponding to the block to spawn.
 	 */ 
 	UFUNCTION(BlueprintCallable)
 	void StartBuildTool(int blockID);
@@ -109,7 +109,7 @@ protected:
 	void StopBuildTool();
 
 	/** Lerps the "ghost block" on tick to ensure a smooth movement. If placing a zone, this will update the grid to show what tiles are being affected.
-	 * @params deltaTime deltaTime value being passed through via the Tick function.
+	 * @param deltaTime deltaTime value being passed through via the Tick function.
 	 */
 	void TickBuildTool(float deltaTime);
 
@@ -142,21 +142,21 @@ protected:
 	void RemoveBlockUnderCursor();
 
 	/** Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
-	 * @params tileID TileID of the tile to clear/ owned by the block to delete.
+	 * @param tileID TileID of the tile to clear/ owned by the block to delete.
 	 */
 	void DeleteBlockOnTile(int tileID);
 
 
 	/** Calls ActivateZoneViewMode in GridManager.
-	 * @params ViewMode ViewMode ID (should be replaced by EBuildingType)
+	 * @param ViewMode ViewMode ID (should be replaced by EBuildingType)
 	 */
 	UFUNCTION(BlueprintCallable)
 	void ToggleViewMode(int ViewMode);
 
 	/** Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
 	 * This function is very similar to the one in BlockManager to the exception of the for loop (<= instead of <).
-	 * @params tileA Corner A / StartTile of the zone.
-	 * @params tileB Opposite corner to A.
+	 * @param tileA Corner A / StartTile of the zone.
+	 * @param tileB Opposite corner to A.
 	 */
 	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 	

@@ -1,0 +1,42 @@
+digraph "ATT_GridManager::TileClearState"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node62 [label="ATT_GridManager::TileClear\lState",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Tile Effect - Reset all altered tiles to their original state."];
+  Node62 -> Node63 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node63 [label="ATT_GridManager::TileHovered",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#ae67df470fb8fde84f2fd67b3799a04d8",tooltip="Tile Effect - Set this tile as hovered."];
+  Node63 -> Node64 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node64 [label="ATT_PlayerGridCamera\l::MouseTrace",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#adff10752fbd388a46227a42a2140d6d0",tooltip="Line trace from the camera to the grid and updates tile if they are hovered."];
+  Node62 -> Node65 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node65 [label="ATT_GridManager::TileClicked",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a6f460da9a1912ed31e2e5c9959b447ce",tooltip="Tile Effect -Set this tile as clicked."];
+  Node62 -> Node66 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node66 [label="ATT_GridManager::SetTile\lColorFromZoneID",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#acdaeb76af04a73d65ea6c249b3bace21",tooltip="Tile Effect - Set this array of tiles as Residential Zone."];
+  Node66 -> Node67 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node67 [label="ATT_PlayerGridCamera\l::TickBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a67c2ba8b8b3f86ddddf25f3d11b70c8f",tooltip="Lerps the \"ghost block\" on tick to ensure a smooth movement."];
+  Node66 -> Node68 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node68 [label="ATT_PlayerGridCamera\l::TickRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a1d0784f96f603f5dae27ff61e329c527",tooltip="Used to refresh the zone selection."];
+  Node68 -> Node69 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node69 [label="ATT_PlayerGridCamera\l::StartRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aa5e54106a559060b452e8f39ac2b83c4",tooltip="Starts RemoveTool, will wait for the player to click a tile to call ConfirmRemoveToolStartTile()."];
+  Node62 -> Node70 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node70 [label="ATT_GridManager::StopZone\lViewMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a508f83eb4ba58bdb100f000003be810b",tooltip="Deactivates all view modes, stops the timer and reset tile colours."];
+  Node70 -> Node71 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node71 [label="ATT_GridManager::Activate\lZoneViewMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a209c380bfc8c559954b0898bef309038",tooltip="Activates zone view modes, displays the zone a certain colour on the grid."];
+  Node71 -> Node72 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node72 [label="ATT_PlayerGridCamera\l::ToggleViewMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4a5097bfe8542f4065317a50725d25a7",tooltip="Calls ActivateZoneViewMode in GridManager."];
+  Node62 -> Node64 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node62 -> Node73 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node73 [label="ATT_PlayerGridCamera\l::StopBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aeab5a8ae1220466c3bd63d96cab019b4",tooltip="Cancels the building of block if any."];
+  Node73 -> Node74 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node74 [label="ATT_PlayerGridCamera\l::StartBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4b6f91d32b63d387425d22faa853895a",tooltip="Spawns a block in edit mode (aka \"ghost block\") to show the player where he is placing down the block..."];
+  Node73 -> Node75 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node75 [label="ATT_PlayerGridCamera\l::ConfirmBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aca622600a2b7f3a52b001c34a0da537b",tooltip="Finalises the block building or zone building process."];
+  Node73 -> Node69 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node62 -> Node76 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node76 [label="ATT_PlayerGridCamera\l::DeleteBlockOnTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4ee51f1a11796e95ddef813ba85f101e",tooltip="Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID."];
+  Node76 -> Node77 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node77 [label="ATT_PlayerGridCamera\l::ConfirmRemoveToolEndTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a26a23b23a58d5bbeab3359dcbd359b3a",tooltip="To be called when StartTile has been confirmed."];
+  Node76 -> Node78 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node78 [label="ATT_PlayerGridCamera\l::RemoveBlockUnderCursor",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a330aef5a0f8e06fa1d70aa07cdf72c3a",tooltip="Instantly deletes whatever is placed on the currently hovered tile."];
+}

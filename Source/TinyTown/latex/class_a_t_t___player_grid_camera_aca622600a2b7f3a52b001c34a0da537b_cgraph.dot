@@ -1,0 +1,35 @@
+digraph "ATT_PlayerGridCamera::ConfirmBuildTool"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="ATT_PlayerGridCamera\l::ConfirmBuildTool",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Finalises the block building or zone building process."];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 [label="ATT_BlockManager::SpawnBlock",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a5276646c418b0ef0a3fa7253144bbc74",tooltip="Calculate the zone used by the block & assign the tile arrays to the block."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="ATT_GridManager::GetTile\lLocation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a8498f5d3bf51947e60b9604cc8a6ae37",tooltip="Accessor - Public accessor for tile locations."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="ATT_BlockManager::GetBlock\lStatsFromBlockID",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a9cfa474a85d9f0843d92db0622ece18b",tooltip="Returns data of block from its BlockID (see TT_Struct_Block)."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="ATT_BlockManager::GetZone\lStartTileFromZoneSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a59bada3b5d0d0f9d55fa6ef89133849b",tooltip="Returns the TileID of the corner tile opposite to tileB in a zone defined by parameters (see top of p..."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="ATT_GridManager::GetGridSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#ac32858e31de063415fcb5131962d4a59",tooltip="Accessor - Returns the size of the grid in a 2D Vector."];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="ATT_BlockManager::GetZone\lEndTileFromZoneSize",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#ae317f6c25bbb2a33a510ac726fe267ab",tooltip="Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of p..."];
+  Node6 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="ATT_BlockManager::GetZone\lTileIDsFromZoneParameters",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a5b89998b7b010e253761617f03362b03",tooltip="Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectan..."];
+  Node7 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="ATT_GridManager::GetDistance\lBetweenTiles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#ac48caa79e0a7d2255484da80e5e563d3",tooltip="Accessor - Returns the distance between each tile."];
+  Node7 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node0 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="ATT_BlockManager::Create\lZoneOnTiles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a0023c00d2796cb3b7aaf3f09b496958a",tooltip="Assigns elements of the spawnedZoneID array to a certain ZoneID."];
+  Node0 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="ATT_GridManager::TileReset",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a7ff2d0e2f13412c3d0aba2393f9f7e5f",tooltip="Tile Effect - Reset this tile to its original state (both colour and transform)."];
+  Node0 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="ATT_PlayerGridCamera\l::StopBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aeab5a8ae1220466c3bd63d96cab019b4",tooltip="Cancels the building of block if any."];
+  Node11 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="ATT_GridManager::TileClear\lState",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a5bcea6c5c60adcfb537a996c0eede4a5",tooltip="Tile Effect - Reset all altered tiles to their original state."];
+}

@@ -1,0 +1,16 @@
+digraph "ATT_BlockManager::DeleteZoneOnTile"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node19 [label="ATT_BlockManager::Delete\lZoneOnTile",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Clears the tile of any zoneIDs."];
+  Node19 -> Node20 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="ATT_BlockManager::Delete\lBlockOnTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a4389a110be093fdec1e1e56e847f93a5",tooltip="Delete block that owns the tile selected & clears all tiles that belonged to that block."];
+  Node20 -> Node21 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="ATT_PlayerGridCamera\l::DeleteBlockOnTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4ee51f1a11796e95ddef813ba85f101e",tooltip="Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID."];
+  Node21 -> Node22 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="ATT_PlayerGridCamera\l::ConfirmRemoveToolEndTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a26a23b23a58d5bbeab3359dcbd359b3a",tooltip="To be called when StartTile has been confirmed."];
+  Node21 -> Node23 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node23 [label="ATT_PlayerGridCamera\l::RemoveBlockUnderCursor",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a330aef5a0f8e06fa1d70aa07cdf72c3a",tooltip="Instantly deletes whatever is placed on the currently hovered tile."];
+}

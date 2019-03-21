@@ -1,0 +1,11 @@
+digraph "ATT_Block"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="{ATT_Block\n|+ RotationRoot\l+ isInEditingMode\l# Root\l# BuildingRoot\l# blockStats\l# blockManager\l# blockTileIDs\l# blockRotation\l# blockAnchorLocation\l# TimerHandle_EditMode\l# distanceBetweenTiles\l|+ ATT_Block()\l+ SetBlockStats()\l+ GetBlockStats()\l+ SetBlockManager()\l+ GetBlockManager()\l+ SetBlockTileIDs()\l+ GetBlockTileIDs()\l+ SetBlockPosition()\l+ SetBlockRotation()\l+ UpdateBlockRotationAndLocation()\l+ ActivateEditMode()\l+ StopEditMode()\l+ EditModeTick()\l+ DestroyBlock()\l# BeginPlay()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node1 [label="{AActor\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node2 [label="{ATT_GhostBlock\n||+ ATT_GhostBlock()\l# BeginPlay()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___ghost_block.html",tooltip=" "];
+}

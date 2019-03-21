@@ -1,0 +1,25 @@
+digraph "ATT_PlayerGridCamera"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node2 [label="{ATT_PlayerGridCamera\n|# CapsuleComp\l# SpringArmComp\l# CameraComp\l# inputMovementMouseSensitivity\l# inputMovementKeyboardSensitivity\l# inputYRotationSensitivity\l# inputXRotationSensitivity\l# inputRotationKeyboardSensitivty\l# MaxSpringArmLength\l# MinSpringArmLength\land 34 more...\l|+ ATT_PlayerGridCamera()\l+ Tick()\l+ SetupPlayerInputComponent()\l# BeginPlay()\l# InputKeyboardMovements()\l# InputKeyboardRotation()\l# InputCameraMovements()\l# InputCameraRotation()\l# InputCameraZoom()\l# InputSelectButtonDown()\l# InputSelectButtonUp()\l# InputRotationButtonDown()\l# InputRotationButtonUp()\land 21 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node3 [label="{APawn\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node4 -> Node2 [color="grey25",fontsize="10",style="solid",label=" #placingBlockGhost" ,arrowhead="odiamond"];
+  Node4 [label="{ATT_Block\n|+ RotationRoot\l+ isInEditingMode\l# Root\l# BuildingRoot\l# blockTileIDs\l# blockRotation\l# blockAnchorLocation\l# TimerHandle_EditMode\l# distanceBetweenTiles\l|+ ATT_Block()\l+ SetBlockStats()\l+ GetBlockStats()\l+ SetBlockManager()\l+ GetBlockManager()\l+ SetBlockTileIDs()\l+ GetBlockTileIDs()\l+ SetBlockPosition()\l+ SetBlockRotation()\l+ UpdateBlockRotationAndLocation()\l+ ActivateEditMode()\l+ StopEditMode()\l+ EditModeTick()\l+ DestroyBlock()\l# BeginPlay()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block.html",tooltip=" "];
+  Node5 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node5 [label="{AActor\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node6 -> Node4 [color="grey25",fontsize="10",style="solid",label=" #blockStats" ,arrowhead="odiamond"];
+  Node6 [label="{FTT_Struct_Block\n|+ Block_Name\l+ Description\l+ Type\l+ Efficiency\l+ Resizable\l+ Size_X\l+ Size_Y\l+ Grid_Colour\l+ Initial_Cost\l+ R_Mo\land 14 more...\l|}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$struct_f_t_t___struct___block.html",tooltip=" "];
+  Node7 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node7 [label="{FTableRowBase\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node8 -> Node4 [color="grey25",fontsize="10",style="solid",label=" #blockManager" ,arrowhead="odiamond"];
+  Node8 [label="{ATT_BlockManager\n|+ BlockToSpawn\l+ zoneIDMap\l+ isZoneViewModeActive\l+ zoneViewModeIndex\l# spawnedBlockID\l# spawnedZoneID\l# spawnedBlocks\l# data_Block\l# blockTypeMap\l|+ ATT_BlockManager()\l+ SetGridManager()\l+ SpawnBlock()\l+ SpawnBlockFromParameters()\l+ DeleteBlockOnTile()\l+ CreateZoneOnTiles()\l+ DeleteZoneOnTile()\l+ GetZoneTileIDsFromZoneParameters()\l+ GetZoneStartTileFromZoneSize()\l+ GetZoneEndTileFromZoneSize()\l+ GetBlockStatsFromBlockID()\l+ GetRandomBlockIDFromParameter()\l+ GetAllBlockIDsFromParameter()\l+ GetSpawnedZoneTileIDs()\l# BeginPlay()\l# GetBlockDataTable()\l# AnalyseDataBase()\l# SetTileArraysSize()\l# ClearTileArraysAtIndex()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html",tooltip=" "];
+  Node5 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node9 -> Node8 [color="grey25",fontsize="10",style="solid",label=" +GridManager" ,arrowhead="odiamond"];
+  Node9 [label="{ATT_GridManager\n|+ instanceGroupedSpriteComp\l# Root\l# BlockManagerClass\l# sizeX\l# sizeY\l# distanceBetweenTiles\l# tileSpriteNormal\l# tileHoveredZOffset\l# tileLocations\l# clickedTile\l# modifiedTiles\l# TimerHandler_ViewMode\l# viewModeTiles\l# playerTileSelection\l# isViewMode\l# zoneColours\l|+ ATT_GridManager()\l+ OnConstruction()\l+ TileHovered()\l+ TileClicked()\l+ TileReset()\l+ SetTileColorFromZoneID()\l+ SetTileColor()\l+ TileClearState()\l+ GetTileLocation()\l+ GetDistanceBetweenTiles()\land 6 more...\l# BeginPlay()\l# SpawnTiles()\l# SpawnBlockManager()\l# FetchZoneColours()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html",tooltip=" "];
+  Node5 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node8 -> Node9 [color="grey25",fontsize="10",style="solid",label=" +BlockManager" ,arrowhead="odiamond"];
+  Node9 -> Node2 [color="grey25",fontsize="10",style="solid",label=" #GridManager" ,arrowhead="odiamond"];
+}

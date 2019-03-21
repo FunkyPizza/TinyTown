@@ -1,0 +1,9 @@
+digraph "ATT_BlockManager"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="{ATT_BlockManager\n|+ GridManager\l+ BlockToSpawn\l+ zoneIDMap\l+ isZoneViewModeActive\l+ zoneViewModeIndex\l# spawnedBlockID\l# spawnedZoneID\l# spawnedBlocks\l# data_Block\l# blockTypeMap\l|+ ATT_BlockManager()\l+ SetGridManager()\l+ SpawnBlock()\l+ SpawnBlockFromParameters()\l+ DeleteBlockOnTile()\l+ CreateZoneOnTiles()\l+ DeleteZoneOnTile()\l+ GetZoneTileIDsFromZoneParameters()\l+ GetZoneStartTileFromZoneSize()\l+ GetZoneEndTileFromZoneSize()\l+ GetBlockStatsFromBlockID()\l+ GetRandomBlockIDFromParameter()\l+ GetAllBlockIDsFromParameter()\l+ GetSpawnedZoneTileIDs()\l# BeginPlay()\l# GetBlockDataTable()\l# AnalyseDataBase()\l# SetTileArraysSize()\l# ClearTileArraysAtIndex()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node1 [label="{AActor\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

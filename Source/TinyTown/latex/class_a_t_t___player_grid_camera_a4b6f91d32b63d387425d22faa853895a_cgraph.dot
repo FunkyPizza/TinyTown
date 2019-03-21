@@ -1,0 +1,18 @@
+digraph "ATT_PlayerGridCamera::StartBuildTool"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node78 [label="ATT_PlayerGridCamera\l::StartBuildTool",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Spawns a block in edit mode (aka \"ghost block\") to show the player where he is placing down the block..."];
+  Node78 -> Node79 [color="midnightblue",fontsize="10",style="solid"];
+  Node79 [label="ATT_PlayerGridCamera\l::StopBuildTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aeab5a8ae1220466c3bd63d96cab019b4",tooltip="Cancels the building of block if any."];
+  Node79 -> Node80 [color="midnightblue",fontsize="10",style="solid"];
+  Node80 [label="ATT_GridManager::TileClear\lState",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a5bcea6c5c60adcfb537a996c0eede4a5",tooltip="Tile Effect - Reset all altered tiles to their original state."];
+  Node78 -> Node81 [color="midnightblue",fontsize="10",style="solid"];
+  Node81 [label="ATT_PlayerGridCamera\l::StopRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aa29ae802ebeb61c95d7bfdba3021eb62",tooltip="Fully Disables the RemoveTool, and cancels any tile deletion."];
+  Node81 -> Node82 [color="midnightblue",fontsize="10",style="solid"];
+  Node82 [label="ATT_GridManager::TileReset",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a7ff2d0e2f13412c3d0aba2393f9f7e5f",tooltip="Tile Effect - Reset this tile to its original state (both colour and transform)."];
+  Node78 -> Node83 [color="midnightblue",fontsize="10",style="solid"];
+  Node83 [label="ATT_BlockManager::GetBlock\lStatsFromBlockID",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a9cfa474a85d9f0843d92db0622ece18b",tooltip="Returns data of block from its BlockID (see TT_Struct_Block)."];
+}

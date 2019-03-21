@@ -1,0 +1,13 @@
+digraph "ATT_BlockManager"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node2 [label="{ATT_BlockManager\n|+ BlockToSpawn\l+ zoneIDMap\l+ isZoneViewModeActive\l+ zoneViewModeIndex\l# spawnedBlockID\l# spawnedZoneID\l# spawnedBlocks\l# data_Block\l# blockTypeMap\l|+ ATT_BlockManager()\l+ SetGridManager()\l+ SpawnBlock()\l+ SpawnBlockFromParameters()\l+ DeleteBlockOnTile()\l+ CreateZoneOnTiles()\l+ DeleteZoneOnTile()\l+ GetZoneTileIDsFromZoneParameters()\l+ GetZoneStartTileFromZoneSize()\l+ GetZoneEndTileFromZoneSize()\l+ GetBlockStatsFromBlockID()\l+ GetRandomBlockIDFromParameter()\l+ GetAllBlockIDsFromParameter()\l+ GetSpawnedZoneTileIDs()\l# BeginPlay()\l# GetBlockDataTable()\l# AnalyseDataBase()\l# SetTileArraysSize()\l# ClearTileArraysAtIndex()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node3 [label="{AActor\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node4 -> Node2 [color="grey25",fontsize="10",style="solid",label=" +GridManager" ,arrowhead="odiamond"];
+  Node4 [label="{ATT_GridManager\n|+ instanceGroupedSpriteComp\l# Root\l# BlockManagerClass\l# sizeX\l# sizeY\l# distanceBetweenTiles\l# tileSpriteNormal\l# tileHoveredZOffset\l# tileLocations\l# clickedTile\l# modifiedTiles\l# TimerHandler_ViewMode\l# viewModeTiles\l# playerTileSelection\l# isViewMode\l# zoneColours\l|+ ATT_GridManager()\l+ OnConstruction()\l+ TileHovered()\l+ TileClicked()\l+ TileReset()\l+ SetTileColorFromZoneID()\l+ SetTileColor()\l+ TileClearState()\l+ GetTileLocation()\l+ GetDistanceBetweenTiles()\land 6 more...\l# BeginPlay()\l# SpawnTiles()\l# SpawnBlockManager()\l# FetchZoneColours()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html",tooltip=" "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal"];
+  Node2 -> Node4 [color="grey25",fontsize="10",style="solid",label=" +BlockManager" ,arrowhead="odiamond"];
+}

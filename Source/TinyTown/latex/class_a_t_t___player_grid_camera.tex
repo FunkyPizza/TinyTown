@@ -1,0 +1,661 @@
+\hypertarget{class_a_t_t___player_grid_camera}{}\section{A\+T\+T\+\_\+\+Player\+Grid\+Camera Class Reference}
+\label{class_a_t_t___player_grid_camera}\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+Inheritance diagram for A\+T\+T\+\_\+\+Player\+Grid\+Camera\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_a_t_t___player_grid_camera}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a69134dc801e23bdcdb1cb065a80e9769}\label{class_a_t_t___player_grid_camera_a69134dc801e23bdcdb1cb065a80e9769}} 
+virtual void {\bfseries Tick} (float Delta\+Time) override
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a2ca56f44eba6e5ce19650dbc40f1af18}\label{class_a_t_t___player_grid_camera_a2ca56f44eba6e5ce19650dbc40f1af18}} 
+virtual void {\bfseries Setup\+Player\+Input\+Component} (class U\+Input\+Component $\ast$Player\+Input\+Component) override
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_acce40996cf41c4cf2fb31d7ddd158abc}\label{class_a_t_t___player_grid_camera_acce40996cf41c4cf2fb31d7ddd158abc}} 
+virtual void {\bfseries Begin\+Play} () override
+\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_add3a8f7a775aed1d2943843f2a53e7cd}{Input\+Keyboard\+Movements}} (float notused)
+\begin{DoxyCompactList}\small\item\em Handles camera movements via keyboard. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aec7ff1bb18a7904e3a6d3e13253eae48}{Input\+Keyboard\+Rotation}} (float notused)
+\begin{DoxyCompactList}\small\item\em Handles camera rotation via keyboard. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a8c3523ed3ca9e59d65d7aab20a51a4f3}{Input\+Camera\+Movements}} ()
+\begin{DoxyCompactList}\small\item\em Handles camera movements via mouse/touch. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aaf74425253dc40b18874f7e9be347887}{Input\+Camera\+Rotation}} ()
+\begin{DoxyCompactList}\small\item\em Handles camera rotation via mouse. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a4b97741b890a94e22076932e9d28d311}{Input\+Camera\+Zoom}} (float value)
+\begin{DoxyCompactList}\small\item\em Handles zoom via mouse. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa393b50d508c21a1dd8faae484d96407}\label{class_a_t_t___player_grid_camera_aa393b50d508c21a1dd8faae484d96407}} 
+void {\bfseries Input\+Select\+Button\+Down} ()
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aeeb6cfbdab8803f40747796076729a07}\label{class_a_t_t___player_grid_camera_aeeb6cfbdab8803f40747796076729a07}} 
+void {\bfseries Input\+Select\+Button\+Up} ()
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a58b790b3154d729c93f4226e3022a306}\label{class_a_t_t___player_grid_camera_a58b790b3154d729c93f4226e3022a306}} 
+void {\bfseries Input\+Rotation\+Button\+Down} ()
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa06f0ce4ad1af5d7e48171f35f2abd8e}\label{class_a_t_t___player_grid_camera_aa06f0ce4ad1af5d7e48171f35f2abd8e}} 
+void {\bfseries Input\+Rotation\+Button\+Up} ()
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a50ec5e502ebe9337580f342106f5afc0}\label{class_a_t_t___player_grid_camera_a50ec5e502ebe9337580f342106f5afc0}} 
+void {\bfseries Input\+Move\+Button\+Down} ()
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a89dd4e8347109bb613735dcc35b6f89d}\label{class_a_t_t___player_grid_camera_a89dd4e8347109bb613735dcc35b6f89d}} 
+void {\bfseries Input\+Move\+Button\+Up} ()
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a095c6cdbf81d0e428728afe0be13a9fd}\label{class_a_t_t___player_grid_camera_a095c6cdbf81d0e428728afe0be13a9fd}} 
+void {\bfseries Input\+Cancel} ()
+\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_adff10752fbd388a46227a42a2140d6d0}{Mouse\+Trace}} ()
+\begin{DoxyCompactList}\small\item\em Line trace from the camera to the grid and updates tile if they are hovered. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a1e45820a848051156885e4275e013a20}{Move\+Camera}} (float x, float y, float sensitivity)
+\begin{DoxyCompactList}\small\item\em Moves the camera in XY direction multiplied by Sensitivity. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a912c3c1f4bb7b5351822d3d46e0e7396}{Rotate\+Camera}} (float x, float y, float x\+Sensitivity, float y\+Sensitivity)
+\begin{DoxyCompactList}\small\item\em Rotates the camera around Y and Z axis multiplied by Sensitivity. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}} $\ast$ \mbox{\hyperlink{class_a_t_t___player_grid_camera_ae4c11bb7a68a06a9f95e445db9ccc69f}{Get\+Grid\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Finds and saves the Grid\+Manager as a reference. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a4b6f91d32b63d387425d22faa853895a}{Start\+Build\+Tool}} (int block\+ID)
+\begin{DoxyCompactList}\small\item\em Spawns a block in edit mode (aka \char`\"{}ghost block\char`\"{}) to show the player where he is placing down the block. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aeab5a8ae1220466c3bd63d96cab019b4}{Stop\+Build\+Tool}} ()
+\begin{DoxyCompactList}\small\item\em Cancels the building of block if any. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a67c2ba8b8b3f86ddddf25f3d11b70c8f}{Tick\+Build\+Tool}} (float delta\+Time)
+\begin{DoxyCompactList}\small\item\em Lerps the \char`\"{}ghost block\char`\"{} on tick to ensure a smooth movement. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a8fd9c9e736603f9b0bf9768b2e8ac898}{Confirm\+Build\+Tool\+Start\+Tile}} ()
+\begin{DoxyCompactList}\small\item\em If the building is flagged as \char`\"{}\+Resizable\char`\"{}, the player will instead be placing down a zone instead of a block. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aca622600a2b7f3a52b001c34a0da537b}{Confirm\+Build\+Tool}} ()
+\begin{DoxyCompactList}\small\item\em Finalises the block building or zone building process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aa5e54106a559060b452e8f39ac2b83c4}{Start\+Remove\+Tool}} ()
+\begin{DoxyCompactList}\small\item\em Starts Remove\+Tool, will wait for the player to click a tile to call \mbox{\hyperlink{class_a_t_t___player_grid_camera_aec01f397402202fb08dea3a659256baa}{Confirm\+Remove\+Tool\+Start\+Tile()}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aa29ae802ebeb61c95d7bfdba3021eb62}{Stop\+Remove\+Tool}} ()
+\begin{DoxyCompactList}\small\item\em Fully Disables the Remove\+Tool, and cancels any tile deletion. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a1d0784f96f603f5dae27ff61e329c527}{Tick\+Remove\+Tool}} ()
+\begin{DoxyCompactList}\small\item\em Used to refresh the zone selection. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_aec01f397402202fb08dea3a659256baa}{Confirm\+Remove\+Tool\+Start\+Tile}} ()
+\begin{DoxyCompactList}\small\item\em This confirms the currently hovered tile to be the first tile of the Remove\+Tool selection zone. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a26a23b23a58d5bbeab3359dcbd359b3a}{Confirm\+Remove\+Tool\+End\+Tile}} ()
+\begin{DoxyCompactList}\small\item\em To be called when Start\+Tile has been confirmed. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a330aef5a0f8e06fa1d70aa07cdf72c3a}{Remove\+Block\+Under\+Cursor}} ()
+\begin{DoxyCompactList}\small\item\em Instantly deletes whatever is placed on the currently hovered tile. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a4ee51f1a11796e95ddef813ba85f101e}{Delete\+Block\+On\+Tile}} (int tile\+ID)
+\begin{DoxyCompactList}\small\item\em Calls Delete\+Block\+On\+Tile in Block\+Manager to delete the block or clear the zone a Tile\+ID. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_t_t___player_grid_camera_a4a5097bfe8542f4065317a50725d25a7}{Toggle\+View\+Mode}} (int View\+Mode)
+\begin{DoxyCompactList}\small\item\em Calls Activate\+Zone\+View\+Mode in Grid\+Manager. \end{DoxyCompactList}\item 
+T\+Array$<$ int $>$ \mbox{\hyperlink{class_a_t_t___player_grid_camera_afb96fd6854de63d2871cff6402622d9f}{Get\+Zone\+Tile\+I\+Ds\+From\+Zone\+Parameters}} (int tileA, int tileB)
+\begin{DoxyCompactList}\small\item\em Returns all the tiles included in the zone delimited by tileA \& tileB (opposing corners of the rectangular zone). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_add44832fe1feaf83f402fdca00dcb0c6}\label{class_a_t_t___player_grid_camera_add44832fe1feaf83f402fdca00dcb0c6}} 
+U\+Capsule\+Component $\ast$ {\bfseries Capsule\+Comp}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a7bc1946ccd3d2ced724a3e931e8c3e82}\label{class_a_t_t___player_grid_camera_a7bc1946ccd3d2ced724a3e931e8c3e82}} 
+U\+Spring\+Arm\+Component $\ast$ {\bfseries Spring\+Arm\+Comp}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a719083ee48da9d1f9da9296f3c7b384f}\label{class_a_t_t___player_grid_camera_a719083ee48da9d1f9da9296f3c7b384f}} 
+U\+Camera\+Component $\ast$ {\bfseries Camera\+Comp}
+\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_ab258c4fd2ad5d52e3df8a2cdc739918d}{input\+Movement\+Mouse\+Sensitivity}}
+\begin{DoxyCompactList}\small\item\em Movement sensitivity for moving the camera with mouse input. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_a8de8fb40426afd5291a6251c9ecb468c}{input\+Movement\+Keyboard\+Sensitivity}}
+\begin{DoxyCompactList}\small\item\em Movement sensitivity for moving the camera with keyboard. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_ab55b65a2722c4f69479fe968e17578ee}{input\+Y\+Rotation\+Sensitivity}}
+\begin{DoxyCompactList}\small\item\em Y axis rotation sensitivity using mouse input. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_abe6126eaf2e0d115400a623073a51ecc}{input\+X\+Rotation\+Sensitivity}}
+\begin{DoxyCompactList}\small\item\em X axis rotation sensitivity using mouse input. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_a98ed12d8e8e7a76cf5035f39617274cc}{input\+Rotation\+Keyboard\+Sensitivty}}
+\begin{DoxyCompactList}\small\item\em Movement sensitivity for rotating the camera with keyboard. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_a5e06acbaca3a6809893105f0d54bee11}{Max\+Spring\+Arm\+Length}}
+\begin{DoxyCompactList}\small\item\em Maximum length for the spring arm. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_a0f3b41c28b2cfe379ddca83c31ec9bf6}{Min\+Spring\+Arm\+Length}}
+\begin{DoxyCompactList}\small\item\em Minimum length for the spring arm. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___player_grid_camera_a840089f30c5196fae78441737475a82f}{zoom\+Step\+Accuracy}}
+\begin{DoxyCompactList}\small\item\em Defines how accurately the player can zoom (the higher, the slower the zoom). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_t_t___player_grid_camera_a33d3314f56995c1e6caed175dac6d98c}{zoom\+Lerp\+Speed}}
+\begin{DoxyCompactList}\small\item\em Defines how fast the camera lerps when zooming and de-\/zooming (the higher, the faster). \end{DoxyCompactList}\item 
+T\+Subclass\+Of$<$ \mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}} $>$ \mbox{\hyperlink{class_a_t_t___player_grid_camera_a351c1412234109b4d816e0234bfccbf8}{placing\+Block\+Ghost\+Class}}
+\begin{DoxyCompactList}\small\item\em The class responsible to display blocks being placed down. \end{DoxyCompactList}\item 
+T\+Subclass\+Of$<$ \mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}} $>$ \mbox{\hyperlink{class_a_t_t___player_grid_camera_a8a3c50c930057d70036ff6c9d39a72cc}{placing\+Resizable\+Block\+Ghost\+Class}}
+\begin{DoxyCompactList}\small\item\em The class responsible to display resizable block being placed down. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_a42de37b02c9b4d9dfd47d5296a550b3b}{ghost\+Block\+Movement\+Speed}}
+\begin{DoxyCompactList}\small\item\em The speed at which a ghost block moves on the grid (when placing down a block). \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_a_t_t___player_grid_camera_aedbba22f216af5eddc3ce9b7d9501ee2}{ghost\+Block\+Rotation\+Mouse\+Threshold}}
+\begin{DoxyCompactList}\small\item\em How fast can the mouse rotate the ghost\+Block when placing down a block. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a4228c0b739f9d595b8494f2694e6ce26}\label{class_a_t_t___player_grid_camera_a4228c0b739f9d595b8494f2694e6ce26}} 
+\mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}} $\ast$ {\bfseries placing\+Block\+Ghost}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa11576a1a84082ca5b4b1300179063d0}\label{class_a_t_t___player_grid_camera_aa11576a1a84082ca5b4b1300179063d0}} 
+int {\bfseries placing\+Block\+Ghost\+ID}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8a30993f653202fa40ca4a32737fa3fb}\label{class_a_t_t___player_grid_camera_a8a30993f653202fa40ca4a32737fa3fb}} 
+int {\bfseries placing\+Block\+Tile\+ID}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a814f5a90ba94174b00158a37682bdff7}\label{class_a_t_t___player_grid_camera_a814f5a90ba94174b00158a37682bdff7}} 
+int {\bfseries placing\+Blocklast\+End\+Tile\+ID}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a94856f64687087eb48ef31ec11928074}\label{class_a_t_t___player_grid_camera_a94856f64687087eb48ef31ec11928074}} 
+bool {\bfseries is\+Ghost\+Block\+Resizable}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ae239de13e96934f7e03ed42301225fa1}\label{class_a_t_t___player_grid_camera_ae239de13e96934f7e03ed42301225fa1}} 
+T\+Array$<$ int $>$ {\bfseries placing\+Last\+Zone\+Built}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa24c90ace03ae96c39eb6c52c09bd8a5}\label{class_a_t_t___player_grid_camera_aa24c90ace03ae96c39eb6c52c09bd8a5}} 
+F\+Vector {\bfseries placing\+Block\+Target\+Location}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ab798a1bbd33b0ad745ee10631408e1f9}\label{class_a_t_t___player_grid_camera_ab798a1bbd33b0ad745ee10631408e1f9}} 
+F\+Rotator {\bfseries placing\+Block\+Target\+Rotation}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ab78c2b39ef84808df0b83bdff696d516}\label{class_a_t_t___player_grid_camera_ab78c2b39ef84808df0b83bdff696d516}} 
+float {\bfseries placing\+Block\+MouseX}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a3098404ebef517be33b5a0d80648d2a4}\label{class_a_t_t___player_grid_camera_a3098404ebef517be33b5a0d80648d2a4}} 
+float {\bfseries placing\+Block\+MouseY}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a1b6d0bf24eb7261ed3beefab824a15f3}\label{class_a_t_t___player_grid_camera_a1b6d0bf24eb7261ed3beefab824a15f3}} 
+T\+Array$<$ int $>$ {\bfseries tiles\+To\+Be\+Removed}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a563d7f0bbe94f8ac7d3fb68a280a8a56}\label{class_a_t_t___player_grid_camera_a563d7f0bbe94f8ac7d3fb68a280a8a56}} 
+F\+Timer\+Handle {\bfseries Timer\+Handle\+\_\+\+Remove\+Tool}
+\item 
+\mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}} $\ast$ \mbox{\hyperlink{class_a_t_t___player_grid_camera_a7fbaa573742ce09a00fde7506b3087ce}{Grid\+Manager}}
+\begin{DoxyCompactList}\small\item\em Reference to the current Grid\+Manager, set by \mbox{\hyperlink{class_a_t_t___player_grid_camera_ae4c11bb7a68a06a9f95e445db9ccc69f}{Get\+Grid\+Manager()}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a90f7795d356b6fb9c3c7c070da75f5c9}\label{class_a_t_t___player_grid_camera_a90f7795d356b6fb9c3c7c070da75f5c9}} 
+int {\bfseries zoom\+Current\+Step}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa7bb5b6132ddd2f7e870fe4a82419a6e}\label{class_a_t_t___player_grid_camera_aa7bb5b6132ddd2f7e870fe4a82419a6e}} 
+int {\bfseries zoom\+Coefficient}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a3bbea5b0ef3656fd4fcef6651565e641}\label{class_a_t_t___player_grid_camera_a3bbea5b0ef3656fd4fcef6651565e641}} 
+float {\bfseries new\+Target\+Arm\+Length}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8d4039801c91d707c17e187e1d95b506}\label{class_a_t_t___player_grid_camera_a8d4039801c91d707c17e187e1d95b506}} 
+bool {\bfseries is\+Movement\+Enabled}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a79f600ea401ad1cdff7c91b5187d2a94}\label{class_a_t_t___player_grid_camera_a79f600ea401ad1cdff7c91b5187d2a94}} 
+bool {\bfseries is\+Select\+Button\+Down}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a1ed506b5418217ccfac4eaa96b646b90}\label{class_a_t_t___player_grid_camera_a1ed506b5418217ccfac4eaa96b646b90}} 
+bool {\bfseries is\+Rotation\+Button\+Down}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a140977eabbd61224c5f8bb2925755fd3}\label{class_a_t_t___player_grid_camera_a140977eabbd61224c5f8bb2925755fd3}} 
+bool {\bfseries is\+Move\+Button\+Down}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a99113fa32ae544f0fa6e60f605283a00}\label{class_a_t_t___player_grid_camera_a99113fa32ae544f0fa6e60f605283a00}} 
+bool {\bfseries is\+Moving\+Camera}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a9624c0584126d598c2a59d5cd853fbce}\label{class_a_t_t___player_grid_camera_a9624c0584126d598c2a59d5cd853fbce}} 
+bool {\bfseries is\+Rotating\+Camera}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_adb941d6a9e13ba1f8a2e6ab910b671fc}\label{class_a_t_t___player_grid_camera_adb941d6a9e13ba1f8a2e6ab910b671fc}} 
+bool {\bfseries is\+Placing\+Down\+Block}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a43a65258e2232dead6dfd26d529dfde8}\label{class_a_t_t___player_grid_camera_a43a65258e2232dead6dfd26d529dfde8}} 
+bool {\bfseries is\+Rotating\+Block}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a6f3b4a494ebfbe4a7f33282126c32ca8}\label{class_a_t_t___player_grid_camera_a6f3b4a494ebfbe4a7f33282126c32ca8}} 
+bool {\bfseries is\+Setting\+Block\+Size}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a45f2a93c093a7828ff062decb92593fc}\label{class_a_t_t___player_grid_camera_a45f2a93c093a7828ff062decb92593fc}} 
+bool {\bfseries is\+Zone\+Building\+Cancelled}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a43fdd2474160af3f781cce0dcf89698a}\label{class_a_t_t___player_grid_camera_a43fdd2474160af3f781cce0dcf89698a}} 
+bool {\bfseries is\+Remove\+Tool\+Active}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a879aec854adb763eee6b92ab6fc07665}\label{class_a_t_t___player_grid_camera_a879aec854adb763eee6b92ab6fc07665}} 
+bool {\bfseries is\+Remove\+Tool\+Selecting}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8105870a2afcb2dd19b75ff3d440cfeb}\label{class_a_t_t___player_grid_camera_a8105870a2afcb2dd19b75ff3d440cfeb}} 
+int32 {\bfseries current\+Linetraced\+Tile}
+\item 
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ae9c569efb9b6529fcbfeec91f9a70ec6}\label{class_a_t_t___player_grid_camera_ae9c569efb9b6529fcbfeec91f9a70ec6}} 
+int32 {\bfseries last\+Linetraced\+Tile}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aca622600a2b7f3a52b001c34a0da537b}\label{class_a_t_t___player_grid_camera_aca622600a2b7f3a52b001c34a0da537b}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ConfirmBuildTool@{ConfirmBuildTool}}
+\index{ConfirmBuildTool@{ConfirmBuildTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ConfirmBuildTool()}{ConfirmBuildTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Confirm\+Build\+Tool (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Finalises the block building or zone building process. 
+
+Calls the Block\+Manager to build the block and ensures the temporary \char`\"{}ghost block\char`\"{} is destroyed. \mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8fd9c9e736603f9b0bf9768b2e8ac898}\label{class_a_t_t___player_grid_camera_a8fd9c9e736603f9b0bf9768b2e8ac898}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ConfirmBuildToolStartTile@{ConfirmBuildToolStartTile}}
+\index{ConfirmBuildToolStartTile@{ConfirmBuildToolStartTile}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ConfirmBuildToolStartTile()}{ConfirmBuildToolStartTile()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Confirm\+Build\+Tool\+Start\+Tile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+If the building is flagged as \char`\"{}\+Resizable\char`\"{}, the player will instead be placing down a zone instead of a block. 
+
+This will avoid the building being placed down on first click and instead will require a drag \& drop. \mbox{\Hypertarget{class_a_t_t___player_grid_camera_a26a23b23a58d5bbeab3359dcbd359b3a}\label{class_a_t_t___player_grid_camera_a26a23b23a58d5bbeab3359dcbd359b3a}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ConfirmRemoveToolEndTile@{ConfirmRemoveToolEndTile}}
+\index{ConfirmRemoveToolEndTile@{ConfirmRemoveToolEndTile}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ConfirmRemoveToolEndTile()}{ConfirmRemoveToolEndTile()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Confirm\+Remove\+Tool\+End\+Tile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+To be called when Start\+Tile has been confirmed. 
+
+This concludes the Remove\+Tool, deleting selected tile and disabling the tool. \mbox{\Hypertarget{class_a_t_t___player_grid_camera_aec01f397402202fb08dea3a659256baa}\label{class_a_t_t___player_grid_camera_aec01f397402202fb08dea3a659256baa}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ConfirmRemoveToolStartTile@{ConfirmRemoveToolStartTile}}
+\index{ConfirmRemoveToolStartTile@{ConfirmRemoveToolStartTile}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ConfirmRemoveToolStartTile()}{ConfirmRemoveToolStartTile()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Confirm\+Remove\+Tool\+Start\+Tile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+This confirms the currently hovered tile to be the first tile of the Remove\+Tool selection zone. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a4ee51f1a11796e95ddef813ba85f101e}\label{class_a_t_t___player_grid_camera_a4ee51f1a11796e95ddef813ba85f101e}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!DeleteBlockOnTile@{DeleteBlockOnTile}}
+\index{DeleteBlockOnTile@{DeleteBlockOnTile}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{DeleteBlockOnTile()}{DeleteBlockOnTile()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Delete\+Block\+On\+Tile (\begin{DoxyParamCaption}\item[{int}]{tile\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Calls Delete\+Block\+On\+Tile in Block\+Manager to delete the block or clear the zone a Tile\+ID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tile\+ID} & Tile\+ID of the tile to clear/ owned by the block to delete. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ae4c11bb7a68a06a9f95e445db9ccc69f}\label{class_a_t_t___player_grid_camera_ae4c11bb7a68a06a9f95e445db9ccc69f}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!GetGridManager@{GetGridManager}}
+\index{GetGridManager@{GetGridManager}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{GetGridManager()}{GetGridManager()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}} $\ast$ A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Get\+Grid\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Finds and saves the Grid\+Manager as a reference. 
+
+This uses the first existing Grid\+Manager object that it finds, doesn\textquotesingle{}t support multiple Grid\+Manager objects. \mbox{\Hypertarget{class_a_t_t___player_grid_camera_afb96fd6854de63d2871cff6402622d9f}\label{class_a_t_t___player_grid_camera_afb96fd6854de63d2871cff6402622d9f}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!GetZoneTileIDsFromZoneParameters@{GetZoneTileIDsFromZoneParameters}}
+\index{GetZoneTileIDsFromZoneParameters@{GetZoneTileIDsFromZoneParameters}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{GetZoneTileIDsFromZoneParameters()}{GetZoneTileIDsFromZoneParameters()}}
+{\footnotesize\ttfamily T\+Array$<$ int $>$ A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Get\+Zone\+Tile\+I\+Ds\+From\+Zone\+Parameters (\begin{DoxyParamCaption}\item[{int}]{tileA,  }\item[{int}]{tileB }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Returns all the tiles included in the zone delimited by tileA \& tileB (opposing corners of the rectangular zone). 
+
+This function is very similar to the one in Block\+Manager to the exception of the for loop ($<$= instead of $<$). 
+\begin{DoxyParams}{Parameters}
+{\em tileA} & Corner A / Start\+Tile of the zone. \\
+\hline
+{\em tileB} & Opposite corner to A. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8c3523ed3ca9e59d65d7aab20a51a4f3}\label{class_a_t_t___player_grid_camera_a8c3523ed3ca9e59d65d7aab20a51a4f3}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!InputCameraMovements@{InputCameraMovements}}
+\index{InputCameraMovements@{InputCameraMovements}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{InputCameraMovements()}{InputCameraMovements()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Input\+Camera\+Movements (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Handles camera movements via mouse/touch. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aaf74425253dc40b18874f7e9be347887}\label{class_a_t_t___player_grid_camera_aaf74425253dc40b18874f7e9be347887}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!InputCameraRotation@{InputCameraRotation}}
+\index{InputCameraRotation@{InputCameraRotation}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{InputCameraRotation()}{InputCameraRotation()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Input\+Camera\+Rotation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Handles camera rotation via mouse. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a4b97741b890a94e22076932e9d28d311}\label{class_a_t_t___player_grid_camera_a4b97741b890a94e22076932e9d28d311}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!InputCameraZoom@{InputCameraZoom}}
+\index{InputCameraZoom@{InputCameraZoom}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{InputCameraZoom()}{InputCameraZoom()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Input\+Camera\+Zoom (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Handles zoom via mouse. 
+
+Zooms in or out step by step, steps being defined in Begin\+Play. 
+\begin{DoxyParams}{Parameters}
+{\em value} & If $<$0 will zoom out, else if $>$0 will zoom in. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_add3a8f7a775aed1d2943843f2a53e7cd}\label{class_a_t_t___player_grid_camera_add3a8f7a775aed1d2943843f2a53e7cd}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!InputKeyboardMovements@{InputKeyboardMovements}}
+\index{InputKeyboardMovements@{InputKeyboardMovements}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{InputKeyboardMovements()}{InputKeyboardMovements()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Input\+Keyboard\+Movements (\begin{DoxyParamCaption}\item[{float}]{notused }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Handles camera movements via keyboard. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em notused} & This parameter enables the function to be bound to an Axis\+Input. It is not used. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aec7ff1bb18a7904e3a6d3e13253eae48}\label{class_a_t_t___player_grid_camera_aec7ff1bb18a7904e3a6d3e13253eae48}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!InputKeyboardRotation@{InputKeyboardRotation}}
+\index{InputKeyboardRotation@{InputKeyboardRotation}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{InputKeyboardRotation()}{InputKeyboardRotation()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Input\+Keyboard\+Rotation (\begin{DoxyParamCaption}\item[{float}]{notused }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Handles camera rotation via keyboard. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em notused} & This parameter enables the function to be bound to an Axis\+Input. It is not used. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_adff10752fbd388a46227a42a2140d6d0}\label{class_a_t_t___player_grid_camera_adff10752fbd388a46227a42a2140d6d0}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!MouseTrace@{MouseTrace}}
+\index{MouseTrace@{MouseTrace}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{MouseTrace()}{MouseTrace()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Mouse\+Trace (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Line trace from the camera to the grid and updates tile if they are hovered. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a1e45820a848051156885e4275e013a20}\label{class_a_t_t___player_grid_camera_a1e45820a848051156885e4275e013a20}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!MoveCamera@{MoveCamera}}
+\index{MoveCamera@{MoveCamera}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{MoveCamera()}{MoveCamera()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Move\+Camera (\begin{DoxyParamCaption}\item[{float}]{x,  }\item[{float}]{y,  }\item[{float}]{sensitivity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Moves the camera in XY direction multiplied by Sensitivity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Direction X to move in (-\/1 $<$ X $<$ 1). \\
+\hline
+{\em y} & Direction Y to move in (-\/1 $<$ x $<$ 1). \\
+\hline
+{\em sensitivity} & Used to scale movement speed (defined by blueprint variable). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a330aef5a0f8e06fa1d70aa07cdf72c3a}\label{class_a_t_t___player_grid_camera_a330aef5a0f8e06fa1d70aa07cdf72c3a}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!RemoveBlockUnderCursor@{RemoveBlockUnderCursor}}
+\index{RemoveBlockUnderCursor@{RemoveBlockUnderCursor}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{RemoveBlockUnderCursor()}{RemoveBlockUnderCursor()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Remove\+Block\+Under\+Cursor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Instantly deletes whatever is placed on the currently hovered tile. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a912c3c1f4bb7b5351822d3d46e0e7396}\label{class_a_t_t___player_grid_camera_a912c3c1f4bb7b5351822d3d46e0e7396}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!RotateCamera@{RotateCamera}}
+\index{RotateCamera@{RotateCamera}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{RotateCamera()}{RotateCamera()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Rotate\+Camera (\begin{DoxyParamCaption}\item[{float}]{x,  }\item[{float}]{y,  }\item[{float}]{x\+Sensitivity,  }\item[{float}]{y\+Sensitivity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Rotates the camera around Y and Z axis multiplied by Sensitivity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Amount of Yaw to add. \\
+\hline
+{\em y} & Amount of Pitch to add. \\
+\hline
+{\em x\+Sensitivity} & Used to scale Yaw rotation speed (defined by blueprint variable). \\
+\hline
+{\em y\+Sensitivity} & Used to scale Pitch rotation speed (defined by blueprint variable). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a4b6f91d32b63d387425d22faa853895a}\label{class_a_t_t___player_grid_camera_a4b6f91d32b63d387425d22faa853895a}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!StartBuildTool@{StartBuildTool}}
+\index{StartBuildTool@{StartBuildTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{StartBuildTool()}{StartBuildTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Start\+Build\+Tool (\begin{DoxyParamCaption}\item[{int}]{block\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Spawns a block in edit mode (aka \char`\"{}ghost block\char`\"{}) to show the player where he is placing down the block. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em block\+ID} & Data table index of the row corresponding to the block to spawn. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa5e54106a559060b452e8f39ac2b83c4}\label{class_a_t_t___player_grid_camera_aa5e54106a559060b452e8f39ac2b83c4}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!StartRemoveTool@{StartRemoveTool}}
+\index{StartRemoveTool@{StartRemoveTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{StartRemoveTool()}{StartRemoveTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Start\+Remove\+Tool (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Starts Remove\+Tool, will wait for the player to click a tile to call \mbox{\hyperlink{class_a_t_t___player_grid_camera_aec01f397402202fb08dea3a659256baa}{Confirm\+Remove\+Tool\+Start\+Tile()}}. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aeab5a8ae1220466c3bd63d96cab019b4}\label{class_a_t_t___player_grid_camera_aeab5a8ae1220466c3bd63d96cab019b4}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!StopBuildTool@{StopBuildTool}}
+\index{StopBuildTool@{StopBuildTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{StopBuildTool()}{StopBuildTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Stop\+Build\+Tool (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Cancels the building of block if any. 
+
+Ensures the temporary \char`\"{}ghost block\char`\"{} is destroyed. \mbox{\Hypertarget{class_a_t_t___player_grid_camera_aa29ae802ebeb61c95d7bfdba3021eb62}\label{class_a_t_t___player_grid_camera_aa29ae802ebeb61c95d7bfdba3021eb62}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!StopRemoveTool@{StopRemoveTool}}
+\index{StopRemoveTool@{StopRemoveTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{StopRemoveTool()}{StopRemoveTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Stop\+Remove\+Tool (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Fully Disables the Remove\+Tool, and cancels any tile deletion. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a67c2ba8b8b3f86ddddf25f3d11b70c8f}\label{class_a_t_t___player_grid_camera_a67c2ba8b8b3f86ddddf25f3d11b70c8f}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!TickBuildTool@{TickBuildTool}}
+\index{TickBuildTool@{TickBuildTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{TickBuildTool()}{TickBuildTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Tick\+Build\+Tool (\begin{DoxyParamCaption}\item[{float}]{delta\+Time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Lerps the \char`\"{}ghost block\char`\"{} on tick to ensure a smooth movement. 
+
+If placing a zone, this will update the grid to show what tiles are being affected. 
+\begin{DoxyParams}{Parameters}
+{\em delta\+Time} & delta\+Time value being passed through via the Tick function. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a1d0784f96f603f5dae27ff61e329c527}\label{class_a_t_t___player_grid_camera_a1d0784f96f603f5dae27ff61e329c527}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!TickRemoveTool@{TickRemoveTool}}
+\index{TickRemoveTool@{TickRemoveTool}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{TickRemoveTool()}{TickRemoveTool()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Tick\+Remove\+Tool (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Used to refresh the zone selection. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a4a5097bfe8542f4065317a50725d25a7}\label{class_a_t_t___player_grid_camera_a4a5097bfe8542f4065317a50725d25a7}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ToggleViewMode@{ToggleViewMode}}
+\index{ToggleViewMode@{ToggleViewMode}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ToggleViewMode()}{ToggleViewMode()}}
+{\footnotesize\ttfamily void A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Toggle\+View\+Mode (\begin{DoxyParamCaption}\item[{int}]{View\+Mode }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Calls Activate\+Zone\+View\+Mode in Grid\+Manager. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em View\+Mode} & View\+Mode ID (should be replaced by E\+Building\+Type) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a42de37b02c9b4d9dfd47d5296a550b3b}\label{class_a_t_t___player_grid_camera_a42de37b02c9b4d9dfd47d5296a550b3b}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ghostBlockMovementSpeed@{ghostBlockMovementSpeed}}
+\index{ghostBlockMovementSpeed@{ghostBlockMovementSpeed}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ghostBlockMovementSpeed}{ghostBlockMovementSpeed}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::ghost\+Block\+Movement\+Speed\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The speed at which a ghost block moves on the grid (when placing down a block). 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_aedbba22f216af5eddc3ce9b7d9501ee2}\label{class_a_t_t___player_grid_camera_aedbba22f216af5eddc3ce9b7d9501ee2}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!ghostBlockRotationMouseThreshold@{ghostBlockRotationMouseThreshold}}
+\index{ghostBlockRotationMouseThreshold@{ghostBlockRotationMouseThreshold}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{ghostBlockRotationMouseThreshold}{ghostBlockRotationMouseThreshold}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::ghost\+Block\+Rotation\+Mouse\+Threshold\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+How fast can the mouse rotate the ghost\+Block when placing down a block. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a7fbaa573742ce09a00fde7506b3087ce}\label{class_a_t_t___player_grid_camera_a7fbaa573742ce09a00fde7506b3087ce}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!GridManager@{GridManager}}
+\index{GridManager@{GridManager}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{GridManager}{GridManager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_a_t_t___grid_manager}{A\+T\+T\+\_\+\+Grid\+Manager}}$\ast$ A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Grid\+Manager\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Reference to the current Grid\+Manager, set by \mbox{\hyperlink{class_a_t_t___player_grid_camera_ae4c11bb7a68a06a9f95e445db9ccc69f}{Get\+Grid\+Manager()}}. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8de8fb40426afd5291a6251c9ecb468c}\label{class_a_t_t___player_grid_camera_a8de8fb40426afd5291a6251c9ecb468c}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!inputMovementKeyboardSensitivity@{inputMovementKeyboardSensitivity}}
+\index{inputMovementKeyboardSensitivity@{inputMovementKeyboardSensitivity}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{inputMovementKeyboardSensitivity}{inputMovementKeyboardSensitivity}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::input\+Movement\+Keyboard\+Sensitivity\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Movement sensitivity for moving the camera with keyboard. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ab258c4fd2ad5d52e3df8a2cdc739918d}\label{class_a_t_t___player_grid_camera_ab258c4fd2ad5d52e3df8a2cdc739918d}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!inputMovementMouseSensitivity@{inputMovementMouseSensitivity}}
+\index{inputMovementMouseSensitivity@{inputMovementMouseSensitivity}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{inputMovementMouseSensitivity}{inputMovementMouseSensitivity}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::input\+Movement\+Mouse\+Sensitivity\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Movement sensitivity for moving the camera with mouse input. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a98ed12d8e8e7a76cf5035f39617274cc}\label{class_a_t_t___player_grid_camera_a98ed12d8e8e7a76cf5035f39617274cc}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!inputRotationKeyboardSensitivty@{inputRotationKeyboardSensitivty}}
+\index{inputRotationKeyboardSensitivty@{inputRotationKeyboardSensitivty}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{inputRotationKeyboardSensitivty}{inputRotationKeyboardSensitivty}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::input\+Rotation\+Keyboard\+Sensitivty\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Movement sensitivity for rotating the camera with keyboard. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_abe6126eaf2e0d115400a623073a51ecc}\label{class_a_t_t___player_grid_camera_abe6126eaf2e0d115400a623073a51ecc}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!inputXRotationSensitivity@{inputXRotationSensitivity}}
+\index{inputXRotationSensitivity@{inputXRotationSensitivity}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{inputXRotationSensitivity}{inputXRotationSensitivity}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::input\+X\+Rotation\+Sensitivity\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+X axis rotation sensitivity using mouse input. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_ab55b65a2722c4f69479fe968e17578ee}\label{class_a_t_t___player_grid_camera_ab55b65a2722c4f69479fe968e17578ee}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!inputYRotationSensitivity@{inputYRotationSensitivity}}
+\index{inputYRotationSensitivity@{inputYRotationSensitivity}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{inputYRotationSensitivity}{inputYRotationSensitivity}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::input\+Y\+Rotation\+Sensitivity\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Y axis rotation sensitivity using mouse input. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a5e06acbaca3a6809893105f0d54bee11}\label{class_a_t_t___player_grid_camera_a5e06acbaca3a6809893105f0d54bee11}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!MaxSpringArmLength@{MaxSpringArmLength}}
+\index{MaxSpringArmLength@{MaxSpringArmLength}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{MaxSpringArmLength}{MaxSpringArmLength}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Max\+Spring\+Arm\+Length\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Maximum length for the spring arm. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a0f3b41c28b2cfe379ddca83c31ec9bf6}\label{class_a_t_t___player_grid_camera_a0f3b41c28b2cfe379ddca83c31ec9bf6}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!MinSpringArmLength@{MinSpringArmLength}}
+\index{MinSpringArmLength@{MinSpringArmLength}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{MinSpringArmLength}{MinSpringArmLength}}
+{\footnotesize\ttfamily float A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::\+Min\+Spring\+Arm\+Length\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Minimum length for the spring arm. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a351c1412234109b4d816e0234bfccbf8}\label{class_a_t_t___player_grid_camera_a351c1412234109b4d816e0234bfccbf8}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!placingBlockGhostClass@{placingBlockGhostClass}}
+\index{placingBlockGhostClass@{placingBlockGhostClass}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{placingBlockGhostClass}{placingBlockGhostClass}}
+{\footnotesize\ttfamily T\+Subclass\+Of$<$\mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}}$>$ A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::placing\+Block\+Ghost\+Class\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The class responsible to display blocks being placed down. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a8a3c50c930057d70036ff6c9d39a72cc}\label{class_a_t_t___player_grid_camera_a8a3c50c930057d70036ff6c9d39a72cc}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!placingResizableBlockGhostClass@{placingResizableBlockGhostClass}}
+\index{placingResizableBlockGhostClass@{placingResizableBlockGhostClass}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{placingResizableBlockGhostClass}{placingResizableBlockGhostClass}}
+{\footnotesize\ttfamily T\+Subclass\+Of$<$\mbox{\hyperlink{class_a_t_t___block}{A\+T\+T\+\_\+\+Block}}$>$ A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::placing\+Resizable\+Block\+Ghost\+Class\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The class responsible to display resizable block being placed down. 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a33d3314f56995c1e6caed175dac6d98c}\label{class_a_t_t___player_grid_camera_a33d3314f56995c1e6caed175dac6d98c}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!zoomLerpSpeed@{zoomLerpSpeed}}
+\index{zoomLerpSpeed@{zoomLerpSpeed}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{zoomLerpSpeed}{zoomLerpSpeed}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::zoom\+Lerp\+Speed\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Defines how fast the camera lerps when zooming and de-\/zooming (the higher, the faster). 
+
+\mbox{\Hypertarget{class_a_t_t___player_grid_camera_a840089f30c5196fae78441737475a82f}\label{class_a_t_t___player_grid_camera_a840089f30c5196fae78441737475a82f}} 
+\index{ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}!zoomStepAccuracy@{zoomStepAccuracy}}
+\index{zoomStepAccuracy@{zoomStepAccuracy}!ATT\_PlayerGridCamera@{ATT\_PlayerGridCamera}}
+\subsubsection{\texorpdfstring{zoomStepAccuracy}{zoomStepAccuracy}}
+{\footnotesize\ttfamily int A\+T\+T\+\_\+\+Player\+Grid\+Camera\+::zoom\+Step\+Accuracy\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Defines how accurately the player can zoom (the higher, the slower the zoom). 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Public/T\+T\+\_\+\+Player\+Grid\+Camera.\+h\item 
+Private/T\+T\+\_\+\+Player\+Grid\+Camera.\+cpp\end{DoxyCompactItemize}

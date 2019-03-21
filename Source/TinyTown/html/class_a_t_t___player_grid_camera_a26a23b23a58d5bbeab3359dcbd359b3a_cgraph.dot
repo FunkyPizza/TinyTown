@@ -1,0 +1,22 @@
+digraph "ATT_PlayerGridCamera::ConfirmRemoveToolEndTile"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node16 [label="ATT_PlayerGridCamera\l::ConfirmRemoveToolEndTile",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="To be called when StartTile has been confirmed."];
+  Node16 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="ATT_PlayerGridCamera\l::StopRemoveTool",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#aa29ae802ebeb61c95d7bfdba3021eb62",tooltip="Fully Disables the RemoveTool, and cancels any tile deletion."];
+  Node17 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="ATT_GridManager::TileReset",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a7ff2d0e2f13412c3d0aba2393f9f7e5f",tooltip="Tile Effect - Reset this tile to its original state (both colour and transform)."];
+  Node16 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="ATT_PlayerGridCamera\l::DeleteBlockOnTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___player_grid_camera.html#a4ee51f1a11796e95ddef813ba85f101e",tooltip="Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID."];
+  Node19 -> Node20 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="ATT_BlockManager::Delete\lBlockOnTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a4389a110be093fdec1e1e56e847f93a5",tooltip="Delete block that owns the tile selected & clears all tiles that belonged to that block."];
+  Node20 -> Node21 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="ATT_BlockManager::Delete\lZoneOnTile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a90878ae6eacd58d3d256aa36da109f25",tooltip="Clears the tile of any zoneIDs."];
+  Node20 -> Node22 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="ATT_BlockManager::ClearTile\lArraysAtIndex",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___block_manager.html#a93d498beaf84adad9978e38a3a40b9eb",tooltip="Clear any value in tile arrays at the specified index."];
+  Node19 -> Node23 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node23 [label="ATT_GridManager::TileClear\lState",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_a_t_t___grid_manager.html#a5bcea6c5c60adcfb537a996c0eede4a5",tooltip="Tile Effect - Reset all altered tiles to their original state."];
+}
