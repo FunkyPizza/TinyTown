@@ -75,6 +75,9 @@ FVector2D ATT_GridManager::GetGridSize()
 
 void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 {
+	tileIDs.Empty();
+	int tileIDCounter;
+
 	for (int i = 0; i < y; i++) 
 	{
 		for (int j = 0; j < x; j++) 
@@ -86,6 +89,9 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 
 			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
 			instanceGroupedSpriteComp->AddInstance(tileTransform, tileSpriteNormal, true, FLinearColor::White);
+
+			tileIDs.Add(tileIDCounter);
+			tileIDCounter++;
 		}
 	}
 
@@ -295,6 +301,7 @@ void ATT_GridManager::ViewModeTick()
 					// Check if the zone on the tile corresponds to the active view mode
 					if (tempZoneTileIDs[i] == BlockManager->zoneViewModeIndex[viewModeIndex])
 					{
+						UE_LOG(LogTemp, Warning, TEXT("Yo road"));
 						// Add the tile to view mode tile, & change its colour
 						viewModeTiles.Add(i);
 						SetTileColor(i, zoneColours[viewModeIndex]);
@@ -318,5 +325,16 @@ void ATT_GridManager::ClearPlayerSelection()
 		TileReset(i);
 	}
 	playerTileSelection.Empty();
+}
+
+bool ATT_GridManager::IsTileValid(int tileID)
+{
+	FTransform emptyTransform;
+	return instanceGroupedSpriteComp->GetInstanceTransform(tileID, emptyTransform, false);
+}
+
+TArray<int> ATT_GridManager::GetAllTileIDs()
+{
+	return tileIDs;
 }
 

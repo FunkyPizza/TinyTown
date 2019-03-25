@@ -1,0 +1,7 @@
+22/03/2019
+- Added Dijkstra pathfinding as Pathfinding component.
+- Implemented pathfinding componenent to PlayerGridCamera.
+
+25/03/2018
+- Can no longer build on tiles that have already been built on.
+- Added a SpawnBlockAtStartTile(), but need to adjust block relative location again on spawn 

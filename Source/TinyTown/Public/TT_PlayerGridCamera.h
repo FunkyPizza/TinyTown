@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class ATT_GridManager;
 class ATT_Block;
+class UTT_Pathfinder;
 
 UCLASS()
 class TINYTOWN_API ATT_PlayerGridCamera : public APawn
@@ -32,6 +33,8 @@ protected:
 		USpringArmComponent* SpringArmComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UCameraComponent* CameraComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UTT_Pathfinder* PathfinderComp;
 
 
 /*---------- Functions -----------*/
@@ -252,6 +255,7 @@ protected:
 	bool isPlacingDownBlock; // Indicates if the player is placing down a building
 	bool isRotatingBlock; // Indicates if the player is rotating a building while placing it down
 	bool isSettingBlockSize; // Indicates if the player is setting the size of a block while placing it down (drag)
+	bool isPlacingDownRoad; // Indicates whether or not the block is a road in which case pathfinding should be use
 	bool isZoneBuildingCancelled; // Indicates whether block building should be restarted or totally cancelled.
 	bool isRemoveToolActive; // Indicates whether the RemoveTool is activated.
 	bool isRemoveToolSelecting; // Indicates whether the RemoveTool currently has selected tiles to remove or not.

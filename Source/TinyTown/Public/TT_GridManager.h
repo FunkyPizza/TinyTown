@@ -80,7 +80,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Grid Settings")
 		float tileHoveredZOffset;
 
-
+	/** Array of all Tile IDs in order. */
+	TArray<int> tileIDs;
+	
 	/** Array of all spawned tile instances locations. */
 	TArray<FVector> tileLocations; 
 
@@ -163,13 +165,20 @@ public:
 	/** Deactivates all view modes, stops the timer and reset tile colours */
 	void StopZoneViewMode();
 
-	/** Depending on the activated view mode, will fetch the zone's tile and apply an effect on them.
-	* @TODO: Avoid accessing database on tick,  ~3ms when view mode active.
-	*/
+	/** Depending on the activated view mode, will fetch the zone's tile and apply an effect on them. */
 	void ViewModeTick();
 
+	/** Set a TArray of tiles' colour to avoid being overridden by view modes. */
 	void SetPlayerSelection(TArray<int> tileIDs);
+
+	/** Clears the TArray of tiles, and reset their colour. */
 	void ClearPlayerSelection();
+
+	/** Checks if a tileID exists on the grid. */
+	bool IsTileValid(int tileID);
+
+	/** Returns an array of all tile IDs in order. */
+	TArray<int> GetAllTileIDs();
 
 
 	/*---------- Variables -----------*/

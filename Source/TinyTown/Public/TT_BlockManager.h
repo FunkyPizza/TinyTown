@@ -2,11 +2,12 @@
 
 	/* Blocks bigger than 1x1 are characterised by a StartTile (A), a EndTile(B) and the zone's size for X and Y.
 			_____________																_____________
-			|_2_|_5_|_8_|	Given this grid, and a block where A=1, and B=8				|_x_|_x_|_x_|
-			|_1_|_4_|_7_|	The block's zone would represent the "x" tiles		-->		|_x_|_x_|_x_|
-			|_0_|_3_|_6_|	This zone would be of size X=1 and Y=2 						|___|___|___|
+			|_2_|_5_|_8_|	Given this grid, and a block of size X=2, Y=3 where			|_x_|_x_|_x_|
+			|_1_|_4_|_7_|	A=1 has a zone represented by the "x" tiles. In		 -->	|_x_|_x_|_x_|
+			|_0_|_3_|_6_|	case B=8.													|___|___|___|
 
 	/!\ Remember, X represent the vertical axis, Y the horizontal when it comes to tile calculation /!\ */
+
 
 #pragma once
 
@@ -61,6 +62,9 @@ protected:
 	void ClearTileArraysAtIndex(int index);
 
 
+	void FindZoneLayout(int zoneID, TArray<int> zone);
+
+
 	/*---------- Variables -----------*/
 
 	/** Tile Array - Array of spawned block IDs where index = index of the tile.*/
@@ -98,6 +102,15 @@ public:
 	 * @param tileID Index of the tile to spawn the block around.
 	 */
 	void SpawnBlock(int blockID, FRotator blockRotation, int tileID);
+
+	/**
+	* Calculate the zone used by the block & assign the tile arrays to the block.
+	* Spawn & initialize the block (passes through data table data, tile belonging to the block etc ..).
+	* The block will be spawn from its zone's StartTile rather than around the tile. Doesn't support block rotation.
+	* @param blockID Data table index of the row corresponding to the block to spawn.
+	* @param tileID Index of the tile to be set as the block's zone's StartTile.
+ */
+	void SpawnBlockAtStartTile(int blockID, int tileID);
 
 	/**
 	* Gets a random blockID corresponding to parameters in the data table.
@@ -140,13 +153,13 @@ public:
 	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 
 	/**
-	 * Returns the TileID of the corner tile opposite to tileB in a zone defined by parameters (see top of page for zone explanation). 
-	 * @param tileB Corner B / EndTile of the zone.
+	 * Returns the TileID of the StartTile associated with the zone defined by parameters (see top of page for zone explanation).
+	 * @param tileC Tile currently hovered by the mouse.
 	 * @param sizeX X size of block's zone (how big is the block in tiles).
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
 	 * @param isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
 	 */
-	int GetZoneStartTileFromZoneSize(int tileB, int sizeX, int sizeY, bool isModuloHalfPi);
+	int GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
 
 	/**
 	 * Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation).
@@ -155,7 +168,13 @@ public:
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
 	 * @param isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
 	 */
+
 	int GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi);
+	/**
+* Returns the x and y size of a zone from the array of its TileIDs.
+* @param zone Array containing all TileIDs of the zone.
+*/
+	FVector2D GetZoneSizeFromTileArray(TArray<int> zone);
 
 	/**
 	* Returns data of block from its BlockID (see TT_Struct_Block).

@@ -10,6 +10,7 @@
 #include "TT_BlockManager.h"
 #include "TT_Block.h"
 #include "TimerManager.h"
+#include "TT_Pathfinder.h"
 
 /*---------- Primary functions ----------*/
 ATT_PlayerGridCamera::ATT_PlayerGridCamera()
@@ -21,10 +22,12 @@ ATT_PlayerGridCamera::ATT_PlayerGridCamera()
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->SetupAttachment(RootComponent);
 
+	PathfinderComp = CreateDefaultSubobject<UTT_Pathfinder>(TEXT("PathfinderComp"));
+
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
-	
+
 /*---------- Setting defaults ----------*/
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -377,6 +380,7 @@ void ATT_PlayerGridCamera::StartBuildTool(int blockID)
 	// Ghost block setting
 	placingBlockGhostID = blockID;
 	isGhostBlockResizable = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID)->Resizable;
+	isPlacingDownRoad = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID)->Type == "Road";
 	FTransform blockTransform = FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(1,1,1));
 	placingBlockTargetLocation = FVector(0, 0, 0);
 	placingBlockTargetRotation = FRotator(0, 0, 0);
@@ -486,9 +490,20 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		// Resizing the block
 		if (isSettingBlockSize && !isZoneBuildingCancelled)
 		{
-			placingLastZoneBuilt = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
-			GridManager->SetPlayerSelection(placingLastZoneBuilt);
-			GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
+			if (isPlacingDownRoad)
+			{
+				placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
+				GridManager->SetPlayerSelection(placingLastZoneBuilt);
+				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
+			}
+
+			else 
+			{
+				placingLastZoneBuilt = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
+				GridManager->SetPlayerSelection(placingLastZoneBuilt);
+				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
+
+			}
 		}
 
 		// If not, rotate it
@@ -559,7 +574,7 @@ void ATT_PlayerGridCamera::StartRemoveTool()
 	StopRemoveTool();
 
 	isRemoveToolActive = true;
-	GetWorldTimerManager().SetTimer(TimerHandle_RemoveTool, this, &ATT_PlayerGridCamera::TickRemoveTool, 0.01f, true, 0.0f);
+	GetWorldTimerManager().SetTimer(TimerHandle_RemoveTool, this, &ATT_PlayerGridCamera::TickRemoveTool, 0.1f, true, 0.0f);
 }
 
 void ATT_PlayerGridCamera::StopRemoveTool()
