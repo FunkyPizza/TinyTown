@@ -4,6 +4,7 @@
 #include "TT_GridManager.h"
 #include "EngineUtils.h"
 #include "TT_GridManager.h"
+#include "TT_BlockManager.h"
 
 // Sets default values for this component's properties
 UTT_Pathfinder::UTT_Pathfinder()
@@ -18,6 +19,12 @@ void UTT_Pathfinder::BeginPlay()
 	Super::BeginPlay();
 
 	GridManager = GetGridManager();	
+	if (!GridManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("GridManager isn't valid in pathfinder component. Pathfinding won't work."))
+	}
+
+	tileArray = GridManager->GetAllTileIDs();
 }
 
 ATT_GridManager* UTT_Pathfinder::GetGridManager()
@@ -69,50 +76,57 @@ TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID)
 
 int UTT_Pathfinder::GetTileMoveCost(int tileID)
 {
+	if (GridManager)
+	{
+		if (GridManager->BlockManager->GetSpawnedBlockIDs()[tileID] != 0)
+		{
+			return 100;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("GridManager not valid in pathfinder component, cannot retrieve move cost."));
 	return 1;
 }
 
 TArray<int> UTT_Pathfinder::FindShortestPathDijkstra(int startTile, int goalTile)
 {
-	return FindShortestPathInZoneDijkstra(startTile, goalTile, GridManager->GetAllTileIDs());
+	return FindShortestPathInZoneDijkstra(startTile, goalTile, tileArray);
 }
+
 
 TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone)
 {
-	TArray<int> unexploredTiles;
-
 	TArray<int> walkableTiles = zone;
-
+	TArray<int> unexploredTiles;
 	TMap<int, int> distances;
-
 	TMap<int, int> parentTiles;
 
 	int tileIDOffset = startTile;
 
-
-	for (auto i : walkableTiles)
+	for (int i : walkableTiles)
 	{
 		unexploredTiles.Add(i);
 		distances.Add(i, pathfindingMaxDistance);
-		parentTiles.Add(i,0);
+		parentTiles.Add(i, startTile);
 	}
-
 
 	distances[startTile] = 0;
 
-
-	while (unexploredTiles.Num() > 0)
+	while (unexploredTiles.Num() != 0)
 	{
 		// Get the tileID with the shortest distance to the start tile
-		int currentTile;
+		int currentTile = startTile;
+		int minimumDistance = pathfindingMaxDistance + 1;
 		TArray<int> distanceKeys;
 		TArray<int> distancesValues;
 		distances.GenerateValueArray(distancesValues);
 		distances.GenerateKeyArray(distanceKeys);
+
 		for (int i = 0; i < distancesValues.Num(); i++)
 		{
-			int minimumDistance = pathfindingMaxDistance;
-
 			if (distancesValues[i] < minimumDistance)
 			{
 				minimumDistance = distancesValues[i];
@@ -120,7 +134,7 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 			}
 		}
 
-		// Check if is goal
+		/*// Check if is goal
 		if (currentTile == goalTile)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Goal reached!"));
@@ -147,12 +161,14 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 				}
 			}
 		}
+		*/
 
 		// Remove the tile from unexploredTiles
 		unexploredTiles.Remove(currentTile);
 
 		// Get tile's neighbours 
 		TArray<int> tileNeighbours = GetTileNeighbours(currentTile);
+
 		for (int i = 0; i < tileNeighbours.Num(); i++)
 		{
 			int neighbourTileID = tileNeighbours[i];
@@ -171,8 +187,122 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("No path was found, returning empty array"));
-	TArray<int> EmptyTiles;
-	return EmptyTiles;
+	TArray<int> pathResult;
+	pathResult.Add(goalTile);
+
+	for (int i = 0; i < parentTiles.Num(); i++)
+	{
+		pathResult.Add(parentTiles[pathResult[i]]);
+	}
+
+	if (pathResult.Num() > 0)
+	{
+		return pathResult;
+	}
+
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No path was found, returning empty array"));
+		TArray<int> EmptyTiles;
+		return EmptyTiles;
+	}
 }
 
+
+/*
+TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone)
+{
+	TArray<int> walkableTiles = zone;
+	int zoneSize = walkableTiles.Num();
+
+	TArray<int> unexploredTiles;
+	unexploredTiles.SetNum(zoneSize);
+
+	TArray<int> distances;
+	distances.SetNum(zoneSize);
+
+	TArray<int> parentTiles;
+	parentTiles.SetNum(zoneSize);
+
+	int tileIDOffset = startTile;
+
+
+	for (int i = 0; i < zoneSize -1; i++)
+	{
+		unexploredTiles[i] = walkableTiles[i];
+		distances[i] = pathfindingMaxDistance;
+		parentTiles[i] = 0;
+	}
+
+	distances[walkableTiles.Find(startTile)] = 0;
+
+
+	while (unexploredTiles.Num() > 0)
+	{
+		// Get the tileID with the shortest distance to the start tile
+		int currentTile;
+
+		for (int i = 0; i < unexploredTiles.Num(); i++)
+		{
+			int minimumDistance = pathfindingMaxDistance + 1;
+
+			if (distances[i] < minimumDistance)
+			{
+				minimumDistance = distances[i];
+				currentTile = unexploredTiles[i];
+			}
+		}
+
+
+		// Remove the tile from unexploredTiles
+		unexploredTiles.Remove(currentTile);
+
+		// If is start tile don't do anything
+		if (currentTile == startTile)
+		{
+			break;
+		}
+
+		// Get tile's neighbours 
+		TArray<int> tileNeighbours = GetTileNeighbours(currentTile);
+
+		for (int i = 0; i < tileNeighbours.Num(); i++)
+		{
+			int neighbourTileID = tileNeighbours[i];
+
+			if (walkableTiles.Contains(neighbourTileID))
+			{
+				int dist = 0;
+				dist = distances[walkableTiles.Find(currentTile)] + GetTileMoveCost(neighbourTileID);
+
+				if (dist < distances[walkableTiles.Find(neighbourTileID)])
+				{
+					distances[walkableTiles.Find(neighbourTileID)] = dist;
+					parentTiles[walkableTiles.Find(neighbourTileID)] = currentTile;
+				}
+			}
+		}
+	}
+
+	TArray<int> pathResult;
+	pathResult.Add(goalTile);
+
+	
+	for (int i = 0; i < parentTiles.Num() - 1; i++)
+	{
+		pathResult.Add( parentTiles[ walkableTiles.Find( pathResult[i] ) ] );
+	}
+
+	if (pathResult.Num() > 0)
+	{
+		return pathResult;
+	}
+
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No path was found, returning empty array"));
+		TArray<int> EmptyTiles;
+		return EmptyTiles;
+	}
+}
+*/

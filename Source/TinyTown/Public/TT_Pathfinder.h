@@ -38,6 +38,8 @@ protected:
 	/** Reference to the GridManager. */
 	ATT_GridManager* GridManager;
 
+	TArray<int> tileArray;
+
 	/** Refers to the longest path possible the algorithm can find (in tiles). */
 	int pathfindingMaxDistance;
 

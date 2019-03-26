@@ -67,13 +67,13 @@ protected:
 
 	/*---------- Variables -----------*/
 
-	/** Tile Array - Array of spawned block IDs where index = index of the tile.*/
+	/** Tile Array - Array of spawned block IDs where index = index of the tile, and element = BlockID.*/
 	TArray<int> spawnedBlockID; 
 
-	/** Tile Array - Array of spawned zone IDs where index = index of the tile.*/
+	/** Tile Array - Array of spawned zone IDs where index = index of the tile, and element = BlockID. */
 	TArray<int> spawnedZoneID;
 
-	/** Tile Array - Array of spawned blocks where index = index of the tile.*/
+	/** Tile Array - Array of spawned blocks where index = index of the tile, and element = TT_Block instance.*/
 	TArray<ATT_Block*> spawnedBlocks;
 
 	/** Data table holding data of all the blocks.*/
@@ -200,8 +200,11 @@ public:
 	*/
 	TArray<int> GetAllBlockIDsFromParameter(FString buildingType, int efficiency, int sizeX, int sizeY);
 
-	/** Accessor - Returns the array of spawned zone where index = index of the tile.*/
+	/** Accessor - Returns the array of spawned zone where index = index of the tile, and element = BlockID;*/
 	TArray<int> GetSpawnedZoneTileIDs();
+
+	/** Accessor - Returns the array of spawned blocks where index = index of the tile, and element = BlockID. */
+	TArray<int> GetSpawnedBlockIDs();
 
 
 	/*---------- Variables -----------*/

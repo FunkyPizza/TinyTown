@@ -53,6 +53,11 @@ TArray<int> ATT_BlockManager::GetSpawnedZoneTileIDs()
 }
 
 
+TArray<int> ATT_BlockManager::GetSpawnedBlockIDs()
+{
+	return spawnedBlockID;
+}
+
 /*---------- Block & Zone building functions ----------*/
 
 void ATT_BlockManager::SpawnBlockFromParameters(int tileID, FRotator blockRotation, FString buildingType, int efficiency, int sizeX, int sizeY)
@@ -180,7 +185,7 @@ void ATT_BlockManager::CreateZoneOnTiles(TArray<int> tileIDs, int zoneID)
 	{
 		spawnedZoneID[tileIDs[i]] = zoneID;
 	}
-	FindZoneLayout(zoneID, tileIDs);
+	//FindZoneLayout(zoneID, tileIDs);
 }
 
 void ATT_BlockManager::DeleteZoneOnTile(int tileID)

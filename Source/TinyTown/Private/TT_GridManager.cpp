@@ -41,6 +41,12 @@ void ATT_GridManager::BeginPlay()
 
 	SpawnBlockManager();
 
+	tileIDs.Empty();
+
+	for (int i = 0; i < instanceGroupedSpriteComp->GetInstanceCount(); i++)
+	{
+		tileIDs.Add(i);
+	}
 }
 
 
@@ -75,8 +81,6 @@ FVector2D ATT_GridManager::GetGridSize()
 
 void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 {
-	tileIDs.Empty();
-	int tileIDCounter;
 
 	for (int i = 0; i < y; i++) 
 	{
@@ -90,8 +94,6 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
 			instanceGroupedSpriteComp->AddInstance(tileTransform, tileSpriteNormal, true, FLinearColor::White);
 
-			tileIDs.Add(tileIDCounter);
-			tileIDCounter++;
 		}
 	}
 
