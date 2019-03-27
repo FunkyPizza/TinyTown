@@ -621,7 +621,6 @@ void ATT_PlayerGridCamera::ConfirmRemoveToolEndTile()
 
 }
 
-
 void ATT_PlayerGridCamera::RemoveBlockUnderCursor()
 {
 	DeleteBlockOnTile(lastLinetracedTile);

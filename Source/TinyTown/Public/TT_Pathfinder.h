@@ -31,8 +31,16 @@ protected:
 	*/
 	TArray<int> GetTileNeighbours(int tileID);
 
-	/** @TODO Implement tile movement cost. */
+	/* Returns the cost of moving on that tile. 
+	* @param tileID Tile to return of the cost of.
+	*/
 	int GetTileMoveCost(int tileID);
+
+	/* Returns the distance in Unreal unit between two tiles.
+	* @param tileA Tile of reference.
+	* @param tileB Tile to measure the distance to.
+	*/
+	int GetDistanceBetweenTwoTile(int tileA, int tileB);
 
 
 	/** Reference to the GridManager. */
@@ -45,7 +53,8 @@ protected:
 
 
 public:	
-	/** Return an array of tile IDs representing the shortest path between startTile and goalTile.
+	/** Return an array of tile IDs representing the shortest path between startTile and goalTile using all of the grid's tiles.
+	* /!\ Very demanding on resources, WILL massively impact performance. /!\
 	* @param startTile TileID of the tile to start from.
 	* @param goalTile TileID of the tile to end at.
 	*/
@@ -58,4 +67,5 @@ public:
 	*/
 	TArray<int> FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone);
 		
+	TArray<int> FindShortestPathAStar(int startTile, int goalTile);
 };

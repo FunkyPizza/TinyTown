@@ -208,46 +208,59 @@ void ATT_BlockManager::ClearTileArraysAtIndex(int index)
 
 void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 {
-	// Gets the zone's size
-	FVector2D zoneSize = GetZoneSizeFromTileArray(zone);
-
-	UE_LOG(LogTemp, Error, TEXT("%s"), *zoneSize.ToString());
-
-	if (zoneSize.X <= 0 && zoneSize.Y <= 0)
+	if (zone.Num() == 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("It seems the zone's size can't be found in FindZoneLayout."));
+		UE_LOG(LogTemp, Warning, TEXT("Zone array not valid in FindZoneLayout."));
 		return;
 	}
 
-	int randTile = FMath::RandRange(0, zone.Num() - 1);
+	// Gets the zone's size & check if valid
+	FVector2D zoneSize = GetZoneSizeFromTileArray(zone);  
+	TArray<int> unusedTiles = zone;
 
-
-
-	// Finds all the possible block sizes in that space
-	TArray<FVector2D> placeableSizes;
-	for (int i = 1; i <= zoneSize.X; i++)
+	while (unusedTiles.Num() > 0)
 	{
-		for (int j = 1; j <= zoneSize.Y; j++)
+		// Finds all the possible block sizes in that space
+		TArray<FVector2D> placeableSizes;
+		for (int i = 1; i <= zoneSize.X; i++)
 		{
-			placeableSizes.Add(FVector2D(i, j));
+			for (int j = 1; j <= zoneSize.Y; j++)
+			{
+				placeableSizes.Add(FVector2D(i, j));
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *FVector2D(i, j).ToString());
+			}
+		}
+
+		// Gets placeable block from random size
+		FString zoneType = GetBlockStatsFromBlockID(zoneID)->Block_Name.ToString();
+		TArray<int> placeableBlocks;
+
+		while (placeableBlocks.Num() == 0)
+		{
+			int randomIndex = FMath::RandRange(0, placeableSizes.Num() - 1);
+			placeableBlocks = GetAllBlockIDsFromParameter(zoneType, 1, placeableSizes[randomIndex].X, placeableSizes[randomIndex].Y);
+		}
+
+		//int tileA = GetZoneStartTileFromHoveredTile( /* Random Tile */);
+		//int tileB = GetZoneEndTileFromZoneSize(tileA, /* Block size */);
+		TArray<int> zoneTiles;
+		// zoneTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB);
+		bool canBuild = true;
+		for (auto i : zoneTiles)
+		{
+			if (!unusedTiles.Contains(i))
+			{
+				canBuild = false;
+				break;
+			}
+		}
+
+		if (canBuild)
+		{
+			// Place block
+			SpawnBlockAtStartTile(placeableBlocks[0], zone[0]);
 		}
 	}
-	for (int i = 0; i < placeableSizes.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *placeableSizes[i].ToString());
-	}
-
-	// Gets placeable block from random size
-	FString zoneType = GetBlockStatsFromBlockID(zoneID)->Block_Name.ToString();
-	TArray<int> placeableBlocks;
-	while (placeableBlocks.Num() == 0)
-	{
-		int randomIndex = FMath::RandRange(0, placeableSizes.Num() - 1);
-		placeableBlocks = GetAllBlockIDsFromParameter(zoneType, 1, placeableSizes[randomIndex].X, placeableSizes[randomIndex].Y);
-	}
-
-	// Place block
-	SpawnBlockAtStartTile(placeableBlocks[0], zone[0]);
 }
 
 /*---------- Zone Tiles functions ----------*/
