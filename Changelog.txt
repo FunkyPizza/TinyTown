@@ -13,3 +13,6 @@
 27/03/2019
 - Fixed and tweaked Dijkstra Pathfinding 
 - Started implementing A* pathfinding
+
+28/03/2019
+- Progress on A*, somehow doesn't work fully depending on goal tile.

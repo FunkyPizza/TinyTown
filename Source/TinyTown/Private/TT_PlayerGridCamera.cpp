@@ -492,7 +492,8 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		{
 			if (isPlacingDownRoad)
 			{
-				placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
+				//placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
+				placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
 				GridManager->SetPlayerSelection(placingLastZoneBuilt);
 				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
 			}

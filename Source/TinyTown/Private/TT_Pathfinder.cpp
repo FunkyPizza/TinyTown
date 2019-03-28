@@ -205,91 +205,125 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 
 TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 {
-	TArray<int> walkableTiles;
-	TArray<int> unexploredTiles;
-	TArray<int> gCost; // Distance from start node
-	TArray<int> hCost; // Distance to goal
-	TArray<int> fCost; // g[i] + h[i]
-	TArray<int> parentTiles; // Each tiles parent tile.
-	TArray<int> exploredTiles; 
-	TArray<int> pathResult; // Final path to return
-	TArray<int> EmptyTiles; // Empty path to return
-	TArray<int> currentTileNeighbours;
-	int currentTile;
-
-	// Initialisation
-	walkableTiles.Add(startTile);
-	unexploredTiles.Add(startTile);
-	parentTiles.Add(startTile);
-
-	// Main looping body
-	while (unexploredTiles.Num() != 0)
+	if (startTile != goalTile)
 	{
-		// Get the tileID with the shortest distance to the start tile
-		for (auto i : fCost)
-		{
-			int lowestFCostTile = pathfindingMaxDistance;
+		TArray<int> indexedTiles; 
+		TArray<int> unexploredTiles;
+		TMap<int, int> gCost; // Distance from start node
+		TMap<int, int> hCost; // Distance to goal
+		TMap<int, int> fCost; // g[i] + h[i]
+		TMap<int, int> parentTiles; // Each tiles parent tile.
+		TArray<int> exploredTiles;
+		TArray<int> pathResult; // Final path to return
+		TArray<int> EmptyTiles; // Empty path to return
+		TArray<int> currentTileNeighbours;
+		int currentTile;
 
-			if (i < lowestFCostTile)
+		// Initialisation
+		indexedTiles.Add(startTile);
+		unexploredTiles.Add(startTile);
+		parentTiles.Add(startTile, startTile);
+		gCost.Add(startTile, GetDistanceBetweenTwoTile(startTile, startTile));
+		hCost.Add(startTile, GetDistanceBetweenTwoTile(startTile, goalTile));
+		fCost.Add(startTile, gCost[startTile] + hCost[startTile]);
+
+
+		// Main looping body
+		while (unexploredTiles.Num() != 0)
+		{
+			// Get the tileID with the shortest distance to the start tile
+			for (int i : unexploredTiles)
 			{
-				lowestFCostTile = i;
-				currentTile = walkableTiles[fCost.Find(i)];
+				int lowestFCostTile = INT_MAX;
+
+				if (fCost[i] <= lowestFCostTile)
+				{
+					lowestFCostTile = fCost[i];
+					currentTile = i;
+				}
 			}
-		}
 
-		unexploredTiles.Remove(currentTile);
-		exploredTiles.Add(currentTile);
+			unexploredTiles.Remove(currentTile);
+			exploredTiles.Add(currentTile);
 
-		// Has the goal tile been reached
-		if (currentTile == goalTile)
-		{
-			break;
-		}
-
-		// Get tile's neighbours 
-		currentTileNeighbours = GetTileNeighbours(currentTile);
-		for (int i = 0; i < currentTileNeighbours.Num(); i++)
-		{
-			int currentNeighbour = currentTileNeighbours[i];
-
-			if (!(exploredTiles.Contains(currentNeighbour) || GetTileMoveCost(currentNeighbour) == 1000))
+			// Has the goal tile been reached
+			if (currentTile == goalTile)
 			{
+				break;
+			}
 
-				if (!unexploredTiles.Contains(currentNeighbour)) // Or if distance is better
+			// Get tile's neighbours 
+			currentTileNeighbours = GetTileNeighbours(currentTile);
+			for (int i = 0; i < currentTileNeighbours.Num(); i++)
+			{
+				int currentNeighbour = currentTileNeighbours[i];
+
+				if (exploredTiles.Contains(currentNeighbour) || GetTileMoveCost(currentNeighbour) > 500)
+				{
+					// Skip to next neighbour
+				}
+
+				else
 				{
 					int gValue = GetDistanceBetweenTwoTile(startTile, currentNeighbour);
 					int hValue = GetDistanceBetweenTwoTile(currentNeighbour, goalTile);
-					gCost.Add(gValue);
-					hCost.Add(hValue);
-					fCost.Add(gValue + hValue);
-					parentTiles.Add(currentTile);
-
-					if (!unexploredTiles.Contains(currentNeighbour))
+					
+					if (fCost.Contains(currentNeighbour))
 					{
-						unexploredTiles.Add(currentNeighbour);
+						if (fCost[currentNeighbour] > gValue + hValue)
+						{
+							gCost[currentNeighbour] = gValue;
+							hCost[currentNeighbour] = hValue;
+							fCost[currentNeighbour] = gValue + hValue;
+
+							parentTiles[currentNeighbour] = currentTile;
+						}
 					}
+	
+					else
+					{
+						gCost.Add(currentNeighbour, gValue);
+						hCost.Add(currentNeighbour, hValue);
+						fCost.Add(currentNeighbour, gValue + hValue);
+
+						indexedTiles.Add(currentNeighbour);
+						parentTiles.Add(currentNeighbour, currentTile);
+
+					}
+						unexploredTiles.Add(currentNeighbour);
 				}
 			}
 		}
-	}
 
-	// Getting the path from looping result
-	pathResult.Add(goalTile);
-	for (int i = 0; i < parentTiles.Num(); i++)
-	{
-		pathResult.Add(parentTiles[pathResult[i]]);
-	}
+		// Getting the path from looping result
+		pathResult.Add(goalTile);
+		for (int i = 0; i < parentTiles.Num(); i++)
+		{
+			if (pathResult[i] == startTile)
+			{
+				break;
+			}
 
-	// Path is valid
-	if (pathResult.Num() > 0)
-	{
-		return pathResult;
-	}
+			pathResult.Add(parentTiles[pathResult[i]]);
 
-	// Path isn't valid
+		}
+
+		// Path is valid
+		if (pathResult.Num() > 2)
+		{
+			return pathResult;
+		}
+
+		// Path isn't valid
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No path was found, returning empty array"));
+			return EmptyTiles;
+		}
+	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No path was found, returning empty array"));
-		return EmptyTiles;
-	}
+	TArray<int> EmptyTiles;
+	return EmptyTiles;
+ }
 }
