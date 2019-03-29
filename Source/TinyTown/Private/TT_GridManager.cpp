@@ -97,6 +97,10 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 		}
 	}
 
+	for (int i = 0; i < x*y; i++)
+	{
+		tileIDs.Add(i);
+	}
 }
 
 void ATT_GridManager::SpawnBlockManager()

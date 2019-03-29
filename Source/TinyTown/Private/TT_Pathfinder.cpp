@@ -95,7 +95,7 @@ int UTT_Pathfinder::GetDistanceBetweenTwoTile(int tileA, int tileB)
 	FVector locA = GridManager->GetTileLocation(tileA);
 	FVector locB = GridManager->GetTileLocation(tileB);
 
-	distance = abs(FVector::Dist(locA, locB));
+	distance = abs(FVector::Distance(locA, locB));
 	return distance;
 }
 
@@ -205,9 +205,9 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 
 TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 {
-	if (startTile != goalTile)
+	if (startTile != goalTile && GetTileMoveCost(goalTile) < 500)
 	{
-		TArray<int> indexedTiles; 
+		TArray<int> indexedTiles;
 		TArray<int> unexploredTiles;
 		TMap<int, int> gCost; // Distance from start node
 		TMap<int, int> hCost; // Distance to goal
@@ -223,7 +223,7 @@ TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 		indexedTiles.Add(startTile);
 		unexploredTiles.Add(startTile);
 		parentTiles.Add(startTile, startTile);
-		gCost.Add(startTile, GetDistanceBetweenTwoTile(startTile, startTile));
+		gCost.Add(startTile, 0);
 		hCost.Add(startTile, GetDistanceBetweenTwoTile(startTile, goalTile));
 		fCost.Add(startTile, gCost[startTile] + hCost[startTile]);
 
@@ -232,11 +232,11 @@ TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 		while (unexploredTiles.Num() != 0)
 		{
 			// Get the tileID with the shortest distance to the start tile
+			int lowestFCostTile = INT_MAX;
 			for (int i : unexploredTiles)
 			{
-				int lowestFCostTile = INT_MAX;
 
-				if (fCost[i] <= lowestFCostTile)
+				if (fCost[i] < lowestFCostTile)
 				{
 					lowestFCostTile = fCost[i];
 					currentTile = i;
@@ -265,32 +265,33 @@ TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 
 				else
 				{
-					int gValue = GetDistanceBetweenTwoTile(startTile, currentNeighbour);
+					int gValue = GetDistanceBetweenTwoTile(startTile, currentNeighbour) + gCost[currentTile];
 					int hValue = GetDistanceBetweenTwoTile(currentNeighbour, goalTile);
-					
+					int fValue = gValue + hValue;
+
 					if (fCost.Contains(currentNeighbour))
 					{
-						if (fCost[currentNeighbour] > gValue + hValue)
+						if (fCost[currentNeighbour] > fValue)
 						{
 							gCost[currentNeighbour] = gValue;
 							hCost[currentNeighbour] = hValue;
-							fCost[currentNeighbour] = gValue + hValue;
+							fCost[currentNeighbour] = fValue;
 
 							parentTiles[currentNeighbour] = currentTile;
 						}
 					}
-	
+
 					else
 					{
 						gCost.Add(currentNeighbour, gValue);
 						hCost.Add(currentNeighbour, hValue);
-						fCost.Add(currentNeighbour, gValue + hValue);
+						fCost.Add(currentNeighbour, fValue);
 
 						indexedTiles.Add(currentNeighbour);
 						parentTiles.Add(currentNeighbour, currentTile);
-
 					}
-						unexploredTiles.Add(currentNeighbour);
+
+					unexploredTiles.Add(currentNeighbour);
 				}
 			}
 		}
