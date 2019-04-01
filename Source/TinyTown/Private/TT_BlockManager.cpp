@@ -52,11 +52,11 @@ TArray<int> ATT_BlockManager::GetSpawnedZoneTileIDs()
 	return spawnedZoneID;
 }
 
-
 TArray<int> ATT_BlockManager::GetSpawnedBlockIDs()
 {
 	return spawnedBlockID;
 }
+
 
 /*---------- Block & Zone building functions ----------*/
 
@@ -120,45 +120,13 @@ void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileI
 
 void ATT_BlockManager::SpawnBlockAtStartTile(int blockID, int tileID)
 {
-	// Makes block transform based on TileID
-	FTransform BlockTransform = FTransform(FRotator(0, 0, 0), GridManager->GetTileLocation(tileID), FVector(1, 1, 1));
-
 	//Get Block Default stats from data table
 	FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(blockID);
 
-	//Get the block's zone characteristics
-	int BlockStartTile = tileID;
-	int BlockEndTile = GetZoneEndTileFromZoneSize(BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, false);
-	TArray<int> BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(BlockStartTile, BlockEndTile);
+	// Get the "Hovered tile" 
+	int hoveredTile = GetHoveredTileFromZoneParameter(tileID, BlockStats->Size_X, BlockStats->Size_Y, false);
 
-	for (auto i : BlockZoneTileIDs)
-	{
-		if (spawnedBlockID[i] != 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("A block is already placed on one of these tiles."));
-			return;
-		}
-	}
-
-	ATT_Block* SpawnedActor;
-	SpawnedActor = GetWorld()->SpawnActorDeferred<ATT_Block>(BlockToSpawn, BlockTransform);
-	if (SpawnedActor)
-	{
-		SpawnedActor->SetBlockStats(BlockStats);
-		SpawnedActor->SetBlockManager(this);
-		SpawnedActor->SetBlockTileIDs(BlockZoneTileIDs);
-		SpawnedActor->SetBlockPosition();
-		SpawnedActor->UpdateBlockRotationAndLocation();
-
-		UGameplayStatics::FinishSpawningActor(SpawnedActor, BlockTransform);
-
-
-		for (int i = 0; i < BlockZoneTileIDs.Num(); i++)
-		{
-			spawnedBlockID[BlockZoneTileIDs[i]] = blockID;
-			spawnedBlocks[BlockZoneTileIDs[i]] = SpawnedActor;
-		}
-	}
+	SpawnBlock(blockID, FRotator(0, 0, 0), hoveredTile);
 }
 
 void ATT_BlockManager::DeleteBlockOnTile(int tileID)
@@ -185,7 +153,7 @@ void ATT_BlockManager::CreateZoneOnTiles(TArray<int> tileIDs, int zoneID)
 	{
 		spawnedZoneID[tileIDs[i]] = zoneID;
 	}
-	//FindZoneLayout(zoneID, tileIDs);
+	FindZoneLayout(zoneID, tileIDs);
 }
 
 void ATT_BlockManager::DeleteZoneOnTile(int tileID)
@@ -218,6 +186,14 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 	FVector2D zoneSize = GetZoneSizeFromTileArray(zone);  
 	TArray<int> unusedTiles = zone;
 
+	for (int i : unusedTiles)
+	{
+		SpawnBlockAtStartTile(zoneID, i);
+	}
+
+	return;
+
+	//Some of the following code can be use in the future.
 	while (unusedTiles.Num() > 0)
 	{
 		// Finds all the possible block sizes in that space
@@ -262,6 +238,7 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 		}
 	}
 }
+
 
 /*---------- Zone Tiles functions ----------*/
 
@@ -360,6 +337,45 @@ int ATT_BlockManager::GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int 
 	return ActualTileID;
 }
 
+int ATT_BlockManager::GetHoveredTileFromZoneParameter(int tileA, int sizeX, int sizeY, bool isModuloHalfPi)
+{
+	/* This function is tightly bound to the way a building is moved and rotated (when being placed down).
+		For any changes to this function, make sure to change EditMode in Block.cpp	*/
+
+	int offsetX;
+	int offsetY;
+
+	if (sizeX % 2 == 0)
+	{
+		offsetX = FMath::TruncToInt(sizeX / 2) - 1;
+	}
+	else
+	{
+		offsetX = FMath::TruncToInt(sizeX / 2);
+	}
+
+	if (sizeY % 2 == 0)
+	{
+		offsetY = FMath::TruncToInt(sizeY / 2) - 1;
+	}
+	else
+	{
+		offsetY = FMath::TruncToInt(sizeY / 2);
+	}
+
+	int ActualTileID;
+
+	// Is the block rotated 90°
+	if (isModuloHalfPi)
+	{
+		ActualTileID = tileA + offsetX * GridManager->GetGridSize().X + offsetY;
+		return ActualTileID;
+	}
+
+	ActualTileID = tileA + offsetY * GridManager->GetGridSize().X + offsetX;
+	return ActualTileID;
+}
+
 int ATT_BlockManager::GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi)
 {
 	int xSize = sizeX;
@@ -412,6 +428,7 @@ FVector2D ATT_BlockManager::GetZoneSizeFromTileArray(TArray<int> zone)
 
 	return Result;
 }
+
 
 /*---------- Data Table functions ----------*/
 

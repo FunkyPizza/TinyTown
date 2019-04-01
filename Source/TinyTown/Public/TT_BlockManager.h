@@ -162,6 +162,11 @@ public:
 	int GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
 
 	/**
+	* Returns the tileID of the tile that would have been hovered if this block the standard way.
+	* @
+	*/
+	int GetHoveredTileFromZoneParameter(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
+	/**
 	 * Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation).
 	 * @param tileA Corner A / StartTile of the zone.
 	 * @param sizeX X size of block's zone (how big is the block in tiles).
