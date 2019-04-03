@@ -27,7 +27,7 @@ protected:
 	/*---------- Variable -----------*/
 	FTimerHandle TimerHandle_Time;
 
-	float timeDefault = 0.1f;
+	float timeDefault;
 	int timeMultiplier;
 	bool isTimeOn;
 
@@ -41,10 +41,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
+	UFUNCTION(BlueprintCallable)
 	void StartTime();
+
+	UFUNCTION(BlueprintCallable)
 	void StopTime();
+
 	void TickTime();
-	void StartTimeWithMultiplier(int multiplier);
+	UFUNCTION(BlueprintCallable)
+	void SetTimeMultiplier(int multiplier);
 
 
 	void Transaction(FTT_Struct_Inventory Cost, FTT_Struct_Inventory Revenue);
@@ -53,10 +58,19 @@ public:
 	bool CheckTransaction(FTT_Struct_Inventory Cost);
 
 	/*---------- Variable -----------*/
+	UPROPERTY(BlueprintReadOnly)
 	float Time_Seconds;
-	float Time_Minutes;
-	float Time_Hour;
-	float Time_Day;
+	UPROPERTY(BlueprintReadOnly)
+	int Time_Minutes;
+	UPROPERTY(BlueprintReadOnly)
+	int Time_Hours;
+	UPROPERTY(BlueprintReadOnly)
+	int Time_Day;
+	UPROPERTY(BlueprintReadOnly)
+	int Time_Months;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString Time_String;
 
 
 };

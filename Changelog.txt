@@ -16,3 +16,14 @@
 
 28/03/2019
 - Progress on A*, somehow doesn't work fully depending on goal tile.
+
+29/03/2019
+- Finished implementing A*
+
+1/03/2019
+
+02/03/2019
+- Added day and night cycle
+
+03/03/2019
+- Added time logic, based day/night cycle on that 
