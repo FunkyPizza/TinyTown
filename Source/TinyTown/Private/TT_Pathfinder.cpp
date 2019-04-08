@@ -45,28 +45,42 @@ TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID)
 	FVector2D gridSize = GridManager->GetGridSize();
 	int currentNeighbour;
 
+	// Right tile
 	currentNeighbour = tileID + gridSize.X;
 	if (GridManager->IsTileValid(currentNeighbour))
 	{
 		neighbours.Add(currentNeighbour);
 	}
 
+	// Bottom tile
 	currentNeighbour = tileID - 1;
 	if (GridManager->IsTileValid(currentNeighbour))
 	{
-		neighbours.Add(currentNeighbour);
+		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+
+		if (tileID != tempRow * gridSize.X)
+		{
+			neighbours.Add(currentNeighbour);
+		}
 	}
 
+	// Left tile
 	currentNeighbour = tileID - gridSize.X;
 	if (GridManager->IsTileValid(currentNeighbour))
 	{
 		neighbours.Add(currentNeighbour);
 	}
 
+	// Top tile
 	currentNeighbour = tileID + 1;
 	if (GridManager->IsTileValid(currentNeighbour))
 	{
-		neighbours.Add(currentNeighbour);
+		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+
+		if (tileID + 1 != tempRow * gridSize.X)
+		{
+			neighbours.Add(currentNeighbour);
+		}
 	}
 
 	return neighbours;
@@ -179,6 +193,11 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 		for (int i = 0; i < parentTiles.Num(); i++)
 		{
 			pathResult.Add(parentTiles[pathResult[i]]);
+
+			if (parentTiles[pathResult[i]] == startTile)
+			{
+				break;
+			}
 		}
 
 		// Path is valid
@@ -310,7 +329,7 @@ TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 		}
 
 		// Path is valid
-		if (pathResult.Num() > 2)
+		if (pathResult.Num() > 0)
 		{
 			return pathResult;
 		}

@@ -496,8 +496,14 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 				//placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
 				//placingLastZoneBuilt = PathfinderComp->FindShortestPathDijkstra(placingBlockTileID, lastLinetracedTile);
 				//placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
-				placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
-			
+				
+				placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
+
+				if (placingLastZoneBuilt.Num() < 5)
+				{
+					placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
+				}
+
 				GridManager->SetPlayerSelection(placingLastZoneBuilt);
 				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
 			}
@@ -549,8 +555,27 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 			}
 		}
 
-		// If the player is resizing a block, do not update the block's location to the mouse's position
+		// Check if block is clear to be placed (not hovering used tiles)
+		bool isBlockClearToBePlaced = true;
 		if (!isSettingBlockSize)
+		{
+			bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
+			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, placingBlockGhost->GetBlockStats()->Size_X, placingBlockGhost->GetBlockStats()->Size_Y, isModuloHalfPi);
+			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, placingBlockGhost->GetBlockStats()->Size_X, placingBlockGhost->GetBlockStats()->Size_Y, isModuloHalfPi);
+			TArray<int> ghostBlockTiles = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB);
+
+			
+			for (auto i : ghostBlockTiles)
+			{
+				if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
+				{
+					isBlockClearToBePlaced = false;
+				}
+			}
+		}
+
+		// If the player is resizing a block or if the hovered tile is already used, do not update the block's location to the mouse's position
+		if (!isSettingBlockSize && isBlockClearToBePlaced)
 		{
 			placingBlockTargetLocation = GridManager->GetTileLocation(lastLinetracedTile);
 		}
