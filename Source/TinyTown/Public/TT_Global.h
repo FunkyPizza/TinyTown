@@ -5,6 +5,19 @@
 #include "TT_Global.generated.h" 
 
 
+UENUM(BlueprintType)
+enum class EBlockType : uint8
+{
+	BT_Building 		UMETA(DisplayName = "Building"),
+	BT_ZoneBuilding		UMETA(DisplayName = "Zone Building"),
+	BT_Zone 			UMETA(DisplayName = "Zone"),
+	BT_Path				UMETA(DisplayName = "Path"),
+	BT_Nothing			UMETA(DisplayName = "Nothing")
+};
+
+/**
+* This struct is used as template for the block data base. Any block (zone, building, path etc ...) has its data structured this way.
+*/
 USTRUCT(BlueprintType)
 struct FTT_Struct_Block : public FTableRowBase
 {
@@ -17,10 +30,10 @@ struct FTT_Struct_Block : public FTableRowBase
 		FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		FString Type;
+		FString Category_Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 Efficiency;
+		EBlockType Block_Type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		bool Resizable;
@@ -33,6 +46,9 @@ struct FTT_Struct_Block : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		FLinearColor Grid_Colour;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
+		int32 Efficiency;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Initial_Cost;
@@ -131,16 +147,4 @@ struct FTT_Struct_Inventory : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Building")
 		int32 Production;
 
-};
-
-UENUM(BlueprintType)	
-enum class EBuildingType : uint8
-{
-	BT_Residential 		UMETA(DisplayName = "Residential"),
-	BT_Industrial 		UMETA(DisplayName = "Industrial"),
-	BT_Commercial		UMETA(DisplayName = "Commercial"),
-	BT_Entertainment	UMETA(DisplayName = "Entertainment"),
-	BT_Electricity		UMETA(DisplayName = "Electricity"),
-	BT_Water			UMETA(DisplayName = "Water"),
-	BT_Internet			UMETA(DisplayName = "Internet")
 };

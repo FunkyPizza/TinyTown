@@ -204,7 +204,7 @@ protected:
 
 	/** The class responsible to display blocks being placed down.. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-	TSubclassOf<ATT_Block> placingBlockGhostClass;
+	TSubclassOf<ATT_Block> placingBlockClass;
 
 	/** The class responsible to display resizable block being placed down. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
@@ -220,11 +220,11 @@ protected:
 
 
 	//Block building variables
-	ATT_Block* placingBlockGhost; // Currently spawned ghostBlock
-	int placingBlockGhostID; // BlockID of the ghostBlock that was spawned
+	ATT_Block* placingBlockInstance; // Currently spawned ghostBlock
+	int placingBlockID; // BlockID of the ghostBlock that was spawned
 	int placingBlockTileID; // Tile on which the block has been spawned (used as StartTile for zone spawning)
 	int placingBlocklastEndTileID; // Value of EndTileID last time zone was calculated
-	bool isGhostBlockResizable; // Indicates whether the ghostBlock that was spawn is resizable OR can be rotated
+	bool isPlacingDownAResizableBlock; // Indicates whether the ghostBlock that was spawn is resizable OR can be rotated
 	TArray<int> placingLastZoneBuilt; // The tile array of the last zone to be placed down
 	FVector placingBlockTargetLocation; // Target location to lerp to (when placing a building and hovering tiles)
 	FRotator placingBlockTargetRotation; // Target rotation to lerp to (when rotating the ghostBlock)
@@ -252,15 +252,16 @@ protected:
 	bool isMoveButtonDown; // Indicates if the Move button (right click) is down
 	bool isMovingCamera; // Indicates if the camera is being moved
 	bool isRotatingCamera; // Indicates if the camera is being rotated
-	bool isPlacingDownBlock; // Indicates if the player is placing down a building
+	bool isPlacingDownABlock; // Indicates if the player is placing down a building
 	bool isRotatingBlock; // Indicates if the player is rotating a building while placing it down
 	bool isSettingBlockSize; // Indicates if the player is setting the size of a block while placing it down (drag)
-	bool isPlacingDownRoad; // Indicates whether or not the block is a road in which case pathfinding should be use
+	bool isPlacingDownAPath; // Indicates whether or not the block is a road in which case pathfinding should be use
 	bool isZoneBuildingCancelled; // Indicates whether block building should be restarted or totally cancelled.
 	bool isRemoveToolActive; // Indicates whether the RemoveTool is activated.
 	bool isRemoveToolSelecting; // Indicates whether the RemoveTool currently has selected tiles to remove or not.
 	int32 currentLinetracedTile; // Tile ID of the current line traced tile, if none returns -1
 	int32 lastLinetracedTile; // Tile ID of the last line traced tile
+	int lastPathGoalTile; // Goal tile ID of the last path that was found
 
 
 public:	

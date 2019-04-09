@@ -20,10 +20,22 @@
 29/03/2019
 - Finished implementing A*
 
-1/03/2019
+1/04/2019
 
-02/03/2019
+02/04/2019
 - Added day and night cycle
 
-03/03/2019
-- Added time logic, based day/night cycle on that 
+03/04/2019
+- Added time logic with controls in UI
+- Based day and night cycle on this time system
+
+08/04/2019
+- Pathfinding will no longer find paths by going to the top edge of the grid and carrying on at the bottom of the next row 
+- Ghost blocks no longer hover over used tiles (preventing that they can be placed on it)
+- road building now uses a mix of Dijkstra's and A* to find best path
+
+09/04/2014
+- Added a new "block type" var in database to assign a building to its type
+- Category Name in database is now only used for UI purposes, Block_Type now defines a block's behaviour
+- Added building material with lights going on and off
+- Improved pathfinding perfomance (does not run on tick anymore)

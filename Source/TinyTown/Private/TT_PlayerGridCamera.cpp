@@ -11,6 +11,7 @@
 #include "TT_Block.h"
 #include "TimerManager.h"
 #include "TT_Pathfinder.h"
+#include "TT_Global.h"
 
 /*---------- Primary functions ----------*/
 ATT_PlayerGridCamera::ATT_PlayerGridCamera()
@@ -46,7 +47,7 @@ void ATT_PlayerGridCamera::Tick(float DeltaTime)
 	}
 
 	// Update placingBlockGhost location to follow mouse
-	if (isPlacingDownBlock)
+	if (isPlacingDownABlock)
 	{
 		TickBuildTool(DeltaTime);
 	}
@@ -191,13 +192,13 @@ void ATT_PlayerGridCamera::InputSelectButtonDown()
 		ConfirmRemoveToolStartTile();
 	}
 
-	if (isPlacingDownBlock)
+	if (isPlacingDownABlock)
 	{
 		// Temporarily save mouse position (used to set mouse position back after building rotation)
 		GetWorld()->GetFirstPlayerController()->GetMousePosition(placingBlockMouseX, placingBlockMouseY);
 
 		// Activate zone building if player is placing down a resizable block
-		if (isGhostBlockResizable && !isSettingBlockSize)
+		if (isPlacingDownAResizableBlock && !isSettingBlockSize)
 		{
 			ConfirmBuildToolStartTile();
 			return;
@@ -239,7 +240,7 @@ void ATT_PlayerGridCamera::InputSelectButtonUp()
 	}
 
 	// If not rotating block, confirm block building location.
-	if (isPlacingDownBlock && !isZoneBuildingCancelled)
+	if (isPlacingDownABlock && !isZoneBuildingCancelled)
 	{
 		ConfirmBuildTool();
 		return;
@@ -270,7 +271,7 @@ void ATT_PlayerGridCamera::InputMoveButtonUp()
 
 void ATT_PlayerGridCamera::InputCancel()
 {
-	if (isPlacingDownBlock)
+	if (isPlacingDownABlock)
 	{
 		isZoneBuildingCancelled = true;
 		StopBuildTool();
@@ -362,7 +363,7 @@ void ATT_PlayerGridCamera::MouseTrace()
 
 void ATT_PlayerGridCamera::StartBuildTool(int blockID)
 {
-	if (!placingBlockGhostClass)
+	if (!placingBlockClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Class placingBlockGhost has not been set in %s."), *GetName());
 		return;
@@ -371,38 +372,38 @@ void ATT_PlayerGridCamera::StartBuildTool(int blockID)
 	StopBuildTool();
 	StopRemoveTool();
 
-	if (placingBlockGhost)
+	if (placingBlockInstance)
 	{
 		// Cancel previous block building
 		
 	}
 
 	// Ghost block setting
-	placingBlockGhostID = blockID;
-	isGhostBlockResizable = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID)->Resizable;
-	isPlacingDownRoad = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID)->Type == "Road";
+	placingBlockID = blockID;
+	isPlacingDownAResizableBlock = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockID)->Block_Type == EBlockType::BT_Path || GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockID)->Block_Type == EBlockType::BT_Zone;
+	isPlacingDownAPath = GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockID)->Block_Type == EBlockType::BT_Path;
 	FTransform blockTransform = FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(1,1,1));
 	placingBlockTargetLocation = FVector(0, 0, 0);
 	placingBlockTargetRotation = FRotator(0, 0, 0);
 	   
-	if (isGhostBlockResizable)
+	if (isPlacingDownAResizableBlock)
 	{
-		placingBlockGhost = GetWorld()->SpawnActorDeferred<ATT_Block>(placingResizableBlockGhostClass, blockTransform);
+		placingBlockInstance = GetWorld()->SpawnActorDeferred<ATT_Block>(placingResizableBlockGhostClass, blockTransform);
 	}
 	else
 	{
-		placingBlockGhost = GetWorld()->SpawnActorDeferred<ATT_Block>(placingBlockGhostClass, blockTransform);
+		placingBlockInstance = GetWorld()->SpawnActorDeferred<ATT_Block>(placingBlockClass, blockTransform);
 	}
 
-	if (placingBlockGhost)
+	if (placingBlockInstance)
 	{
-		placingBlockGhost->SetBlockStats(GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockGhostID));
-		placingBlockGhost->SetBlockManager(GridManager->BlockManager);
-		placingBlockGhost->ActivateEditMode();
+		placingBlockInstance->SetBlockStats(GridManager->BlockManager->GetBlockStatsFromBlockID(placingBlockID));
+		placingBlockInstance->SetBlockManager(GridManager->BlockManager);
+		placingBlockInstance->ActivateEditMode();
 
-		UGameplayStatics::FinishSpawningActor(placingBlockGhost, blockTransform);
+		UGameplayStatics::FinishSpawningActor(placingBlockInstance, blockTransform);
 
-		isPlacingDownBlock = true;
+		isPlacingDownABlock = true;
 	}
 }
 
@@ -418,16 +419,17 @@ void ATT_PlayerGridCamera::StopBuildTool()
 	}
 
 	// Makes sure the BuildTool is active, then fully disable it
-	if (isPlacingDownBlock)
+	if (isPlacingDownABlock)
 	{
-		isPlacingDownBlock = false;
+		isPlacingDownABlock = false;
 		isSettingBlockSize = false;
-		isGhostBlockResizable = false;
+		isPlacingDownAResizableBlock = false;
 		isZoneBuildingCancelled = false;
 		GridManager->TileClearState();
 
-		placingBlockGhost->Destroy();
-		placingBlockGhostID = -1;
+		placingBlockInstance->Destroy();
+		placingBlockID = -1;
+		lastPathGoalTile = -1;
 
 		isMovementEnabled = true;
 	}
@@ -435,28 +437,28 @@ void ATT_PlayerGridCamera::StopBuildTool()
 
 void ATT_PlayerGridCamera::ConfirmBuildTool()
 {
-	if (placingBlockGhostID == -1)
+	if (placingBlockID == -1)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("placingBlockGhostID was not set, not spawning block"));
+		UE_LOG(LogTemp, Warning, TEXT("the placing block ID was not set, cannot spawn block"));
 		return;
 	}
-	if (!placingBlockGhost)
+	if (!placingBlockInstance)
 	{
-		placingBlockGhostID = -1;
-		UE_LOG(LogTemp, Warning, TEXT("placingBlockGhost was not created, not spawning block"));
+		placingBlockID = -1;
+		UE_LOG(LogTemp, Warning, TEXT("The placing block instance is not valid, cannot spawn block"));
 		return;
 	}
 
 	// Block has a fixed size
-	if (!isGhostBlockResizable)
+	if (!isPlacingDownAResizableBlock)
 	{
-		GridManager->BlockManager->SpawnBlock(placingBlockGhostID, placingBlockTargetRotation, lastLinetracedTile);
+		GridManager->BlockManager->SpawnBlock(placingBlockID, placingBlockTargetRotation, lastLinetracedTile);
 	}
 
 	// Block is a zone / is resizable
-	if (isGhostBlockResizable)
+	if (isPlacingDownAResizableBlock)
 	{
-		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockGhostID);
+		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockID);
 		GridManager->ClearPlayerSelection();
 
 		for (auto i : placingLastZoneBuilt)
@@ -472,13 +474,13 @@ void ATT_PlayerGridCamera::ConfirmBuildTool()
 
 void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 {
-	if (placingBlockGhost)
+	if (placingBlockInstance)
 	{
-		if (isGhostBlockResizable)
+		if (isPlacingDownAResizableBlock)
 		{
 			TArray<int> tempTiles;
 			tempTiles.Add(lastLinetracedTile);
-			GridManager->SetTileColorFromZoneID(tempTiles, placingBlockGhostID);
+			GridManager->SetTileColorFromZoneID(tempTiles, placingBlockID);
 		}
 
 		// Enables keyboard movement when placing down a block
@@ -490,29 +492,33 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		// Resizing the block
 		if (isSettingBlockSize && !isZoneBuildingCancelled)
 		{
-			if (isPlacingDownRoad)
+			if (isPlacingDownAPath)
 			{
-				// Pathfinding functions
-				//placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
-				//placingLastZoneBuilt = PathfinderComp->FindShortestPathDijkstra(placingBlockTileID, lastLinetracedTile);
-				//placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
-				
-				placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
-
-				if (placingLastZoneBuilt.Num() < 5)
+				if (lastPathGoalTile != lastLinetracedTile)
 				{
-					placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
-				}
+					// Pathfinding functions
+					//placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
+					//placingLastZoneBuilt = PathfinderComp->FindShortestPathDijkstra(placingBlockTileID, lastLinetracedTile);
+					//placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
 
-				GridManager->SetPlayerSelection(placingLastZoneBuilt);
-				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
+					placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
+
+					if (placingLastZoneBuilt.Num() < 5)
+					{
+						placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
+					}
+
+					lastPathGoalTile = lastLinetracedTile;
+				}
+					GridManager->SetPlayerSelection(placingLastZoneBuilt);
+					GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockID);
 			}
 
 			else 
 			{
 				placingLastZoneBuilt = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
 				GridManager->SetPlayerSelection(placingLastZoneBuilt);
-				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockGhostID);
+				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockID);
 
 			}
 		}
@@ -521,7 +527,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		else if (!isZoneBuildingCancelled)
 		{
 			// Check that the mouse button is held and that the block has finished its previous rotation
-			if (isSelectButtonDown && FMath::IsNearlyEqual(placingBlockGhost->RotationRoot->RelativeRotation.Yaw, placingBlockTargetRotation.Yaw, 0.1f))
+			if (isSelectButtonDown && FMath::IsNearlyEqual(placingBlockInstance->RotationRoot->RelativeRotation.Yaw, placingBlockTargetRotation.Yaw, 0.1f))
 			{
 				// Check for any mouse movement meaning the player wants to rotate the block
 				if (!(FMath::IsNearlyEqual(GetInputAxisValue("MouseX"), 0.0f, ghostBlockRotationMouseThreshold)))
@@ -560,8 +566,8 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		if (!isSettingBlockSize)
 		{
 			bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
-			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, placingBlockGhost->GetBlockStats()->Size_X, placingBlockGhost->GetBlockStats()->Size_Y, isModuloHalfPi);
-			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, placingBlockGhost->GetBlockStats()->Size_X, placingBlockGhost->GetBlockStats()->Size_Y, isModuloHalfPi);
+			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, placingBlockInstance->GetBlockStats()->Size_X, placingBlockInstance->GetBlockStats()->Size_Y, isModuloHalfPi);
+			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, placingBlockInstance->GetBlockStats()->Size_X, placingBlockInstance->GetBlockStats()->Size_Y, isModuloHalfPi);
 			TArray<int> ghostBlockTiles = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB);
 
 			
@@ -581,8 +587,8 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		}
 
 		// Get tile location to lerp the block to
-		placingBlockGhost->SetActorLocation(FMath::Lerp(placingBlockGhost->GetActorLocation(), placingBlockTargetLocation, ghostBlockMovementSpeed * deltaTime));
-		placingBlockGhost->SetBlockRotation(placingBlockTargetRotation);
+		placingBlockInstance->SetActorLocation(FMath::Lerp(placingBlockInstance->GetActorLocation(), placingBlockTargetLocation, ghostBlockMovementSpeed * deltaTime));
+		placingBlockInstance->SetBlockRotation(placingBlockTargetRotation);
 	}
 }
 

@@ -17,12 +17,14 @@ ATT_BlockManager::ATT_BlockManager()
 
 	// Get the data table holding block's data
 	data_Block = GetBlockDataTable();
-	AnalyseDataBase();
+
 }
 
 void ATT_BlockManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	RefreshDataFromDataTable();
 }
 
 void ATT_BlockManager::SetGridManager(ATT_GridManager* newGridManager)
@@ -446,10 +448,13 @@ UDataTable* ATT_BlockManager::GetBlockDataTable()
 	}
 }
 
-void ATT_BlockManager::AnalyseDataBase()
+void ATT_BlockManager::RefreshDataFromDataTable()
 {
 	if (data_Block)
 	{
+		blockTypeMap.Empty();
+		zoneIDMap.Empty();
+
 		FString contextString;
 		TArray<FName> rowNames;
 		rowNames = data_Block->GetRowNames();
@@ -459,30 +464,40 @@ void ATT_BlockManager::AnalyseDataBase()
 			FTT_Struct_Block* row = data_Block->FindRow<FTT_Struct_Block>(name, contextString);
 			if (row)
 			{
-				// If type hasn't been encountered yet
-				if (!blockTypeMap.Contains(row->Type))
+				if ( !(row->Category_Name == "") && row->Block_Type != EBlockType::BT_Nothing)
 				{
-					// Create a new map element for the new type, and add the first blockID to it
-					FTT_Struct_BlockType tempBlockType
-					(
-						row->Type,
-						TArray<int>({ FCString::Atoi(*name.ToString()) })
-					);
 
-					blockTypeMap.Add(row->Type, tempBlockType);
-				}
+					// If type hasn't been encountered yet
+					if (!blockTypeMap.Contains(row->Category_Name))
+					{
+						// Create a new map element for the new type, and add the first blockID to it
+						FTT_Struct_BlockType tempBlockType
+						(
+							row->Category_Name,
+							TArray<int>({ FCString::Atoi(*name.ToString()) })
+						);
 
-				// If type already exist in the map
-				else
-				{
-					// Just add blockID to it
-					blockTypeMap.Find(row->Type)->BlockIDs.Add( FCString::Atoi(*name.ToString()) );
-				}
+						blockTypeMap.Add(row->Category_Name, tempBlockType);
+					}
 
-				// If row is a zone add it to the zone map
-				if (row->Type == "Zone" || row->Type == "Road")
-				{
-					zoneIDMap.Add(row->Block_Name.ToString(), FCString::Atoi(*name.ToString()) );
+					// If type already exist in the map
+					else
+					{
+						// Just add blockID to it
+						blockTypeMap.Find(row->Category_Name)->BlockIDs.Add(FCString::Atoi(*name.ToString()));
+					}
+
+					// If row is a zone add it to the zone map
+					if (row->Block_Type == EBlockType::BT_Zone)
+					{
+						zoneIDMap.Add(row->Block_Name.ToString(), FCString::Atoi(*name.ToString()));
+					}
+
+					// If row is a zone building add it to the zone map
+					if (row->Block_Type == EBlockType::BT_ZoneBuilding)
+					{
+						zoneBuildingIDMap.Add(row->Category_Name, FCString::Atoi(*name.ToString()));
+					}
 				}
 			}
 		}
@@ -548,7 +563,7 @@ TArray<int> ATT_BlockManager::GetAllBlockIDsFromParameter(FString buildingType, 
 		if (row)
 		{
 			// Check if current row matches parameters
-			if (row->Type == buildingType && row->Size_X == sizeX && row->Size_Y == sizeY)
+			if (row->Category_Name == buildingType && row->Size_X == sizeX && row->Size_Y == sizeY)
 			{
 				int BlockID = FCString::Atoi(*name.ToString());
 				matchingBlocks.Add(BlockID);

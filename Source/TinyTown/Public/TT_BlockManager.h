@@ -46,7 +46,7 @@ protected:
 	* This function sorts the data base into a FMap. It separates all different block types and gather all blockIDs from the 
 	* same type in the same place.
 	*/
-	void AnalyseDataBase();
+	void RefreshDataFromDataTable();
 
 	/**
 	 * Resize all the tile arrays (responsible of holding tile information, such as if it is used, what is it used by etc ...)
@@ -221,11 +221,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Block Settings")
 	TSubclassOf<AActor> BlockToSpawn;
 
-	/* This maps is a sorted version of the data base where each key is a block type, 
-	* and each value is an array of FTT_Struct_BlockType containing all BlockIDs corresponding
-	* to the block type. 
-	*/
+	/* This maps contains contains all the BT_Zone block names alongside their blockID. */
+	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, int> zoneIDMap;
+
+	/* This maps contains contains all the BT_ZoneBuilding block names alongside their blockID. */
+	UPROPERTY(BlueprintReadOnly)
+	TMap<FString, int> zoneBuildingIDMap;
 
 	/* This array of bool indicates which zone view mode is activate. For each block of type "zone", there is a bool. */
 	TArray<bool> isZoneViewModeActive;
