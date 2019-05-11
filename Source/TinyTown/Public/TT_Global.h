@@ -110,6 +110,10 @@ struct FTT_Struct_BlockType : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
 		TArray<int> BlockIDs;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
+		TArray<FString> BlockNames;
+
 	FTT_Struct_BlockType()
 	{
 
@@ -120,7 +124,18 @@ struct FTT_Struct_BlockType : public FTableRowBase
 		Type_Name = Type;
 		BlockIDs = blockIDArray;
 	}
-
+	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray, TArray<FString> Names)
+	{
+		Type_Name = Type;
+		BlockIDs = blockIDArray;
+		BlockNames = Names;
+	}
+	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray, FString Name)
+	{
+		Type_Name = Type;
+		BlockIDs = blockIDArray;
+		BlockNames.Add(Name);
+	}
 };
 
 

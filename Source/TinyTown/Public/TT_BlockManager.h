@@ -77,6 +77,7 @@ protected:
 	TArray<ATT_Block*> spawnedBlocks;
 
 	/** Data table holding data of all the blocks.*/
+	UPROPERTY(BlueprintReadOnly)
 	UDataTable* data_Block;
 
 	/** This map sorts all blocks by types, each key is a type (string) containing an array of BlockID (int). 

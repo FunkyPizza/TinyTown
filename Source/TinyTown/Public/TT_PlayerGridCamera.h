@@ -236,6 +236,7 @@ protected:
 	FTimerHandle TimerHandle_RemoveTool;
 
 	/** Reference to the current GridManager, set by GetGridManager(). */
+	UPROPERTY(BlueprintReadOnly)
 	ATT_GridManager* GridManager; 
 
 

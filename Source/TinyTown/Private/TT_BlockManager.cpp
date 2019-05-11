@@ -474,7 +474,8 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 						FTT_Struct_BlockType tempBlockType
 						(
 							row->Category_Name,
-							TArray<int>({ FCString::Atoi(*name.ToString()) })
+							TArray<int>({ FCString::Atoi(*name.ToString()) }),
+							row->Block_Name.ToString()
 						);
 
 						blockTypeMap.Add(row->Category_Name, tempBlockType);
@@ -483,8 +484,9 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 					// If type already exist in the map
 					else
 					{
-						// Just add blockID to it
+						// Just add blockID and Name to it
 						blockTypeMap.Find(row->Category_Name)->BlockIDs.Add(FCString::Atoi(*name.ToString()));
+						blockTypeMap.Find(row->Category_Name)->BlockNames.Add(row->Block_Name.ToString());
 					}
 
 					// If row is a zone add it to the zone map

@@ -184,6 +184,7 @@ public:
 	/*---------- Variables -----------*/
  
 	/** Reference to the block manager spawned with SpawnBlockManager(). */
+	UPROPERTY(BlueprintReadOnly)
 	ATT_BlockManager* BlockManager; 
 	   	 
 };
