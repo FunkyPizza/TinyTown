@@ -134,7 +134,7 @@ public:
 	* @param ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
 	*/
 	UFUNCTION(BlueprintCallable)
-		void SetTileColorFromZoneID(TArray<int> tileIDs, int zoneID);
+		void SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID);
 
 	/** Tile Effect - Set the tile a certain color. */
 	void SetTileColor(int tileID, FLinearColor colour);
@@ -169,7 +169,7 @@ public:
 	void ViewModeTick();
 
 	/** Set a TArray of tiles' colour to avoid being overridden by view modes. */
-	void SetPlayerSelection(TArray<int> tileIDs);
+	void SetPlayerSelection(TArray<int> selectedTileIDs);
 
 	/** Clears the TArray of tiles, and reset their colour. */
 	void ClearPlayerSelection();

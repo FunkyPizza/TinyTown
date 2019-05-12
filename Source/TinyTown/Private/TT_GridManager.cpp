@@ -183,9 +183,9 @@ void ATT_GridManager::TileReset(int tileID)
 	instanceGroupedSpriteComp->UpdateInstanceColor(tileID, FLinearColor::White, true);
 }
 
-void ATT_GridManager::SetTileColorFromZoneID(TArray<int> tileIDs, int zoneID)
+void ATT_GridManager::SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID)
 {
-	if (tileIDs.Num() > 0)
+	if (zoneTileIDs.Num() > 0)
 	{
 		TileClearState();
 
@@ -197,9 +197,9 @@ void ATT_GridManager::SetTileColorFromZoneID(TArray<int> tileIDs, int zoneID)
 			ZoneColour = BlockManager->GetBlockStatsFromBlockID(zoneID)->Grid_Colour;
 		}
 
-		for (int i = 0; i < tileIDs.Num(); ++i)
+		for (int i = 0; i < zoneTileIDs.Num(); ++i)
 		{
-				SetTileColor(tileIDs[i], ZoneColour);
+				SetTileColor(zoneTileIDs[i], ZoneColour);
 		}
 	}
 }
@@ -318,10 +318,10 @@ void ATT_GridManager::ViewModeTick()
 	}
 }
 
-void ATT_GridManager::SetPlayerSelection(TArray<int> tileIDs)
+void ATT_GridManager::SetPlayerSelection(TArray<int> selectedTileIDs)
 {
 	playerTileSelection.Empty();
-	playerTileSelection = tileIDs;
+	playerTileSelection = selectedTileIDs;
 }
 
 void ATT_GridManager::ClearPlayerSelection()

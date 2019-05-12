@@ -2,7 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "TT_Global.generated.h" 
+#include "TT_Global.generated.h"
+
+class UPaperSprite;
 
 
 UENUM(BlueprintType)
@@ -98,6 +100,9 @@ struct FTT_Struct_Block : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		UStaticMesh* Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
+		UPaperSprite* Icon;
+
 };
 
 USTRUCT(BlueprintType)
@@ -105,36 +110,30 @@ struct FTT_Struct_BlockType : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block Library")
 		FString Type_Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block Library")
 		TArray<int> BlockIDs;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Zone")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block Library")
 		TArray<FString> BlockNames;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block Library")
+		TArray<FString> BlockDescription;
+	
+	
 	FTT_Struct_BlockType()
 	{
 
 	}
 
-	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray)
+	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray, FString blockName, FString blockDescription)
 	{
 		Type_Name = Type;
 		BlockIDs = blockIDArray;
-	}
-	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray, TArray<FString> Names)
-	{
-		Type_Name = Type;
-		BlockIDs = blockIDArray;
-		BlockNames = Names;
-	}
-	FTT_Struct_BlockType(FString Type, TArray<int32> blockIDArray, FString Name)
-	{
-		Type_Name = Type;
-		BlockIDs = blockIDArray;
-		BlockNames.Add(Name);
+		BlockNames.Add(blockName);
+		BlockDescription.Add(blockDescription);
 	}
 };
 

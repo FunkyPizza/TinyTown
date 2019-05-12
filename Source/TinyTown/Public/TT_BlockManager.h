@@ -77,7 +77,6 @@ protected:
 	TArray<ATT_Block*> spawnedBlocks;
 
 	/** Data table holding data of all the blocks.*/
-	UPROPERTY(BlueprintReadOnly)
 	UDataTable* data_Block;
 
 	/** This map sorts all blocks by types, each key is a type (string) containing an array of BlockID (int). 
@@ -183,10 +182,17 @@ public:
 	FVector2D GetZoneSizeFromTileArray(TArray<int> zone);
 
 	/**
-	* Returns data of block from its BlockID (see TT_Struct_Block).
+	* Returns pointer to data of block from its BlockID (see TT_Struct_Block).
 	* @param blockID Data table index of the row corresponding to the block to spawn.
 	*/
 	FTT_Struct_Block* GetBlockStatsFromBlockID(int blockID);
+
+	/** 
+	* Returns data of block from its BlockID (see TT_Struct_Block). Added to expose GetBlockStatsFromBlockID() to blueprints.
+	* @param blockID Data table index of the row corresponding to the block to spawn.
+	*/
+	UFUNCTION(BlueprintCallable)
+		const FTT_Struct_Block GetBlockStatsInDataTable(int blockID);
 
 	/**
 	* Returns a random blockID corresponding to parameters in the data table.

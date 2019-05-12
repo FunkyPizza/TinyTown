@@ -475,7 +475,8 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 						(
 							row->Category_Name,
 							TArray<int>({ FCString::Atoi(*name.ToString()) }),
-							row->Block_Name.ToString()
+							row->Block_Name.ToString(),
+							row->Description.ToString()
 						);
 
 						blockTypeMap.Add(row->Category_Name, tempBlockType);
@@ -487,6 +488,7 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 						// Just add blockID and Name to it
 						blockTypeMap.Find(row->Category_Name)->BlockIDs.Add(FCString::Atoi(*name.ToString()));
 						blockTypeMap.Find(row->Category_Name)->BlockNames.Add(row->Block_Name.ToString());
+						blockTypeMap.Find(row->Category_Name)->BlockDescription.Add(row->Description.ToString());
 					}
 
 					// If row is a zone add it to the zone map
@@ -544,6 +546,12 @@ FTT_Struct_Block* ATT_BlockManager::GetBlockStatsFromBlockID(int blockID)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Cannot access data_Block in %s , data_Block is not valid."), *GetName());
 	return nullptr;
+}
+
+
+const FTT_Struct_Block ATT_BlockManager::GetBlockStatsInDataTable(int blockID)
+{
+	return *GetBlockStatsFromBlockID(blockID);
 }
 
 TArray<int> ATT_BlockManager::GetAllBlockIDsFromParameter(FString buildingType, int efficiency, int sizeX, int sizeY)
