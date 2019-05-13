@@ -46,24 +46,32 @@ void ATT_GameState::TickTime()
 	{
 		Time_Minutes++;
 		Time_Seconds = 0;
+
+		OnMinutePassed();
 	}
 
 	if (Time_Minutes >= 60)
 	{
 		Time_Hours++;
 		Time_Minutes = 0;
+
+		OnHourPassed();
 	}
 	
 	if (Time_Hours >= 24)
 	{
 		Time_Day++;
 		Time_Hours = 0;
+
+		OnDayPassed();
 	}
 
 	if (Time_Day >= 31)
 	{
 		Time_Months++;
 		Time_Day = 0;
+
+		OnMonthPassed();
 	}
 
 	Time_String = FString::Printf( TEXT("(%d / %d) %d : %d : %f"), Time_Day, Time_Months, Time_Hours, Time_Minutes, Time_Seconds);

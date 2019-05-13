@@ -51,6 +51,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTimeMultiplier(int multiplier);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	void OnMinutePassed();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	void OnHourPassed();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	void OnDayPassed();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	void OnMonthPassed();
 
 	void Transaction(FTT_Struct_Inventory Cost, FTT_Struct_Inventory Revenue);
 	void PayFromInventory(FTT_Struct_Inventory Cost);

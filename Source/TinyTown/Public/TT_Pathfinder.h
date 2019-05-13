@@ -58,6 +58,7 @@ public:
 	* @param startTile TileID of the tile to start from.
 	* @param goalTile TileID of the tile to end at.
 	*/
+	UFUNCTION(BlueprintCallable)
 	TArray<int> FindShortestPathDijkstra(int startTile, int goalTile);
 
 	/** Return an array of tile IDs representing the shortest path between startTile and goalTile guaranteed to be in the zone.
@@ -65,7 +66,14 @@ public:
 	* @param goalTile TileID of the tile to end at.
 	* @param zone Array of TileIDs. The return path is guaranteed to be using only the tiles in the zone.
 	*/
+	UFUNCTION(BlueprintCallable)
 	TArray<int> FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone);
-		
+	
+	/**
+	* Return an array of tile IDs representing the shortest path between startTile and goalTile using A* pathfinding.
+	* @param startTile TileID of the tile to start from.
+	* @param goalTile TileID of the tile to end at.
+	*/
+	UFUNCTION(BlueprintCallable)
 	TArray<int> FindShortestPathAStar(int startTile, int goalTile);
 };
