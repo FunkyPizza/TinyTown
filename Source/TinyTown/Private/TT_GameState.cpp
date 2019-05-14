@@ -33,7 +33,12 @@ void ATT_GameState::StartTime()
 	GetWorldTimerManager().SetTimer(TimerHandle_Time, this, &ATT_GameState::TickTime, timeDefault, true, 0.0f);
 }
 
-void ATT_GameState::StopTime()
+void ATT_GameState::ResumeTime()
+{
+	GetWorldTimerManager().SetTimer(TimerHandle_Time, this, &ATT_GameState::TickTime, timeDefault, true, 0.0f);
+}
+
+void ATT_GameState::PauseTime()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle_Time);
 }
@@ -41,11 +46,12 @@ void ATT_GameState::StopTime()
 void ATT_GameState::TickTime()
 {
 	Time_Seconds += timeMultiplier * 1000 * timeDefault;
+	OnSecondPassed();
 
 	if (Time_Seconds >= 60)
 	{
 		Time_Minutes++;
-		Time_Seconds = 0;
+		Time_Seconds = 1;
 
 		OnMinutePassed();
 	}
@@ -69,14 +75,20 @@ void ATT_GameState::TickTime()
 	if (Time_Day >= 31)
 	{
 		Time_Months++;
-		Time_Day = 0;
+		Time_Day = 1;
 
 		OnMonthPassed();
 	}
 
-	Time_String = FString::Printf( TEXT("(%d / %d) %d : %d : %f"), Time_Day, Time_Months, Time_Hours, Time_Minutes, Time_Seconds);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Time_String);
-	//UE_LOG(LogTemp, Warning, TEXT("(%d / %d) %d : %d : %f"), Time_Day, Time_Months, Time_Hours, Time_Minutes, Time_Seconds);
+	if (Time_Months >= 12)
+	{
+		Time_Year++;
+		Time_Months = 1;
+
+		void OnYearPassed();
+	}
+
+	Time_String = FString::Printf( TEXT("(%d / %d / %d) %d : %d : %f"), Time_Day, Time_Months, Time_Year, Time_Hours, Time_Minutes, Time_Seconds);
 }
 
 void ATT_GameState::SetTimeMultiplier(int multiplier)

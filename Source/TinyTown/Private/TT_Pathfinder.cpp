@@ -39,7 +39,7 @@ ATT_GridManager* UTT_Pathfinder::GetGridManager()
 		return nullptr;
 }
 
-TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID)
+TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID, bool allowDiagonalPaths)
 {
 	TArray<int> neighbours;
 	FVector2D gridSize = GridManager->GetGridSize();
@@ -50,6 +50,21 @@ TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID)
 	if (GridManager->IsTileValid(currentNeighbour))
 	{
 		neighbours.Add(currentNeighbour);
+	}
+
+	// Bottom right
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+
+		if (tileID != tempRow * gridSize.X)
+		{
+			currentNeighbour = tileID + gridSize.X - 1;
+			if (GridManager->IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
 	}
 
 	// Bottom tile
@@ -64,11 +79,42 @@ TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID)
 		}
 	}
 
+	// Bottom left
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+
+		if (tileID != tempRow * gridSize.X)
+		{
+
+			currentNeighbour = tileID - gridSize.X - 1;
+			if (GridManager->IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
+	}
+
 	// Left tile
 	currentNeighbour = tileID - gridSize.X;
 	if (GridManager->IsTileValid(currentNeighbour))
 	{
 		neighbours.Add(currentNeighbour);
+	}
+
+	// Top left
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+
+		if (tileID + 1 != tempRow * gridSize.X)
+		{
+			currentNeighbour = tileID - gridSize.X + 1;
+			if (GridManager->IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
 	}
 
 	// Top tile
@@ -83,14 +129,31 @@ TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID)
 		}
 	}
 
+	// Top right tile
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+
+		if (tileID + 1 != tempRow * gridSize.X)
+		{
+			currentNeighbour = tileID - gridSize.X + 1;
+			if (GridManager->IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
+	}
+
 	return neighbours;
 }
 
-int UTT_Pathfinder::GetTileMoveCost(int tileID)
+int UTT_Pathfinder::GetTileMoveCost(int tileID, int blockToIgnore)
 {
 	if (GridManager)
 	{
-		if (GridManager->BlockManager->GetSpawnedBlockIDs()[tileID] != 0)
+		int tileToCheck = GridManager->BlockManager->GetSpawnedBlockIDs()[tileID];
+
+		if ( tileToCheck != 0 && tileToCheck != blockToIgnore)
 		{
 			return 1000;
 		}
@@ -113,12 +176,12 @@ int UTT_Pathfinder::GetDistanceBetweenTwoTile(int tileA, int tileB)
 	return distance;
 }
 
-TArray<int> UTT_Pathfinder::FindShortestPathDijkstra(int startTile, int goalTile)
+TArray<int> UTT_Pathfinder::FindShortestPathDijkstra(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore)
 {
-	return FindShortestPathInZoneDijkstra(startTile, goalTile, tileArray);
+	return FindShortestPathInZoneDijkstra(startTile, goalTile, tileArray, allowDiagonalPaths, blockToIgnore);
 }
 
-TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone)
+TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone, bool allowDiagonalPaths, int blockToIgnore)
 {
 	if (zone.Num() > 1)
 	{
@@ -166,7 +229,7 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 			unexploredTiles.Remove(currentTile);
 
 			// Get tile's neighbours 
-			TArray<int> tileNeighbours = GetTileNeighbours(currentTile);
+			TArray<int> tileNeighbours = GetTileNeighbours(currentTile, allowDiagonalPaths);
 			for (int i = 0; i < tileNeighbours.Num(); i++)
 			{
 				int neighbourTileID = tileNeighbours[i];
@@ -175,7 +238,7 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 					if (distanceKeys.Contains(neighbourTileID))
 					{
 						int dist = 0;
-						dist = distances[currentTile] + GetTileMoveCost(neighbourTileID);
+						dist = distances[currentTile] + GetTileMoveCost(neighbourTileID, blockToIgnore);
 
 						if (dist < distances[neighbourTileID])
 						{
@@ -222,9 +285,9 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 	}
 }
 
-TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
+TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore)
 {
-	if (startTile != goalTile && GetTileMoveCost(goalTile) < 500)
+	if (startTile != goalTile && GetTileMoveCost(goalTile, blockToIgnore) < 500)
 	{
 		TArray<int> indexedTiles;
 		TArray<int> unexploredTiles;
@@ -272,12 +335,12 @@ TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile)
 			}
 
 			// Get tile's neighbours 
-			currentTileNeighbours = GetTileNeighbours(currentTile);
+			currentTileNeighbours = GetTileNeighbours(currentTile, allowDiagonalPaths);
 			for (int i = 0; i < currentTileNeighbours.Num(); i++)
 			{
 				int currentNeighbour = currentTileNeighbours[i];
 
-				if (exploredTiles.Contains(currentNeighbour) || GetTileMoveCost(currentNeighbour) > 500)
+				if (exploredTiles.Contains(currentNeighbour) || GetTileMoveCost(currentNeighbour, blockToIgnore) > 500)
 				{
 					// Skip to next neighbour
 				}

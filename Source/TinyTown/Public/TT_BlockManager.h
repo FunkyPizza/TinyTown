@@ -224,10 +224,6 @@ public:
 	/** Reference to the GridManager who created this block manager.*/
 	ATT_GridManager* GridManager;
 
-	/** Blueprint reference of the class of block to spawn.*/
-	UPROPERTY(EditAnywhere, Category = "Block Settings")
-	TSubclassOf<AActor> BlockToSpawn;
-
 	/* This maps contains contains all the BT_Zone block names alongside their blockID. */
 	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, int> zoneIDMap;

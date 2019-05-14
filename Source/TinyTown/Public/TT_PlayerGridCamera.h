@@ -202,14 +202,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	int zoomLerpSpeed;
 
-	/** The class responsible to display blocks being placed down.. */
-	UPROPERTY(EditAnywhere, Category = "Block Building")
-	TSubclassOf<ATT_Block> placingBlockClass;
-
-	/** The class responsible to display resizable block being placed down. */
-	UPROPERTY(EditAnywhere, Category = "Block Building")
-	TSubclassOf<ATT_Block> placingResizableBlockGhostClass;
-
 	/** The speed at which a ghost block moves on the grid (when placing down a block). */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
 	float ghostBlockMovementSpeed;

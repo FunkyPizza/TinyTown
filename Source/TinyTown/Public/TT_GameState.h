@@ -40,28 +40,49 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-
-	UFUNCTION(BlueprintCallable)
+	/** Reset TimeMultiplier to 1 and resume counting time of day. */
+	UFUNCTION(BlueprintCallable, Category = "TimeSystem")
 	void StartTime();
 
-	UFUNCTION(BlueprintCallable)
-	void StopTime();
+	/** Resume counting time of day with current TimeMultiplier. */
+	UFUNCTION(BlueprintCallable, Category = "TimeSystem")
+	void ResumeTime();
 
-	void TickTime();
-	UFUNCTION(BlueprintCallable)
+	/** Pause current time of day. */
+	UFUNCTION(BlueprintCallable, Category = "TimeSystem")
+	void PauseTime();
+
+	/**
+	* Sets the speed at which the time of day is calculated. Default is 1, the high the faster time will pass.
+	* @param multiplier Time multiplier.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "TimeSystem")
 	void SetTimeMultiplier(int multiplier);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	/** Functions responsible for setting all the time functions. */
+	void TickTime();
+
+
+
+	/** Is called every time a second passes. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "TimeSystem")
+	void OnSecondPassed();
+	/** Is called every time a minute passes. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "TimeSystem")
 	void OnMinutePassed();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	/** Is called every time an hour passes. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "TimeSystem")
 	void OnHourPassed();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	/** Is called every time a day passes */
+	UFUNCTION(BlueprintImplementableEvent, Category = "TimeSystem")
 	void OnDayPassed();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Time Manager")
+	/** Is called every time a month passes. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "TimeSystem")
 	void OnMonthPassed();
+	/** Is called every time a year passes. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "TimeSystem")
+	void OnYearPassed();
+
 
 	void Transaction(FTT_Struct_Inventory Cost, FTT_Struct_Inventory Revenue);
 	void PayFromInventory(FTT_Struct_Inventory Cost);
@@ -69,18 +90,19 @@ public:
 	bool CheckTransaction(FTT_Struct_Inventory Cost);
 
 	/*---------- Variable -----------*/
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manager")
 	float Time_Seconds;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manager")
 	int Time_Minutes;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manager")
 	int Time_Hours;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manager")
 	int Time_Day;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manager")
 	int Time_Months;
-
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manager")
+	int Time_Year;
+	UPROPERTY(BlueprintReadOnly, Category = "Time Manager")
 	FString Time_String;
 
 

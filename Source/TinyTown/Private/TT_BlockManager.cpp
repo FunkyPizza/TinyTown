@@ -99,7 +99,7 @@ void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileI
 	}
 
 	ATT_Block* SpawnedActor;
-	SpawnedActor = GetWorld()->SpawnActorDeferred<ATT_Block>(BlockToSpawn, BlockTransform);
+	SpawnedActor = GetWorld()->SpawnActorDeferred<ATT_Block>(BlockStats->BlockClass, BlockTransform);
 	if (SpawnedActor)
 	{
 		SpawnedActor->SetBlockStats(BlockStats);
@@ -474,9 +474,7 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 						FTT_Struct_BlockType tempBlockType
 						(
 							row->Category_Name,
-							TArray<int>({ FCString::Atoi(*name.ToString()) }),
-							row->Block_Name.ToString(),
-							row->Description.ToString()
+							TArray<int>({ FCString::Atoi(*name.ToString()) })
 						);
 
 						blockTypeMap.Add(row->Category_Name, tempBlockType);
@@ -487,8 +485,6 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 					{
 						// Just add blockID and Name to it
 						blockTypeMap.Find(row->Category_Name)->BlockIDs.Add(FCString::Atoi(*name.ToString()));
-						blockTypeMap.Find(row->Category_Name)->BlockNames.Add(row->Block_Name.ToString());
-						blockTypeMap.Find(row->Category_Name)->BlockDescription.Add(row->Description.ToString());
 					}
 
 					// If row is a zone add it to the zone map
