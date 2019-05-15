@@ -60,6 +60,11 @@ ATT_BlockManager* ATT_Block::GetBlockManager()
 	return blockManager;
 }
 
+void ATT_Block::SetCentralTileID(int tileID)
+{
+	centralTileID = tileID;
+}
+
 void ATT_Block::SetBlockTileIDs(TArray<int> TileIDs)
 {
 	blockTileIDs = TileIDs;
@@ -68,6 +73,12 @@ void ATT_Block::SetBlockTileIDs(TArray<int> TileIDs)
 TArray<int> ATT_Block::GetBlockTileIDs()
 {
 	return blockTileIDs;
+}
+
+void ATT_Block::GetOccupiedTileIDs(int32& centralTile, TArray<int32>& tileZone)
+{
+	centralTile = centralTileID;
+	tileZone = blockTileIDs;
 }
 
 // Block positioning
@@ -122,9 +133,10 @@ void ATT_Block::SetBlockPosition()
 	blockAnchorLocation = FVector(newX, newY, 0);
 }
 
-void ATT_Block::SetBlockRotation(FRotator Rotation)
+void ATT_Block::SetBlockRotation(FRotator Rotation, float blockRotaSpeed)
 {
 	blockRotation = Rotation;
+	blockRotationSpeed = blockRotaSpeed;
 }
 
 void ATT_Block::UpdateBlockRotationAndLocation()
@@ -155,7 +167,7 @@ void ATT_Block::EditModeTick()
 	SetBlockPosition();
 
 	BuildingRoot->SetRelativeLocation(FMath::Lerp(BuildingRoot->RelativeLocation, blockAnchorLocation, 20 * 0.01f));
-	RotationRoot->SetRelativeRotation(FMath::Lerp(RotationRoot->RelativeRotation, blockRotation, 15 * 0.01f));
+	RotationRoot->SetRelativeRotation(FMath::Lerp(RotationRoot->RelativeRotation, blockRotation, 15 * blockRotationSpeed));
 }
 
 /*---------- Block Actions ----------*/

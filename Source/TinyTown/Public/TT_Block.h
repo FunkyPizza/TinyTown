@@ -49,6 +49,8 @@ protected:
 	/** This array contains all the tile the block owns. If a block is owned, no other block can be spawned on it. */
 	TArray<int> blockTileIDs;
 
+	int centralTileID;
+
 	/**
 	 * The following variables are the temporary values for rotation and location of a block which is updated when in EditMode and when being spawned by BlockManager.
 	 */ 
@@ -78,14 +80,20 @@ public:
 	FTT_Struct_Block* GetBlockStats();
 
 	void SetBlockManager(ATT_BlockManager* BlockManager);
+	UFUNCTION(BlueprintPure)
 	ATT_BlockManager* GetBlockManager();
+
+	void SetCentralTileID(int tileID);
 
 	void SetBlockTileIDs(TArray<int> TileIDs);
 	TArray<int> GetBlockTileIDs();
 
+	UFUNCTION(BlueprintPure)
+		void GetOccupiedTileIDs(int32& centralTile, TArray<int32>& tileZone);
+
 	// The two following functions only set variables, use UpdateBlockRotationAndLocation to actually confirm the move. 
 	void SetBlockPosition(); // Set the block's position to fit neatly on the grid and to be centered around its anchor point. 
-	void SetBlockRotation(FRotator Rotation); // Set the rotator variable of the RotationRoot
+	void SetBlockRotation(FRotator Rotation, float blockRotaSpeed); // Set the rotator variable of the RotationRoot
 
 	// Updates a block's rotation and location based of 
 	void UpdateBlockRotationAndLocation();
@@ -106,4 +114,7 @@ public:
 
 	// Indicates whether this block is being updated or not
 	bool isInEditingMode;
+
+	float blockRotationSpeed;
+
 };

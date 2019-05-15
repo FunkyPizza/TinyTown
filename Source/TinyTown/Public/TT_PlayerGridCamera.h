@@ -99,7 +99,14 @@ protected:
 	* Finds and saves the GridManager as a reference.
 	* This uses the first existing GridManager object that it finds, doesn't support multiple GridManager objects.
 	*/
+	UFUNCTION(BlueprintPure)
 	ATT_GridManager* GetGridManager(); 
+
+	/**
+	* Gets a reference to the blockmanager from the gridmanager.
+	*/
+	UFUNCTION(BlueprintPure)
+	ATT_BlockManager* GetBlockManager();
 
 	/**
 	 * Spawns a block in edit mode (aka "ghost block") to show the player where he is placing down the block.
@@ -168,23 +175,23 @@ protected:
 
 	/** Movement sensitivity for moving the camera with mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float inputMovementMouseSensitivity;
-
-	/** Movement sensitivity for moving the camera with keyboard. */
-	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float inputMovementKeyboardSensitivity;
+	float mouseMovementSpeed;
 
 	/** Y axis rotation sensitivity using mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float inputYRotationSensitivity;
+		float mouseYRotationSpeed;
 
-	/** X axis rotation sensitivity using mouse input. */ 
+	/** X axis rotation sensitivity using mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float inputXRotationSensitivity;
+		float mouseXRotationSpeed;
+
+	/** Movement sensitivity for moving the camera with keyboard. */
+	UPROPERTY(EditAnywhere, Category = "Input Settings")
+	float keyboardMovementSpeed;
 
 	/** Movement sensitivity for rotating the camera with keyboard. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float inputRotationKeyboardSensitivty;
+	float keyboardRotationSpeed;
 
 	/** Maximum length for the spring arm. */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
@@ -194,9 +201,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float MinSpringArmLength;
 
-	/** Defines how accurately the player can zoom (the higher, the slower the zoom). */
+	/** Defines how accurately the player can zoom (the higher, the slower the zoom but more accurate). */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	int zoomStepAccuracy;
+	int zoomSteps;
 
 	/** Defines how fast the camera lerps when zooming and de-zooming (the higher, the faster). */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
@@ -204,14 +211,18 @@ protected:
 
 	/** The speed at which a ghost block moves on the grid (when placing down a block). */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-	float ghostBlockMovementSpeed;
+	float blockMovementSpeed;
+
+	/** The speed at which a ghost block moves on the grid (when placing down a block). */
+	UPROPERTY(EditAnywhere, Category = "Block Building")
+		float blockRotationSpeed;
 
 	/** How fast can the mouse rotate the ghostBlock when placing down a block. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-	float ghostBlockRotationMouseThreshold;
+	float blockRotationMouseThreshold;
 
 
-	//Block building variables
+	// Block building variables
 	ATT_Block* placingBlockInstance; // Currently spawned ghostBlock
 	int placingBlockID; // BlockID of the ghostBlock that was spawned
 	int placingBlockTileID; // Tile on which the block has been spawned (used as StartTile for zone spawning)
@@ -265,4 +276,12 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/**
+	* Returns the tile currently hovered tile. Will return -1 if no tiles is hovered.
+	* @output hoveredTileID		TileID of the tile under the cursor.
+	* @output lastHoveredTileID TileId of the last tile to be hovered.
+	*/
+	UFUNCTION(BlueprintPure)
+	void GetTileIDUnderMouse(int32& hoveredTileID, int32& lastHoveredTileID);
+	
 };

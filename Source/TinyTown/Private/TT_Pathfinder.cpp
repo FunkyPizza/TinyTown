@@ -27,16 +27,24 @@ void UTT_Pathfinder::BeginPlay()
 
 ATT_GridManager* UTT_Pathfinder::GetGridManager()
 {
-	// Iterate through actors of class TT_GridManager and gets first result. (There should be only one at all times)
-	for (TActorIterator<ATT_GridManager> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
-		if (ActorItr->IsA(ATT_GridManager::StaticClass()))
-		{
-			return *ActorItr;
-		}
+	if (GridManager)
+	{
+		return GridManager;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Couldn't get GridManager in Pathfinder Component."))
-		return nullptr;
+	else
+	{
+		// Iterate through actors of class TT_GridManager and gets first result. (There should be only one at all times)
+		for (TActorIterator<ATT_GridManager> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
+			if (ActorItr->IsA(ATT_GridManager::StaticClass()))
+			{
+				return *ActorItr;
+			}
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("Couldn't get GridManager in Pathfinder Component."))
+			return nullptr;
+	}
 }
 
 TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID, bool allowDiagonalPaths)
@@ -164,6 +172,15 @@ int UTT_Pathfinder::GetTileMoveCost(int tileID, int blockToIgnore)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("GridManager not valid in pathfinder component, cannot retrieve move cost."));
 	return 1;
+}
+
+bool UTT_Pathfinder::IsTileUsed(int tileID)
+{
+	if (GetTileMoveCost(tileID, 0) > 10)
+	{
+		return true;
+	}
+	return false;
 }
 
 int UTT_Pathfinder::GetDistanceBetweenTwoTile(int tileA, int tileB)

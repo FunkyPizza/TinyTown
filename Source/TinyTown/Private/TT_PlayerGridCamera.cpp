@@ -72,25 +72,47 @@ void ATT_PlayerGridCamera::BeginPlay()
 	isMovementEnabled = true;
 
 	//Set camera zoom values
-	zoomCurrentStep = zoomStepAccuracy / 2;
-	zoomCoefficient = (MaxSpringArmLength - MinSpringArmLength) / zoomStepAccuracy;
+	zoomCurrentStep = zoomSteps / 2;
+	zoomCoefficient = (MaxSpringArmLength - MinSpringArmLength) / zoomSteps;
 	InputCameraZoom(1);
 }
 
 ATT_GridManager* ATT_PlayerGridCamera::GetGridManager()
 {
-	// Iterate through actors of class TT_GridManager and gets first result. (There should be only one at all times)
-	for (TActorIterator<ATT_GridManager> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
-		if (ActorItr->IsA(ATT_GridManager::StaticClass()))
-		{
-			return *ActorItr;
-		}
+	if (GridManager)
+	{
+		return GridManager;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Couldn't get GridManager in PlayerGridCamera."))
-	return nullptr;
+	else
+	{
+		// Iterate through actors of class TT_GridManager and gets first result. (There should be only one at all times)
+		for (TActorIterator<ATT_GridManager> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+		{
+			if (ActorItr->IsA(ATT_GridManager::StaticClass()))
+			{
+				return *ActorItr;
+			}
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("Couldn't get GridManager in PlayerGridCamera."))
+			return nullptr;
+	}
 }
 
+
+ATT_BlockManager* ATT_PlayerGridCamera::GetBlockManager()
+{
+	if (GridManager)
+	{
+		return GridManager->BlockManager;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot retrieve Blockmanager from TT_PlayerGridCamera."))
+		return nullptr;
+	}
+}
 
 /*---------- Player input functions ----------*/
 
@@ -101,7 +123,7 @@ void ATT_PlayerGridCamera::InputKeyboardMovements(float notused)
 	{
 		isMovingCamera = true;
 
-		MoveCamera(GetInputAxisValue("MoveRight"), GetInputAxisValue("MoveForward"), inputMovementKeyboardSensitivity);
+		MoveCamera(GetInputAxisValue("MoveRight"), GetInputAxisValue("MoveForward"), keyboardMovementSpeed);
 	}
 
 	else 
@@ -116,7 +138,7 @@ void ATT_PlayerGridCamera::InputKeyboardRotation(float notused)
 	{
 		isRotatingCamera = true;
 
-		RotateCamera(-notused, 0.0f, inputRotationKeyboardSensitivty, 0);
+		RotateCamera(-notused, 0.0f, keyboardRotationSpeed, 0);
 	}
 
 	else 
@@ -134,7 +156,7 @@ void ATT_PlayerGridCamera::InputCameraMovements()
 		{
 			isMovingCamera = true;
 
-			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), inputMovementMouseSensitivity);
+			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), mouseMovementSpeed);
 		}
 
 		else 
@@ -152,7 +174,7 @@ void ATT_PlayerGridCamera::InputCameraRotation()
 		{
 			isRotatingCamera = true;
 
-			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), inputXRotationSensitivity, inputYRotationSensitivity);
+			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), mouseXRotationSpeed, mouseYRotationSpeed);
 		}
 
 		else 
@@ -168,7 +190,7 @@ void ATT_PlayerGridCamera::InputCameraZoom(float value)
 	{
 		// Zoom out
 		if (value < -0.1f) {
-			zoomCurrentStep = FMath::Clamp(zoomCurrentStep + 1, 1, zoomStepAccuracy);
+			zoomCurrentStep = FMath::Clamp(zoomCurrentStep + 1, 1, zoomSteps);
 
 			newTargetArmLength = zoomCurrentStep * zoomCoefficient + MinSpringArmLength;
 		}
@@ -176,7 +198,7 @@ void ATT_PlayerGridCamera::InputCameraZoom(float value)
 		// Zoom in
 		if (value > 0.1f) 
 		{
-			zoomCurrentStep = FMath::Clamp(zoomCurrentStep - 1, 1, zoomStepAccuracy);
+			zoomCurrentStep = FMath::Clamp(zoomCurrentStep - 1, 1, zoomSteps);
 
 			newTargetArmLength = zoomCurrentStep * zoomCoefficient + MinSpringArmLength;
 		}
@@ -520,13 +542,13 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 			if (isSelectButtonDown && FMath::IsNearlyEqual(placingBlockInstance->RotationRoot->RelativeRotation.Yaw, placingBlockTargetRotation.Yaw, 0.1f))
 			{
 				// Check for any mouse movement meaning the player wants to rotate the block
-				if (!(FMath::IsNearlyEqual(GetInputAxisValue("MouseX"), 0.0f, ghostBlockRotationMouseThreshold)))
+				if (!(FMath::IsNearlyEqual(GetInputAxisValue("MouseX"), 0.0f, blockRotationMouseThreshold)))
 				{
 					isRotatingBlock = true;
 					isMovementEnabled = false;
 				}
 
-				if (GetInputAxisValue("MouseX") > ghostBlockRotationMouseThreshold)
+				if (GetInputAxisValue("MouseX") > blockRotationMouseThreshold)
 				{
 					placingBlockTargetRotation = placingBlockTargetRotation - FRotator(0, 90, 0);
 
@@ -536,7 +558,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 					}
 				}
 
-				if (GetInputAxisValue("MouseX") < -ghostBlockRotationMouseThreshold)
+				if (GetInputAxisValue("MouseX") < -blockRotationMouseThreshold)
 				{
 					isRotatingBlock = true;
 					isMovementEnabled = false;
@@ -577,8 +599,8 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		}
 
 		// Get tile location to lerp the block to
-		placingBlockInstance->SetActorLocation(FMath::Lerp(placingBlockInstance->GetActorLocation(), placingBlockTargetLocation, ghostBlockMovementSpeed * deltaTime));
-		placingBlockInstance->SetBlockRotation(placingBlockTargetRotation);
+		placingBlockInstance->SetActorLocation(FMath::Lerp(placingBlockInstance->GetActorLocation(), placingBlockTargetLocation, blockMovementSpeed * deltaTime));
+		placingBlockInstance->SetBlockRotation(placingBlockTargetRotation, blockRotationSpeed);
 	}
 }
 
@@ -745,4 +767,10 @@ void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("MouseY");
 	PlayerInputComponent->BindAxis("MouseX");
 
+}
+
+void ATT_PlayerGridCamera::GetTileIDUnderMouse(int32& hoveredTileID, int32& lastHoveredTileID)
+{
+	hoveredTileID = currentLinetracedTile;
+	lastHoveredTileID = lastLinetracedTile;
 }

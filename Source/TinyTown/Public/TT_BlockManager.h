@@ -150,6 +150,7 @@ public:
 	 * @param tileA Corner A / StartTile of the zone.
 	 * @param tileB Opposite corner to A.
 	 */
+	UFUNCTION(BlueprintPure)
 	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 
 	/**
@@ -159,6 +160,7 @@ public:
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
 	 * @param isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
 	 */
+	UFUNCTION(BlueprintPure)
 	int GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
 
 	/**
@@ -173,12 +175,13 @@ public:
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
 	 * @param isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
 	 */
-
+	UFUNCTION(BlueprintPure)
 	int GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi);
 	/**
 * Returns the x and y size of a zone from the array of its TileIDs.
 * @param zone Array containing all TileIDs of the zone.
 */
+	UFUNCTION(BlueprintPure)
 	FVector2D GetZoneSizeFromTileArray(TArray<int> zone);
 
 	/**

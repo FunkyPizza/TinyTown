@@ -21,29 +21,36 @@ protected:
 	virtual void BeginPlay() override;
 
 	/**
-	* Finds and saves the GridManager as a reference.
-	* This uses the first existing GridManager object that it finds, doesn't support multiple GridManager objects.
+	* Looks for spawned GridManager and return the first one found. Make sure you only have one GridManager in your scene. 
 	*/
+	UFUNCTION(BlueprintPure, Category = "Pathfinder")
 	ATT_GridManager* GetGridManager();
 
 	/** Returns the tile's neighbours in a clockwise order (Right, Down, Left, Up). 
 	* @param tileID Specified tileID.
 	* @param allowDiagonalPaths Include the diagonal neighbours
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Pathfinder")
+	UFUNCTION(BlueprintPure, Category = "Pathfinder")
 	TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths);
 
 	/* Returns the cost of moving on that tile. 
 	* @param tileID			Tile to return of the cost of.
-	* @param blockToIgnore	Block ID of the block to ignore.
+	* @param blockIDToIgnore	Block ID of the block to ignore.
 	*/
-	int GetTileMoveCost(int tileID, int blockToIgnore);
+	int GetTileMoveCost(int tileID, int blockIDToIgnore);
+
+	/**
+	* Returns whether or not a tile is being occupied by a block.
+	* @param tileID	Tile to check.
+	*/
+	UFUNCTION(BlueprintPure, Category = "Pathfinder")
+	bool IsTileUsed(int tileID);
 
 	/* Returns the distance in Unreal unit between two tiles.
 	* @param tileA Tile of reference.
 	* @param tileB Tile to measure the distance to.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Pathfinder")
+	UFUNCTION(BlueprintPure, Category = "Pathfinder")
 	int GetDistanceBetweenTwoTile(int tileA, int tileB);
 
 

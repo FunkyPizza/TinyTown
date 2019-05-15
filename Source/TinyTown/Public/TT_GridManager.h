@@ -147,6 +147,7 @@ public:
 	/** Accessor - Public accessor for tile locations. 
 	*	@param tileID TileID (instance index) of the tile.
 	*/
+	UFUNCTION(BlueprintPure)
 	FVector GetTileLocation(int tileID);
 
 	/** Accessor - Returns the distance between each tile. */

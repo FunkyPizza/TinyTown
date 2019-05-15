@@ -104,8 +104,9 @@ void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileI
 	{
 		SpawnedActor->SetBlockStats(BlockStats);
 		SpawnedActor->SetBlockManager(this);
+		SpawnedActor->SetCentralTileID(tileID);
 		SpawnedActor->SetBlockTileIDs(BlockZoneTileIDs);
-		SpawnedActor->SetBlockRotation(blockRotation);
+		SpawnedActor->SetBlockRotation(blockRotation, 0.1f);
 		SpawnedActor->SetBlockPosition();
 		SpawnedActor->UpdateBlockRotationAndLocation();
 
@@ -243,6 +244,7 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 
 
 /*---------- Zone Tiles functions ----------*/
+
 
 TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
 {
