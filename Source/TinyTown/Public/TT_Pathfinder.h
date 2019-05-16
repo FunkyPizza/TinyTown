@@ -72,7 +72,6 @@ public:
 	* @param allowDiagonalPaths  Allow the algorithm to use diagonal paths.
 	* @param blockToIgnore		 Allow the algorithm to ignore certain blocks. 
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Pathfinder")
 	TArray<int> FindShortestPathDijkstra(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore);
 
 	/** Return an array of tile IDs representing the shortest path between startTile and goalTile guaranteed to be in the zone.
