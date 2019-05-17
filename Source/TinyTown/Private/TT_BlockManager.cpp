@@ -546,7 +546,6 @@ FTT_Struct_Block* ATT_BlockManager::GetBlockStatsFromBlockID(int blockID)
 	return nullptr;
 }
 
-
 const FTT_Struct_Block ATT_BlockManager::GetBlockStatsInDataTable(int blockID)
 {
 	return *GetBlockStatsFromBlockID(blockID);
@@ -602,5 +601,23 @@ int  ATT_BlockManager::GetRandomBlockIDFromParameter(FString buildingType, int e
 	}
 
 	return 0;
+}
+
+
+/*---------- Blueprints Exposed -----------*/
+
+TMap<FString, FTT_Struct_BlockType> ATT_BlockManager::GetAllBlocksSortedByCategory()
+{
+	return blockTypeMap;
+}
+
+TMap<FString, int>  ATT_BlockManager::GetAllZones()
+{
+	return zoneIDMap;
+}
+
+TMap<FString, int>  ATT_BlockManager::GetAllZoneBuildings()
+{
+	return zoneBuildingIDMap;
 }
 

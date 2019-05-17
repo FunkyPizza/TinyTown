@@ -7,6 +7,7 @@
 #include "TT_GridManager.h"
 #include "TimerManager.h"
 
+
 /*---------- Primary functions ----------*/
 
 ATT_Block::ATT_Block()
@@ -19,6 +20,9 @@ ATT_Block::ATT_Block()
 
 	RotationRoot = CreateDefaultSubobject<USceneComponent>(TEXT("RotationRoot"));
 	RotationRoot->SetupAttachment(BuildingRoot);
+
+	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
+	BlockMesh->SetupAttachment(RotationRoot);
 	   
 }
 
@@ -47,6 +51,11 @@ void ATT_Block::SetBlockStats(FTT_Struct_Block* inputStats)
 FTT_Struct_Block* ATT_Block::GetBlockStats()
 {
 	return &blockStats;
+}
+
+const FTT_Struct_Block ATT_Block::GetBlockData()
+{
+	return blockStats;
 }
 
 void ATT_Block::SetBlockManager(ATT_BlockManager* BlockManager)

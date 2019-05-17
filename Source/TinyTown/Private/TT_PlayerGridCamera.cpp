@@ -235,7 +235,7 @@ void ATT_PlayerGridCamera::InputSelectButtonDown()
 
 	if (currentLinetracedTile != -1) 
 	{
-		GridManager->TileClicked(currentLinetracedTile);
+		GridManager->OnTileClicked(currentLinetracedTile);
 	}
 }
 
@@ -365,7 +365,7 @@ void ATT_PlayerGridCamera::MouseTrace()
 
 					if (!isSettingBlockSize)
 					{
-						GridManager->TileHovered(currentLinetracedTile);
+						GridManager->OnTileHovered(currentLinetracedTile);
 					}
 				}
 			}
@@ -743,18 +743,21 @@ void ATT_PlayerGridCamera::ToggleViewMode(int ViewMode)
 
 /*---------- Input binding ----------*/
 
+
 void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+/*
 	//Keyboard
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATT_PlayerGridCamera::InputKeyboardMovements);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATT_PlayerGridCamera::InputKeyboardMovements);
 	PlayerInputComponent->BindAxis("XRotation", this, &ATT_PlayerGridCamera::InputKeyboardRotation);
-
+	*/
+	PlayerInputComponent->BindAxis("MoveForward");
+	PlayerInputComponent->BindAxis("MoveRight");
 	//PROTOTYPE Build input
 	PlayerInputComponent->BindAction("Delete", IE_Pressed, this, &ATT_PlayerGridCamera::RemoveBlockUnderCursor);
-
+	/*
 	//Mouse
 	PlayerInputComponent->BindAction("InputSelect", IE_Pressed, this, &ATT_PlayerGridCamera::InputSelectButtonDown);
 	PlayerInputComponent->BindAction("InputSelect", IE_Released, this, &ATT_PlayerGridCamera::InputSelectButtonUp);
@@ -763,7 +766,7 @@ void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("InputRotation", IE_Released, this, &ATT_PlayerGridCamera::InputRotationButtonUp);
 	PlayerInputComponent->BindAction("InputMovement", IE_Pressed, this, &ATT_PlayerGridCamera::InputMoveButtonDown);
 	PlayerInputComponent->BindAction("InputMovement", IE_Released, this, &ATT_PlayerGridCamera::InputMoveButtonUp);
-	PlayerInputComponent->BindAxis("ZoomIn", this, &ATT_PlayerGridCamera::InputCameraZoom);
+	PlayerInputComponent->BindAxis("ZoomIn", this, &ATT_PlayerGridCamera::InputCameraZoom); */
 	PlayerInputComponent->BindAxis("MouseY");
 	PlayerInputComponent->BindAxis("MouseX");
 

@@ -44,11 +44,13 @@ protected:
 	/** Handles camera movements via keyboard
 	* @param notused This parameter enables the function to be bound to an AxisInput. It is not used.
 	*/
+	UFUNCTION(BlueprintCallable)
 	void InputKeyboardMovements(float notused);
 
 	/** Handles camera rotation via keyboard.
 * @param notused This parameter enables the function to be bound to an AxisInput. It is not used.
 */
+	UFUNCTION(BlueprintCallable)
 	void InputKeyboardRotation(float notused);
 
 	/** Handles camera movements via mouse/touch. */
@@ -60,21 +62,29 @@ protected:
 	/** Handles zoom via mouse. Zooms in or out step by step, steps being defined in BeginPlay.
 	* @param value If <0 will zoom out, else if >0 will zoom in.
 	*/
+	UFUNCTION(BlueprintCallable)
 	void InputCameraZoom(float value); 
 
 	//Handles Select button inputs
+	UFUNCTION(BlueprintCallable)
 	void InputSelectButtonDown(); 
+	UFUNCTION(BlueprintCallable)
 	void InputSelectButtonUp();
 
 	//Handles Camera Rotation button inputs
+	UFUNCTION(BlueprintCallable)
 	void InputRotationButtonDown(); 
+	UFUNCTION(BlueprintCallable)
 	void InputRotationButtonUp();
 
 	//Handles Camera Movement button inputs
+	UFUNCTION(BlueprintCallable)
 	void InputMoveButtonDown();
+	UFUNCTION(BlueprintCallable)
 	void InputMoveButtonUp();
 	
 	//Handles input to cancel a building
+	UFUNCTION(BlueprintCallable)
 	void InputCancel();
 
 	/** Line trace from the camera to the grid and updates tile if they are hovered. */

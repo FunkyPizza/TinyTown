@@ -11,6 +11,7 @@ class UPaperSprite;
 class UMaterialInterface;
 class ATT_BlockManager;
 
+
 UCLASS()
 class TINYTOWN_API ATT_GridManager : public AActor
 {
@@ -56,17 +57,13 @@ protected:
 
 	/*---------- Variables -----------*/
 
-	/** Blueprint class of BlockManager to spawn with SpawnBloackManager(). */
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
-		TSubclassOf<ATT_BlockManager> BlockManagerClass;
-
 	/** Size of the grid in tiles on the X axis. */
 	UPROPERTY(EditAnywhere, Category ="Grid Settings")
-		int sizeX;
+		int gridSizeX;
 
 	/** Size of the grid in tiles on the Y axis. */
 	UPROPERTY(EditAnywhere, Category = "Grid Settings")
-		int sizeY;
+		int gridSizeY;
 
 	/** Distance that separate each tile from one another. */
 	UPROPERTY(EditAnywhere, Category = "Grid Settings")
@@ -116,15 +113,29 @@ public:
 		UPaperGroupedSpriteComponent* instanceGroupedSpriteComp;
 
 
-	/*---------- Functions -----------*/
+	/*---------- Events -----------*/
+
+	/** 
+	* Called whenever a tile is hovered by the mouse cursor.
+	* @param tileID TileID of the tile that has been hovered.
+	*/
+	UFUNCTION(BlueprintNativeEvent, Category = "Grid Customisation")
+		void OnTileHovered(int tileID);
 
 	/** Tile Effect - Set this tile as hovered. */
-	UFUNCTION(BlueprintCallable)
-		void TileHovered(int tileID);
+	void OnTileHovered_Implementation(int tileID);
+
+	/**
+	* Called whenever a tile is clicked by the mouse cursor.
+	* @param tileID TileID of the tile that has been clicked.
+	*/
+	UFUNCTION(BlueprintNativeEvent, Category = "Grid Customisation")
+		void OnTileClicked(int tileID);
 
 	/** Tile Effect -Set this tile as clicked. */
-	UFUNCTION(BlueprintCallable)
-		void TileClicked(int tileID);
+	void OnTileClicked_Implementation(int tileID);
+
+	/*---------- Functions -----------*/
 
 	/** Tile Effect - Reset this tile to its original state (both colour and transform). */
 	void TileReset(int tileID);
@@ -133,21 +144,20 @@ public:
 	* @param TileIDs Array of all TileIDs in the zone. 
 	* @param ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
 	*/
-	UFUNCTION(BlueprintCallable)
-		void SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID);
+	void SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID);
 
 	/** Tile Effect - Set the tile a certain color. */
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
 	void SetTileColor(int tileID, FLinearColor colour);
 
 	/** Tile Effect - Reset all altered tiles to their original state. */
-	UFUNCTION(BlueprintCallable)
 		void TileClearState();
 
 
 	/** Accessor - Public accessor for tile locations. 
 	*	@param tileID TileID (instance index) of the tile.
 	*/
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "GridManager")
 	FVector GetTileLocation(int tileID);
 
 	/** Accessor - Returns the distance between each tile. */
@@ -176,16 +186,56 @@ public:
 	void ClearPlayerSelection();
 
 	/** Checks if a tileID exists on the grid. */
+	UFUNCTION(BlueprintPure, Category = "GridManager")
 	bool IsTileValid(int tileID);
 
 	/** Returns an array of all tile IDs in order. */
+	UFUNCTION(BlueprintPure, Category = "GridManager")
 	TArray<int> GetAllTileIDs();
 
 
 	/*---------- Variables -----------*/
  
 	/** Reference to the block manager spawned with SpawnBlockManager(). */
-	UPROPERTY(BlueprintReadOnly)
 	ATT_BlockManager* BlockManager; 
 	   	 
+
+	/*---------- BlockManager Access -----------*/
+	UFUNCTION(BlueprintPure)
+	/** Returns a reference to the Blockmanager. */
+	ATT_BlockManager* GetBlockManager();
+
+	/**
+	 * Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
+	 * @param tileA Tile with the smallest TileID in the zone.
+	 * @param tileB Tile with the biggest TileID in the zone.
+	 */
+	UFUNCTION(BlueprintPure)
+		TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
+	
+	/**
+ * Returns the tileID of Tile A (corner with the smallest TileID in the zone) associated with the zone defined by parameters.
+ * @param tileC Tile at the center of the zone (in some cases this is the tile hovered by the mouse).
+ * @param sizeX X size in tile of the zone
+ * @param sizeY Y size in tile of the zone
+ */
+	UFUNCTION(BlueprintPure)
+		int GetZoneTileAFromHoveredTile(int tileC, int sizeX, int sizeY);
+
+	/**
+ * Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation).
+ * @param tileA Tile with the smallest TileID in the zone. 
+ * @param sizeX X size in tile of the zone
+ * @param sizeY Y size in tile of the zone
+ */
+	UFUNCTION(BlueprintPure)
+		int GetZoneTileBFromZoneSize(int tileA, int sizeX, int sizeY);
+
+	/**
+* Returns the x and y size of a zone from the array of its TileIDs.
+* @param zone Array containing all TileIDs of the zone.
+*/
+	UFUNCTION(BlueprintPure)
+		FVector2D GetZoneSizeFromTileArray(TArray<int> zone);
+
 };

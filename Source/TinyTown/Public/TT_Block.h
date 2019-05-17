@@ -10,6 +10,7 @@
 
 struct FTT_Struct_Block;
 class ATT_BlockManager;
+class UStaticMeshComponent;
 
 UCLASS()
 class TINYTOWN_API ATT_Block : public AActor
@@ -31,6 +32,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* BuildingRoot;
 
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* BlockMesh;
+
 
 /*---------- Functions -----------*/
 
@@ -40,7 +44,6 @@ protected:
 /*---------- Variables -----------*/
 
 	/** This struct contains all the information that characterise this block (both block building as well a gameplay variables). */
-	UPROPERTY(BlueprintReadOnly)
 	FTT_Struct_Block blockStats;
 
 	/** Reference to BlockManager, set on spawn. */
@@ -78,6 +81,9 @@ public:
 
 	void SetBlockStats(FTT_Struct_Block* inputStats);
 	FTT_Struct_Block* GetBlockStats();
+
+	UFUNCTION(BlueprintPure)
+	const FTT_Struct_Block GetBlockData();
 
 	void SetBlockManager(ATT_BlockManager* BlockManager);
 	UFUNCTION(BlueprintPure)

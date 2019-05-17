@@ -31,7 +31,7 @@ void ATT_GridManager::OnConstruction(const FTransform& Transform)
 		instanceGroupedSpriteComp->ClearInstances();
 		tileLocations.Empty();
 
-		SpawnTiles(sizeX, sizeY, GetActorLocation(), distanceBetweenTiles);
+		SpawnTiles(gridSizeX, gridSizeY, GetActorLocation(), distanceBetweenTiles);
 
 }
 
@@ -73,7 +73,7 @@ float ATT_GridManager::GetDistanceBetweenTiles()
 
 FVector2D ATT_GridManager::GetGridSize()
 {
-	return FVector2D(sizeX, sizeY);
+	return FVector2D(gridSizeX, gridSizeY);
 }
 
 
@@ -105,11 +105,9 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 
 void ATT_GridManager::SpawnBlockManager()
 {
-	if (BlockManagerClass) 
-	{
 		//Spawn TT_BlockManager and assign its TT_GridManager to this object
 		ATT_BlockManager* newBlockManager;
-		newBlockManager = GetWorld()->SpawnActorDeferred<ATT_BlockManager>(BlockManagerClass, GetActorTransform());
+		newBlockManager = GetWorld()->SpawnActorDeferred<ATT_BlockManager>(ATT_BlockManager::StaticClass(), GetActorTransform());
 		
 		if (newBlockManager) 
 		{
@@ -118,7 +116,6 @@ void ATT_GridManager::SpawnBlockManager()
 
 			UGameplayStatics::FinishSpawningActor(newBlockManager, GetActorTransform());
 		}
-	}
 	else 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BlockManagerClass no set in GridManager. Please set it, and try again."))
@@ -133,12 +130,10 @@ void ATT_GridManager::FetchZoneColours()
 	}	
 }
 
-/*---------- Tile functions ----------*/
-
-void ATT_GridManager::TileHovered(int tileID)
+void ATT_GridManager::OnTileHovered_Implementation(int tileID)
 {
 	// Check if the tile is already hovered
-	if (!modifiedTiles.Contains(tileID) || viewModeTiles.Contains(tileID)) 
+	if (!modifiedTiles.Contains(tileID) || viewModeTiles.Contains(tileID))
 	{
 		TileClearState();
 		clickedTile = -1;
@@ -154,10 +149,10 @@ void ATT_GridManager::TileHovered(int tileID)
 	}
 }
 
-void ATT_GridManager::TileClicked(int tileID)
+void ATT_GridManager::OnTileClicked_Implementation(int tileID)
 {
 	//Check the tile is hovered and hasn't been clicked
-	if (modifiedTiles.Contains(tileID) && (clickedTile == -1)) 
+	if (modifiedTiles.Contains(tileID) && (clickedTile == -1))
 	{
 		TileClearState();
 
@@ -172,6 +167,9 @@ void ATT_GridManager::TileClicked(int tileID)
 		modifiedTiles.Add(clickedTile);
 	}
 }
+
+
+/*---------- Tile functions ----------*/
 
 void ATT_GridManager::TileReset(int tileID)
 {
@@ -343,4 +341,33 @@ TArray<int> ATT_GridManager::GetAllTileIDs()
 {
 	return tileIDs;
 }
+
+
+/*---------- BlockManager Access -----------*/
+
+ATT_BlockManager* ATT_GridManager::GetBlockManager()
+{
+	return BlockManager;
+}
+
+TArray<int> ATT_GridManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
+{
+	return BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB);
+}
+
+int ATT_GridManager::GetZoneTileAFromHoveredTile(int tileC, int sizeX, int sizeY)
+{
+	return BlockManager->GetZoneStartTileFromHoveredTile(tileC, sizeX, sizeY, false);
+}
+
+int ATT_GridManager::GetZoneTileBFromZoneSize(int tileA, int sizeX, int sizeY)
+{
+	return BlockManager->GetZoneEndTileFromZoneSize(tileA, sizeX, sizeY, false);
+}
+
+FVector2D ATT_GridManager::GetZoneSizeFromTileArray(TArray<int> zone)
+{
+	return BlockManager->GetZoneSizeFromTileArray(zone);
+}
+
 

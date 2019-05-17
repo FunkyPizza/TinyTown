@@ -79,10 +79,7 @@ protected:
 	/** Data table holding data of all the blocks.*/
 	UDataTable* data_Block;
 
-	/** This map sorts all blocks by types, each key is a type (string) containing an array of BlockID (int). 
-	* Note to self: I had to include Global.h in this header to get the struct's array size (even if = 0)
-	*/
-	UPROPERTY(BlueprintReadOnly)
+	/** This map sorts all blocks by types, each key is a type (string) containing an array of BlockID (int). */
 	TMap<FString, FTT_Struct_BlockType> blockTypeMap;
 	
 public:	
@@ -150,7 +147,6 @@ public:
 	 * @param tileA Corner A / StartTile of the zone.
 	 * @param tileB Opposite corner to A.
 	 */
-	UFUNCTION(BlueprintPure)
 	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 
 	/**
@@ -160,7 +156,6 @@ public:
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
 	 * @param isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
 	 */
-	UFUNCTION(BlueprintPure)
 	int GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
 
 	/**
@@ -175,13 +170,11 @@ public:
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
 	 * @param isModuloHalfPi If true, sizeX = sizeY & sizeY = sizeX (depending on the block's orientation).
 	 */
-	UFUNCTION(BlueprintPure)
 	int GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi);
 	/**
 * Returns the x and y size of a zone from the array of its TileIDs.
 * @param zone Array containing all TileIDs of the zone.
 */
-	UFUNCTION(BlueprintPure)
 	FVector2D GetZoneSizeFromTileArray(TArray<int> zone);
 
 	/**
@@ -194,8 +187,8 @@ public:
 	* Returns data of block from its BlockID (see TT_Struct_Block). Added to expose GetBlockStatsFromBlockID() to blueprints.
 	* @param blockID Data table index of the row corresponding to the block to spawn.
 	*/
-	UFUNCTION(BlueprintCallable)
-		const FTT_Struct_Block GetBlockStatsInDataTable(int blockID);
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
+	const FTT_Struct_Block GetBlockStatsInDataTable(int blockID);
 
 	/**
 	* Returns a random blockID corresponding to parameters in the data table.
@@ -221,18 +214,17 @@ public:
 	/** Accessor - Returns the array of spawned blocks where index = index of the tile, and element = BlockID. */
 	TArray<int> GetSpawnedBlockIDs();
 
+	
 
 	/*---------- Variables -----------*/
 	
 	/** Reference to the GridManager who created this block manager.*/
 	ATT_GridManager* GridManager;
 
-	/* This maps contains contains all the BT_Zone block names alongside their blockID. */
-	UPROPERTY(BlueprintReadOnly)
+	/* This maps contains contains all the blocks flagged as BT_Zone block names alongside their blockID. */
 	TMap<FString, int> zoneIDMap;
 
-	/* This maps contains contains all the BT_ZoneBuilding block names alongside their blockID. */
-	UPROPERTY(BlueprintReadOnly)
+	/* This maps contains contains all the blocks fallaged BT_ZoneBuilding block names alongside their blockID. */
 	TMap<FString, int> zoneBuildingIDMap;
 
 	/* This array of bool indicates which zone view mode is activate. For each block of type "zone", there is a bool. */
@@ -240,4 +232,26 @@ public:
 
 	/* This is array is mapped like isZoneViewModeActive. It holds the original BlockID of each zone. */
 	TArray<int> zoneViewModeIndex;
+
+
+	/*---------- Blueprints Exposed -----------*/
+
+	/** This returns a map of all the blocks from the datatable organised by Categories (set by the user in the table). 
+	* Each key is a category and contains all the block IDs associated with its category and their names. This includes zones and zone buildings.
+	*/
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
+	TMap<FString, FTT_Struct_BlockType> GetAllBlocksSortedByCategory();
+
+	/** This returns a map of all the blocks flagged as Zones.
+	* Each key is the name of a zone and contains the zone's block ID.
+	*/
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
+		TMap<FString, int>  GetAllZones();
+
+	/** This returns a map of all the blocks flagged as Zone buildings.
+	* Each key is the name of the zone the building is associated to, and contains the block zone building's block ID.
+	*/
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
+		TMap<FString, int>  GetAllZoneBuildings();
+
 };
