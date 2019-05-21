@@ -10,6 +10,7 @@ class UPaperGroupedSpriteComponent;
 class UPaperSprite;
 class UMaterialInterface;
 class ATT_BlockManager;
+class ATextRenderActor;
 
 
 UCLASS()
@@ -73,9 +74,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Grid Settings")
 		UPaperSprite* tileSpriteNormal;
 
-	/** Z offset for hovered tiles. */
+	/** Toggles the spawning of TextRender displaying each tile's ID when they are spawned. */
 	UPROPERTY(EditAnywhere, Category = "Grid Settings")
-		float tileHoveredZOffset;
+		bool displayTileID;
+
 
 	/** Array of all Tile IDs in order. */
 	TArray<int> tileIDs;
@@ -105,6 +107,7 @@ protected:
 	/* Array of all zone colours. */
 	TArray<FLinearColor> zoneColours;
 
+	TArray<ATextRenderActor*> tileIDActors;
 	   	 
 public:	
 

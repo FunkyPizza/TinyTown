@@ -11,6 +11,7 @@
 struct FTT_Struct_Block;
 class ATT_BlockManager;
 class UStaticMeshComponent;
+class UBoxComponent;
 
 UCLASS()
 class TINYTOWN_API ATT_Block : public AActor
@@ -52,7 +53,6 @@ protected:
 	/** This array contains all the tile the block owns. If a block is owned, no other block can be spawned on it. */
 	TArray<int> blockTileIDs;
 
-	int centralTileID;
 
 	/**
 	 * The following variables are the temporary values for rotation and location of a block which is updated when in EditMode and when being spawned by BlockManager.
@@ -118,9 +118,12 @@ public:
 
 /*---------- Variables -----------*/
 
-	// Indicates whether this block is being updated or not
+	/** Indicates whether this block is being updated or not */
 	bool isInEditingMode;
 
+	/** Rotation speed when being rotated in edit mode */
 	float blockRotationSpeed;
 
+	/** Central tile occupied by this block. */
+	int centralTileID;
 };

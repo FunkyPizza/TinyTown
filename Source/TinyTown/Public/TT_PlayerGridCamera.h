@@ -159,11 +159,13 @@ protected:
 	void ConfirmRemoveToolEndTile();
 
 	/** Instantly deletes whatever is placed on the currently hovered tile. */
+	UFUNCTION(BlueprintCallable)
 	void RemoveBlockUnderCursor();
 
 	/** Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
 	 * @param tileID TileID of the tile to clear/ owned by the block to delete.
 	 */
+	UFUNCTION(BlueprintCallable)
 	void DeleteBlockOnTile(int tileID);
 
 
@@ -185,51 +187,59 @@ protected:
 
 	/** Movement sensitivity for moving the camera with mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float mouseMovementSpeed;
+	float mouseMovementSpeed = 175.0f;
 
 	/** Y axis rotation sensitivity using mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-		float mouseYRotationSpeed;
+	float mouseYRotationSpeed = 3.0f;
 
 	/** X axis rotation sensitivity using mouse input. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-		float mouseXRotationSpeed;
+		float mouseXRotationSpeed = 4.0f;
 
 	/** Movement sensitivity for moving the camera with keyboard. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float keyboardMovementSpeed;
+	float keyboardMovementSpeed = 20.0f;
 
 	/** Movement sensitivity for rotating the camera with keyboard. */
 	UPROPERTY(EditAnywhere, Category = "Input Settings")
-	float keyboardRotationSpeed;
+	float keyboardRotationSpeed = 1.5f;
+
+	/** Maximum pitch in degrees the camera is allowed to rotate to. */
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float maximumPitch = 85.0f;
+
+	/**	Minimum pitch in degrees the camera is allowed to rotate to. */
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float minimumPitch = 5.0f;
 
 	/** Maximum length for the spring arm. */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float MaxSpringArmLength;
+	float MaxSpringArmLength = 12000.0f;
 
 	/** Minimum length for the spring arm. */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float MinSpringArmLength;
+	float MinSpringArmLength = 1500.0f;
 
 	/** Defines how accurately the player can zoom (the higher, the slower the zoom but more accurate). */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	int zoomSteps;
+	int zoomSteps = 10;
 
 	/** Defines how fast the camera lerps when zooming and de-zooming (the higher, the faster). */
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	int zoomLerpSpeed;
+	int zoomLerpSpeed = 5;
 
 	/** The speed at which a ghost block moves on the grid (when placing down a block). */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-	float blockMovementSpeed;
+	float blockMovementSpeed = 12.0f;
 
 	/** The speed at which a ghost block moves on the grid (when placing down a block). */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-		float blockRotationSpeed;
+		float blockRotationSpeed = 0.01f;
 
 	/** How fast can the mouse rotate the ghostBlock when placing down a block. */
 	UPROPERTY(EditAnywhere, Category = "Block Building")
-	float blockRotationMouseThreshold;
+	float blockRotationMouseThreshold = 0.1f;
 
 
 	// Block building variables

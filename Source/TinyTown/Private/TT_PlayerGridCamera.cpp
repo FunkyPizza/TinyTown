@@ -324,17 +324,21 @@ void ATT_PlayerGridCamera::MoveCamera(float x, float y, float sensitivity)
 void ATT_PlayerGridCamera::RotateCamera(float x, float y, float xSensitivity, float ySensitivity)
 {
 
-	FRotator currentRotation = SpringArmComp->GetRelativeTransform().GetRotation().Rotator();
+	float negativeMaxPitch = maximumPitch * -1;
+	float negativeMinPitch = minimumPitch * -1;
 
+	FRotator currentRotation = SpringArmComp->GetRelativeTransform().GetRotation().Rotator();
+	SpringArmComp->SetRelativeRotation(FRotator(currentRotation.Pitch, 0, 0));
+	
 	// Clamps camera angle 
-	if (currentRotation.Pitch >= -5.0f )
+	if (currentRotation.Pitch >= negativeMinPitch)
 	{
-		SpringArmComp->SetRelativeRotation(FRotator(-5.1f, 0, 0));
+		SpringArmComp->SetRelativeRotation(FRotator(-5.5f, 0, 0));
 		return;
 	}
-	if (currentRotation.Pitch <= -85.0f) 
+	if (currentRotation.Pitch <= negativeMaxPitch)
 	{
-		SpringArmComp->SetRelativeRotation(FRotator(-84.9f, 0, 0));
+		SpringArmComp->SetRelativeRotation(FRotator(-84.5f, 0, 0));
 		return;
 	}
 
@@ -345,6 +349,7 @@ void ATT_PlayerGridCamera::RotateCamera(float x, float y, float xSensitivity, fl
 	// Rotate X
 	FRotator newRotationX = FRotator(0, x, 0) * xSensitivity;
 	AddActorLocalRotation(newRotationX);
+
 }
 
 void ATT_PlayerGridCamera::MouseTrace()
@@ -357,15 +362,31 @@ void ATT_PlayerGridCamera::MouseTrace()
 			FHitResult Hit;
 			if (GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit))
 			{
-				if (Hit.Actor == GridManager && Hit.Item != currentLinetracedTile)
+				if (Hit.Item != currentLinetracedTile)
 				{
-					// Hit a tile
-					currentLinetracedTile = Hit.Item;
-					lastLinetracedTile = currentLinetracedTile;
-
-					if (!isSettingBlockSize)
+					if (Hit.Actor == GridManager)
 					{
-						GridManager->OnTileHovered(currentLinetracedTile);
+						// Hit a tile
+						currentLinetracedTile = Hit.Item;
+						lastLinetracedTile = currentLinetracedTile;
+
+						if (!isSettingBlockSize)
+						{
+							GridManager->OnTileHovered(currentLinetracedTile);
+						}
+						return;
+					}
+
+					if (Hit.Actor->GetClass() == ATT_Block::StaticClass())
+					{
+						currentLinetracedTile = Cast<ATT_Block>(Hit.Actor)->centralTileID;;
+						lastLinetracedTile = currentLinetracedTile;
+
+						if (!isSettingBlockSize)
+						{
+							GridManager->OnTileHovered(currentLinetracedTile);
+						}
+						return;
 					}
 				}
 			}

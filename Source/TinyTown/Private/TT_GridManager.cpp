@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "TT_BlockManager.h"
 #include "TimerManager.h"
+#include "Engine/TextRenderActor.h"
+#include "Components/TextRenderComponent.h"
 
 /*---------- Primary functions ----------*/
 
@@ -30,6 +32,12 @@ void ATT_GridManager::OnConstruction(const FTransform& Transform)
 		// Refresh the grid only when the grid size has been changed. Enables moving the grid with refreshing all instances.
 		instanceGroupedSpriteComp->ClearInstances();
 		tileLocations.Empty();
+
+		for (ATextRenderActor* i : tileIDActors)
+		{
+			i->Destroy(true, true);
+		}
+		tileIDActors.Empty();
 
 		SpawnTiles(gridSizeX, gridSizeY, GetActorLocation(), distanceBetweenTiles);
 
@@ -81,11 +89,13 @@ FVector2D ATT_GridManager::GetGridSize()
 
 void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 {
+	int tileCounter = -1;
 
 	for (int i = 0; i < y; i++) 
 	{
 		for (int j = 0; j < x; j++) 
 		{
+			tileCounter++;
 
 			//Calculating new location (will spawn around center vector hence the very long expression). Taken from "2D Grid Execution Macro".
 			FVector newLocation = FVector(center + (FVector(distance * 0.5f, distance * 0.5f, 0.0f) + (distance * (FVector((j - (float(x) / 2)), (i - (float(y) / 2)), 0.0f)))));
@@ -93,6 +103,20 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 
 			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
 			instanceGroupedSpriteComp->AddInstance(tileTransform, tileSpriteNormal, true, FLinearColor::White);
+
+			if (displayTileID)
+			{
+				int tileID = tileCounter;
+				ATextRenderActor* Text = GetWorld()->SpawnActor<ATextRenderActor>(ATextRenderActor::StaticClass(), FVector(0.f, 100, 170.f), FRotator(90.f, 180.f, 0.f));
+				Text->GetTextRender()->SetText(FString::FromInt(tileID));
+				Text->GetTextRender()->SetTextRenderColor(FColor::White);
+				Text->GetTextRender()->SetVerticalAlignment(EVRTA_TextCenter);
+				Text->GetTextRender()->SetHorizontalAlignment(EHTA_Center);
+				Text->SetActorLocation(newLocation);
+				Text->SetActorScale3D(FVector(4.f, 4.f, 4.f));
+
+				tileIDActors.Add(Text);
+			}
 
 		}
 	}
