@@ -119,6 +119,7 @@ public:
 /*---------- Variables -----------*/
 
 	/** Indicates whether this block is being updated or not */
+	UPROPERTY(BlueprintReadOnly, Category = "Block Settings")
 	bool isInEditingMode;
 
 	/** Rotation speed when being rotated in edit mode */
