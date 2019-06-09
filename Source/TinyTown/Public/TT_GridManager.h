@@ -59,23 +59,23 @@ protected:
 	/*---------- Variables -----------*/
 
 	/** Size of the grid in tiles on the X axis. */
-	UPROPERTY(EditAnywhere, Category ="Grid Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Grid Settings")
 		int gridSizeX;
 
 	/** Size of the grid in tiles on the Y axis. */
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		int gridSizeY;
 
 	/** Distance that separate each tile from one another. */
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		float distanceBetweenTiles;
 
 	/** Default sprite for a tile. */
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		UPaperSprite* tileSpriteNormal;
 
 	/** Toggles the spawning of TextRender displaying each tile's ID when they are spawned. */
-	UPROPERTY(EditAnywhere, Category = "Grid Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		bool displayTileID;
 
 
@@ -162,6 +162,13 @@ public:
 	*/
 	UFUNCTION(BlueprintPure, Category = "GridManager")
 	FVector GetTileLocation(int tileID);
+
+	/** Returns the tile's neighbours in a clockwise order (Right, Down, Left, Up).
+	* @param tileID Specified tileID.
+	* @param allowDiagonalPaths Include the diagonal neighbours
+	*/
+	UFUNCTION(BlueprintPure, Category = "Pathfinder")
+		TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths);
 
 	/** Accessor - Returns the distance between each tile. */
 	float GetDistanceBetweenTiles();

@@ -59,6 +59,10 @@ TArray<int> ATT_BlockManager::GetSpawnedBlockIDs()
 	return spawnedBlockID;
 }
 
+TArray<ATT_Block*> ATT_BlockManager::GetSpawnedBlocks()
+{
+	return spawnedBlocks;
+}
 
 /*---------- Block & Zone building functions ----------*/
 
@@ -85,16 +89,29 @@ void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileI
 
 	//Get the block's zone characteristics
 	bool isModuloHalfPi = FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f);
-	int BlockStartTile = GetZoneStartTileFromHoveredTile(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-	int BlockEndTile = GetZoneEndTileFromZoneSize(BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-	TArray<int> BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(BlockStartTile, BlockEndTile);
+	TArray<int> BlockZoneTileIDs;
+	int BlockStartTile = tileID;
+	int BlockEndTile = tileID;
 
-	for (auto i : BlockZoneTileIDs)
+	// If block is of size 1x1, its zone will always be 1x1.
+	if (BlockStats->Size_X > 1 || BlockStats->Size_Y > 1)
 	{
-		if (spawnedBlockID[i] != 0)
+		BlockStartTile = GetZoneStartTileFromHoveredTile(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+		BlockEndTile = GetZoneEndTileFromZoneSize(BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+	}
+
+	BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(BlockStartTile, BlockEndTile);
+
+	for (int i : BlockZoneTileIDs)
+	{
+
+		if (GridManager->IsTileValid(i))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("A block is already placed on one of these tiles."));
-			return;
+			if (spawnedBlockID[i] != 0)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("A block is already placed on one of these tiles."));
+				return;
+			}
 		}
 	}
 
@@ -156,6 +173,7 @@ void ATT_BlockManager::CreateZoneOnTiles(TArray<int> tileIDs, int zoneID)
 	{
 		spawnedZoneID[tileIDs[i]] = zoneID;
 	}
+
 	FindZoneLayout(zoneID, tileIDs);
 }
 
@@ -189,6 +207,7 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 	FVector2D zoneSize = GetZoneSizeFromTileArray(zone);  
 	TArray<int> unusedTiles = zone;
 
+
 	for (int i : unusedTiles)
 	{
 		SpawnBlockAtStartTile(zoneID, i);
@@ -196,50 +215,50 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 
 	return;
 
-	//Some of the following code can be use in the future.
-	while (unusedTiles.Num() > 0)
-	{
-		// Finds all the possible block sizes in that space
-		TArray<FVector2D> placeableSizes;
-		for (int i = 1; i <= zoneSize.X; i++)
-		{
-			for (int j = 1; j <= zoneSize.Y; j++)
-			{
-				placeableSizes.Add(FVector2D(i, j));
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *FVector2D(i, j).ToString());
-			}
-		}
-
-		// Gets placeable block from random size
-		FString zoneType = GetBlockStatsFromBlockID(zoneID)->Block_Name.ToString();
-		TArray<int> placeableBlocks;
-
-		while (placeableBlocks.Num() == 0)
-		{
-			int randomIndex = FMath::RandRange(0, placeableSizes.Num() - 1);
-			placeableBlocks = GetAllBlockIDsFromParameter(zoneType, 1, placeableSizes[randomIndex].X, placeableSizes[randomIndex].Y);
-		}
-
-		//int tileA = GetZoneStartTileFromHoveredTile( /* Random Tile */);
-		//int tileB = GetZoneEndTileFromZoneSize(tileA, /* Block size */);
-		TArray<int> zoneTiles;
-		// zoneTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB);
-		bool canBuild = true;
-		for (auto i : zoneTiles)
-		{
-			if (!unusedTiles.Contains(i))
-			{
-				canBuild = false;
-				break;
-			}
-		}
-
-		if (canBuild)
-		{
-			// Place block
-			SpawnBlockAtStartTile(placeableBlocks[0], zone[0]);
-		}
-	}
+// 	Some of the following code can be use in the future.
+// 		while (unusedTiles.Num() > 0)
+// 		{
+// 			// Finds all the possible block sizes in that space
+// 			TArray<FVector2D> placeableSizes;
+// 			for (int i = 1; i <= zoneSize.X; i++)
+// 			{
+// 				for (int j = 1; j <= zoneSize.Y; j++)
+// 				{
+// 					placeableSizes.Add(FVector2D(i, j));
+// 					UE_LOG(LogTemp, Warning, TEXT("%s"), *FVector2D(i, j).ToString());
+// 				}
+// 			}
+// 	
+// 			// Gets placeable block from random size
+// 			FString zoneType = GetBlockStatsFromBlockID(zoneID)->Block_Name.ToString();
+// 			TArray<int> placeableBlocks;
+// 	
+// 			while (placeableBlocks.Num() == 0)
+// 			{
+// 				int randomIndex = FMath::RandRange(0, placeableSizes.Num() - 1);
+// 				placeableBlocks = GetAllBlockIDsFromParameter(zoneType, 1, placeableSizes[randomIndex].X, placeableSizes[randomIndex].Y);
+// 			}
+// 	
+// 			//int tileA = GetZoneStartTileFromHoveredTile( /* Random Tile */);
+// 			//int tileB = GetZoneEndTileFromZoneSize(tileA, /* Block size */);
+// 			TArray<int> zoneTiles;
+// 			// zoneTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB);
+// 			bool canBuild = true;
+// 			for (auto i : zoneTiles)
+// 			{
+// 				if (!unusedTiles.Contains(i))
+// 				{
+// 					canBuild = false;
+// 					break;
+// 				}
+// 			}
+// 	
+// 			if (canBuild)
+// 			{
+// 				// Place block
+// 				SpawnBlockAtStartTile(placeableBlocks[0], zone[0]);
+// 			}
+// 		}
 }
 
 
@@ -249,25 +268,30 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
 {
 	TArray<int> TileIDs;
-	UE_LOG(LogTemp, Log, TEXT("CalculatingZoneTileIDs in BlockManager."));
+
+	if (tileA == tileB)
+	{
+		TileIDs.Add(tileA);
+		return TileIDs;
+	}
 
 	if (tileA != 0 && tileB != 0)
 	{
 		// Convert TileID into polar coordinates
 		int Ay;
 		int Ax;
-		Ay = tileA / GridManager->GetGridSize().X;
+		Ay = trunc(tileA / GridManager->GetGridSize().X);
 		Ax = tileA - (Ay * GridManager->GetGridSize().X);
 
 		int By;
 		int Bx;
-		By = tileB / GridManager->GetGridSize().X;
+		By = trunc(tileB / GridManager->GetGridSize().X);
 		Bx = tileB - (By * GridManager->GetGridSize().X);
 
 		// Get block size from vector AB>
 		FVector2D blockSize;
 
-		blockSize = FVector2D(Bx - Ax, By - Ay);
+		blockSize = FVector2D(By - Ay, Bx - Ax);
 
 
 		// Convert polar coordinates into grid of tiles
@@ -289,12 +313,17 @@ TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int ti
 
 		for (int i = 0; i < abs(blockSize.Y); i++)
 		{
+
 			for (int j = 0; j < abs(blockSize.X); j++)
 			{
 				int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
-				
-				TileIDs.Add(newTileID);
+
+				if (GridManager->IsTileValid(newTileID))
+				{
+					TileIDs.Add(newTileID);
+				}
 			}
+
 		}
 		return TileIDs;
 	}
@@ -476,6 +505,7 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 						FTT_Struct_BlockType tempBlockType
 						(
 							row->Category_Name,
+							TArray<FString>({ row->Block_Name.ToString() }),
 							TArray<int>({ FCString::Atoi(*name.ToString()) })
 						);
 
@@ -485,7 +515,8 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 					// If type already exist in the map
 					else
 					{
-						// Just add blockID and Name to it
+						// Just add block ID and Name to it
+						blockTypeMap.Find(row->Category_Name)->Block_Name.Add(row->Block_Name.ToString());
 						blockTypeMap.Find(row->Category_Name)->BlockIDs.Add(FCString::Atoi(*name.ToString()));
 					}
 

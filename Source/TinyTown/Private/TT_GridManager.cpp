@@ -74,6 +74,114 @@ FVector ATT_GridManager::GetTileLocation(int tileID)
 	return tempVector;
 }
 
+TArray<int> ATT_GridManager::GetTileNeighbours(int tileID, bool allowDiagonalPaths)
+{
+	TArray<int> neighbours;
+	FVector2D gridSize = GetGridSize();
+	int currentNeighbour;
+
+	// Right tile
+	currentNeighbour = tileID + gridSize.X;
+	if (IsTileValid(currentNeighbour))
+	{
+		neighbours.Add(currentNeighbour);
+	}
+
+	// Bottom right
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+
+		if (tileID != tempRow * gridSize.X)
+		{
+			currentNeighbour = tileID + gridSize.X - 1;
+			if (IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
+	}
+
+	// Bottom tile
+	currentNeighbour = tileID - 1;
+	if (IsTileValid(currentNeighbour))
+	{
+		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+
+		if (tileID != tempRow * gridSize.X)
+		{
+			neighbours.Add(currentNeighbour);
+		}
+	}
+
+	// Bottom left
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+
+		if (tileID != tempRow * gridSize.X)
+		{
+
+			currentNeighbour = tileID - gridSize.X - 1;
+			if (IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
+	}
+
+	// Left tile
+	currentNeighbour = tileID - gridSize.X;
+	if (IsTileValid(currentNeighbour))
+	{
+		neighbours.Add(currentNeighbour);
+	}
+
+	// Top left
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+
+		if (tileID + 1 != tempRow * gridSize.X)
+		{
+			currentNeighbour = tileID - gridSize.X + 1;
+			if (IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
+	}
+
+	// Top tile
+	currentNeighbour = tileID + 1;
+	if (IsTileValid(currentNeighbour))
+	{
+		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+
+		if (tileID + 1 != tempRow * gridSize.X)
+		{
+			neighbours.Add(currentNeighbour);
+		}
+	}
+
+	// Top right tile
+	if (allowDiagonalPaths)
+	{
+		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+
+		if (tileID + 1 != tempRow * gridSize.X)
+		{
+			currentNeighbour = tileID - gridSize.X + 1;
+			if (IsTileValid(currentNeighbour))
+			{
+				neighbours.Add(currentNeighbour);
+			}
+		}
+	}
+
+	return neighbours;
+}
+
 float ATT_GridManager::GetDistanceBetweenTiles()
 {
 	return distanceBetweenTiles;

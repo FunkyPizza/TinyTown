@@ -13,7 +13,7 @@
 #include "TT_Pathfinder.h"
 #include "TT_Global.h"
 
-/*---------- Primary functions ----------*/
+
 ATT_PlayerGridCamera::ATT_PlayerGridCamera()
 {	
 /*---------- Components creation ----------*/
@@ -54,11 +54,6 @@ void ATT_PlayerGridCamera::Tick(float DeltaTime)
 
 	// Linetrace cursor to 3D world
 	MouseTrace();
-
-	// Enables mouse input to move the camera
-	InputCameraMovements();
-	InputCameraRotation();
-
 }
 
 void ATT_PlayerGridCamera::BeginPlay()
@@ -100,7 +95,6 @@ ATT_GridManager* ATT_PlayerGridCamera::GetGridManager()
 	}
 }
 
-
 ATT_BlockManager* ATT_PlayerGridCamera::GetBlockManager()
 {
 	if (GridManager)
@@ -114,75 +108,8 @@ ATT_BlockManager* ATT_PlayerGridCamera::GetBlockManager()
 	}
 }
 
+
 /*---------- Player input functions ----------*/
-
-// Keyboard inputs
-void ATT_PlayerGridCamera::InputKeyboardMovements(float notused)
-{
-	if (isMovementEnabled) 
-	{
-		isMovingCamera = true;
-
-		MoveCamera(GetInputAxisValue("MoveRight"), GetInputAxisValue("MoveForward"), keyboardMovementSpeed);
-	}
-
-	else 
-	{
-		isMovingCamera = false;
-	}
-}
-
-void ATT_PlayerGridCamera::InputKeyboardRotation(float notused)
-{
-	if (isMovementEnabled) 
-	{
-		isRotatingCamera = true;
-
-		RotateCamera(-notused, 0.0f, keyboardRotationSpeed, 0);
-	}
-
-	else 
-	{
-		isRotatingCamera = false;
-	}
-}
-
-// Mouse inputs
-void ATT_PlayerGridCamera::InputCameraMovements()
-{
-	if (isMovementEnabled) 
-	{
-		if (isMoveButtonDown) 
-		{
-			isMovingCamera = true;
-
-			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), mouseMovementSpeed);
-		}
-
-		else 
-		{
-			isMovingCamera = false;
-		}
-	}
-}
-
-void ATT_PlayerGridCamera::InputCameraRotation()
-{
-	if (isMovementEnabled) 
-	{
-		if (isRotationButtonDown) 
-		{
-			isRotatingCamera = true;
-
-			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), mouseXRotationSpeed, mouseYRotationSpeed);
-		}
-
-		else 
-		{
-			isRotatingCamera = false;
-		}
-	}
-}
 
 void ATT_PlayerGridCamera::InputCameraZoom(float value)
 {
@@ -235,6 +162,7 @@ void ATT_PlayerGridCamera::InputSelectButtonDown()
 
 	if (currentLinetracedTile != -1) 
 	{
+		SelectBlockFromTileID(currentLinetracedTile);
 		GridManager->OnTileClicked(currentLinetracedTile);
 	}
 }
@@ -246,6 +174,7 @@ void ATT_PlayerGridCamera::InputSelectButtonUp()
 	if (currentLinetracedTile != -1)
 	{
 		GridManager->TileClearState();
+		currentLinetracedTile = -1;
 	}
 
 	if (isRemoveToolActive)
@@ -271,40 +200,94 @@ void ATT_PlayerGridCamera::InputSelectButtonUp()
 	isZoneBuildingCancelled = false;
 }
 
-void ATT_PlayerGridCamera::InputRotationButtonDown()
-{
-	isRotationButtonDown = true;
-}
-
-void ATT_PlayerGridCamera::InputRotationButtonUp()
-{
-	isRotationButtonDown = false;
-}
-
-void ATT_PlayerGridCamera::InputMoveButtonDown()
-{
-	isMoveButtonDown = true;
-}
-
-void ATT_PlayerGridCamera::InputMoveButtonUp()
-{
-	isMoveButtonDown = false;
-}
-
 void ATT_PlayerGridCamera::InputCancel()
 {
 	if (isPlacingDownABlock)
 	{
 		isZoneBuildingCancelled = true;
 		StopBuildTool();
-		return;
 	}
 
 	if (isRemoveToolActive)
 	{
 		StopRemoveTool();
-		return;
 	}
+
+	if (selectedBlock != nullptr)
+	{
+		DeselectBlock();
+	}
+}
+
+
+/*---------- Mouse rotation functions ----------*/
+
+void ATT_PlayerGridCamera::InputRotationButtonDown()
+{
+	isRotationButtonDown = true;
+	
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_MouseRotation, this, &ATT_PlayerGridCamera::MouseRotationTick, GetWorld()->DeltaTimeSeconds, true, 0.0f);
+}
+
+void ATT_PlayerGridCamera::MouseRotationTick()
+{
+	if (isMovementEnabled)
+	{
+		if (isRotationButtonDown)
+		{
+			isRotatingCamera = true;
+
+			RotateCamera(GetInputAxisValue("MouseX"), GetInputAxisValue("MouseY"), mouseXRotationSpeed, mouseYRotationSpeed);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_MouseRotation, this, &ATT_PlayerGridCamera::MouseRotationTick, GetWorld()->DeltaTimeSeconds, true, 0.0f);
+		}
+
+		else
+		{
+			isRotatingCamera = false;
+		}
+	}
+}
+
+void ATT_PlayerGridCamera::InputRotationButtonUp()
+{
+	isRotationButtonDown = false;
+
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_MouseRotation);
+}
+
+
+/*---------- Mouse movements functions ----------*/
+
+void ATT_PlayerGridCamera::InputMoveButtonDown()
+{
+	isMoveButtonDown = true;
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_MouseMovements, this, &ATT_PlayerGridCamera::MouseMovementsTick, GetWorld()->DeltaTimeSeconds, true, 0.0f);
+}
+
+void ATT_PlayerGridCamera::MouseMovementsTick()
+{
+	if (isMovementEnabled)
+	{
+		if (isMoveButtonDown)
+		{
+			isMovingCamera = true;
+
+			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), mouseMovementSpeed);
+		}
+
+		else
+		{
+			isMovingCamera = false;
+		}
+	}
+}
+
+void ATT_PlayerGridCamera::InputMoveButtonUp()
+{
+	isMoveButtonDown = false;
+
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle_MouseMovements);
 }
 
 
@@ -312,44 +295,105 @@ void ATT_PlayerGridCamera::InputCancel()
 
 void ATT_PlayerGridCamera::MoveCamera(float x, float y, float sensitivity)
 {
-	//Avoids a speed increase when both X and Y axis = 1.
-	float axisYNormalized = y * FMath::Abs(FMath::Sin(FMath::Atan2(y, x)));
-	float axisXNormalized = x * FMath::Abs(FMath::Cos(FMath::Atan2(y, x)));
+	if (isMovementEnabled)
+	{
+		isMovingCamera = true;
 
-	FVector movementVector = FVector(axisYNormalized * sensitivity, axisXNormalized * sensitivity, 0.0f);
+		//Avoids a speed increase when both X and Y axis = 1.
+		float axisYNormalized = y * FMath::Abs(FMath::Sin(FMath::Atan2(y, x)));
+		float axisXNormalized = x * FMath::Abs(FMath::Cos(FMath::Atan2(y, x)));
 
-	AddActorLocalOffset(movementVector);
+		FVector movementVector = FVector(axisYNormalized * sensitivity, axisXNormalized * sensitivity, 0.0f);
+
+		AddActorLocalOffset(movementVector, false);
+	}
+
+	else
+	{
+		isMovingCamera = false;
+	}
 }
 
 void ATT_PlayerGridCamera::RotateCamera(float x, float y, float xSensitivity, float ySensitivity)
 {
-
-	float negativeMaxPitch = maximumPitch * -1;
-	float negativeMinPitch = minimumPitch * -1;
-
-	FRotator currentRotation = SpringArmComp->GetRelativeTransform().GetRotation().Rotator();
-	SpringArmComp->SetRelativeRotation(FRotator(currentRotation.Pitch, 0, 0));
-	
-	// Clamps camera angle 
-	if (currentRotation.Pitch >= negativeMinPitch)
+	if (isMovementEnabled)
 	{
-		SpringArmComp->SetRelativeRotation(FRotator(-5.5f, 0, 0));
-		return;
+		isRotatingCamera = true;
+
+		// The camera's rotation values are negative, so we need the negative.
+		float negativeMaxPitch = maximumPitch * -1;
+		float negativeMinPitch = minimumPitch * -1;
+
+		FRotator currentRotation = SpringArmComp->GetRelativeTransform().GetRotation().Rotator();
+
+		// Clamps camera angle 
+		if (currentRotation.Pitch >= negativeMinPitch)
+		{
+			SpringArmComp->SetRelativeRotation(FRotator(negativeMinPitch - 0.1f, 0, 0));
+			return;
+		}
+		if (currentRotation.Pitch <= negativeMaxPitch)
+		{
+			SpringArmComp->SetRelativeRotation(FRotator(negativeMaxPitch + 0.1f, 0, 0));
+			return;
+		}
+
+		// Rotate Y
+		FRotator newRotationY = FRotator(y, 0, 0) * ySensitivity;
+		SpringArmComp->AddLocalRotation(newRotationY,  false);
+
+		// Rotate X
+		FRotator newRotationX = FRotator(0, x, 0) * xSensitivity;
+		AddActorLocalRotation(newRotationX, false);
 	}
-	if (currentRotation.Pitch <= negativeMaxPitch)
+
+	else
 	{
-		SpringArmComp->SetRelativeRotation(FRotator(-84.5f, 0, 0));
-		return;
+		isRotatingCamera = false;
 	}
 
-	// Rotate Y
-	FRotator newRotationY = FRotator(y, 0, 0) * ySensitivity;
-	SpringArmComp->AddLocalRotation(newRotationY);
+}
 
-	// Rotate X
-	FRotator newRotationX = FRotator(0, x, 0) * xSensitivity;
-	AddActorLocalRotation(newRotationX);
+bool ATT_PlayerGridCamera::SelectBlockFromTileID(int tileID)
+{
+	if (GridManager->IsTileValid(tileID))
+	{
+		if (GetBlockManager()->spawnedBlocks[tileID] != nullptr)
+		{
+			selectedBlock = GetBlockManager()->spawnedBlocks[tileID];
 
+			isBlockSelected = true;
+
+			OnBlockSelected();
+
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ATT_PlayerGridCamera::SelectBlock(ATT_Block* blockToSelect)
+{
+	if (blockToSelect)
+	{
+		selectedBlock = blockToSelect;
+		isBlockSelected = true;
+
+		OnBlockSelected();
+		return true;
+	}
+	return false;
+}
+
+void ATT_PlayerGridCamera::DeselectBlock()
+{
+	if (selectedBlock != nullptr)
+	{
+		selectedBlock = nullptr;
+
+		OnBlockDeselected();
+	}
+	isBlockSelected = false;
 }
 
 void ATT_PlayerGridCamera::MouseTrace()
@@ -362,9 +406,9 @@ void ATT_PlayerGridCamera::MouseTrace()
 			FHitResult Hit;
 			if (GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit))
 			{
-				if (Hit.Item != currentLinetracedTile)
+				if (Hit.Actor == GridManager)
 				{
-					if (Hit.Actor == GridManager)
+					if (Hit.Item != currentLinetracedTile)
 					{
 						// Hit a tile
 						currentLinetracedTile = Hit.Item;
@@ -377,17 +421,19 @@ void ATT_PlayerGridCamera::MouseTrace()
 						return;
 					}
 
-					if (Hit.Actor->GetClass() == ATT_Block::StaticClass())
-					{
-						currentLinetracedTile = Cast<ATT_Block>(Hit.Actor)->centralTileID;;
-						lastLinetracedTile = currentLinetracedTile;
+				}
 
-						if (!isSettingBlockSize)
-						{
-							GridManager->OnTileHovered(currentLinetracedTile);
-						}
-						return;
+				if (Hit.Actor->GetClass()->IsChildOf(ATT_Block::StaticClass()))
+				{
+					currentLinetracedTile = Cast<ATT_Block>(Hit.Actor)->centralTileID;
+					lastLinetracedTile = currentLinetracedTile;
+
+					if (!isSettingBlockSize)
+					{
+						GridManager->OnTileHovered(currentLinetracedTile);
 					}
+
+					return;
 				}
 			}
 
@@ -409,7 +455,7 @@ void ATT_PlayerGridCamera::StartBuildTool(int blockID)
 	StopBuildTool();
 	StopRemoveTool();
 
-	if (placingBlockInstance)
+	if (currentBuildToolBlock)
 	{
 		// Cancel previous block building
 		
@@ -426,15 +472,15 @@ void ATT_PlayerGridCamera::StartBuildTool(int blockID)
 	placingBlockTargetRotation = FRotator(0, 0, 0);
 	  
 	// Spawning the placing block
-	placingBlockInstance = GetWorld()->SpawnActorDeferred<ATT_Block>(placingBlockStats->BlockClass, blockTransform);
+	currentBuildToolBlock = GetWorld()->SpawnActorDeferred<ATT_Block>(placingBlockStats->BlockClass, blockTransform);
 
-	if (placingBlockInstance)
+	if (currentBuildToolBlock)
 	{
-		placingBlockInstance->SetBlockStats(placingBlockStats);
-		placingBlockInstance->SetBlockManager(GridManager->BlockManager);
-		placingBlockInstance->ActivateEditMode();
+		currentBuildToolBlock->SetBlockStats(placingBlockStats);
+		currentBuildToolBlock->SetBlockManager(GridManager->BlockManager);
+		currentBuildToolBlock->ActivateEditMode();
 
-		UGameplayStatics::FinishSpawningActor(placingBlockInstance, blockTransform);
+		UGameplayStatics::FinishSpawningActor(currentBuildToolBlock, blockTransform);
 
 		isPlacingDownABlock = true;
 	}
@@ -460,7 +506,7 @@ void ATT_PlayerGridCamera::StopBuildTool()
 		isZoneBuildingCancelled = false;
 		GridManager->TileClearState();
 
-		placingBlockInstance->Destroy();
+		currentBuildToolBlock->Destroy();
 		placingBlockID = -1;
 		lastPathGoalTile = -1;
 
@@ -475,7 +521,7 @@ void ATT_PlayerGridCamera::ConfirmBuildTool()
 		UE_LOG(LogTemp, Warning, TEXT("the placing block ID was not set, cannot spawn block"));
 		return;
 	}
-	if (!placingBlockInstance)
+	if (!currentBuildToolBlock)
 	{
 		placingBlockID = -1;
 		UE_LOG(LogTemp, Warning, TEXT("The placing block instance is not valid, cannot spawn block"));
@@ -494,7 +540,7 @@ void ATT_PlayerGridCamera::ConfirmBuildTool()
 		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockID);
 		GridManager->ClearPlayerSelection();
 
-		for (auto i : placingLastZoneBuilt)
+		for (int i : placingLastZoneBuilt)
 		{
 			GridManager->TileReset(i);
 		}
@@ -507,7 +553,7 @@ void ATT_PlayerGridCamera::ConfirmBuildTool()
 
 void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 {
-	if (placingBlockInstance)
+	if (currentBuildToolBlock)
 	{
 		if (isPlacingDownAResizableBlock)
 		{
@@ -560,7 +606,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		else if (!isZoneBuildingCancelled)
 		{
 			// Check that the mouse button is held and that the block has finished its previous rotation
-			if (isSelectButtonDown && FMath::IsNearlyEqual(placingBlockInstance->RotationRoot->RelativeRotation.Yaw, placingBlockTargetRotation.Yaw, 0.1f))
+			if (isSelectButtonDown && FMath::IsNearlyEqual(currentBuildToolBlock->RotationRoot->RelativeRotation.Yaw, placingBlockTargetRotation.Yaw, 0.1f))
 			{
 				// Check for any mouse movement meaning the player wants to rotate the block
 				if (!(FMath::IsNearlyEqual(GetInputAxisValue("MouseX"), 0.0f, blockRotationMouseThreshold)))
@@ -599,14 +645,24 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		if (!isSettingBlockSize)
 		{
 			bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
-			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, placingBlockInstance->GetBlockStats()->Size_X, placingBlockInstance->GetBlockStats()->Size_Y, isModuloHalfPi);
-			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, placingBlockInstance->GetBlockStats()->Size_X, placingBlockInstance->GetBlockStats()->Size_Y, isModuloHalfPi);
-			TArray<int> ghostBlockTiles = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB);
+			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
+			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
+			TArray<int> ghostBlockTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB);
 
 			
 			for (auto i : ghostBlockTiles)
 			{
-				if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
+				if (GridManager->IsTileValid(i))
+				{
+					if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
+					{
+						GridManager->SetTileColor(i, FLinearColor::Red);
+						UE_LOG(LogTemp, Warning, TEXT("Tile used by block ID %d"), GridManager->BlockManager->GetSpawnedBlockIDs()[i]);
+						isBlockClearToBePlaced = false;
+					}
+				}
+
+				else
 				{
 					isBlockClearToBePlaced = false;
 				}
@@ -620,8 +676,8 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		}
 
 		// Get tile location to lerp the block to
-		placingBlockInstance->SetActorLocation(FMath::Lerp(placingBlockInstance->GetActorLocation(), placingBlockTargetLocation, blockMovementSpeed * deltaTime));
-		placingBlockInstance->SetBlockRotation(placingBlockTargetRotation, blockRotationSpeed);
+		currentBuildToolBlock->SetActorLocation(FMath::Lerp(currentBuildToolBlock->GetActorLocation(), placingBlockTargetLocation, blockMovementSpeed * deltaTime));
+		currentBuildToolBlock->SetBlockRotation(placingBlockTargetRotation, blockRotationSpeed);
 	}
 }
 
@@ -690,16 +746,14 @@ void ATT_PlayerGridCamera::ConfirmRemoveToolEndTile()
 
 }
 
-void ATT_PlayerGridCamera::RemoveBlockUnderCursor()
-{
-	DeleteBlockOnTile(lastLinetracedTile);
-}
-
 void ATT_PlayerGridCamera::DeleteBlockOnTile(int tileID)
 {
-	GridManager->BlockManager->DeleteBlockOnTile(tileID);
-	GridManager->TileClearState();
-	currentLinetracedTile = -1;
+	if (GridManager->IsTileValid(tileID))
+	{
+		GridManager->BlockManager->DeleteBlockOnTile(tileID);
+		GridManager->TileClearState();
+		currentLinetracedTile = -1;
+	}
 }
 
 
@@ -708,6 +762,12 @@ void ATT_PlayerGridCamera::DeleteBlockOnTile(int tileID)
 TArray<int> ATT_PlayerGridCamera::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
 {
 	TArray<int> TileIDs;
+
+	if (tileA == tileB)
+	{
+		TileIDs.Add(tileA);
+		return TileIDs;
+	}
 
 	// Convert TileID into polar coordinates
 	int Ay;
@@ -737,6 +797,7 @@ TArray<int> ATT_PlayerGridCamera::GetZoneTileIDsFromZoneParameters(int tileA, in
 	{
 		xSign = abs(blockSize.X) / blockSize.X;
 	}
+
 	if (blockSize.Y != 0)
 	{
 		ySign = abs(blockSize.Y) / blockSize.Y;
@@ -768,26 +829,7 @@ void ATT_PlayerGridCamera::ToggleViewMode(int ViewMode)
 void ATT_PlayerGridCamera::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-/*
-	//Keyboard
-	PlayerInputComponent->BindAxis("MoveForward", this, &ATT_PlayerGridCamera::InputKeyboardMovements);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ATT_PlayerGridCamera::InputKeyboardMovements);
-	PlayerInputComponent->BindAxis("XRotation", this, &ATT_PlayerGridCamera::InputKeyboardRotation);
-	*/
-	PlayerInputComponent->BindAxis("MoveForward");
-	PlayerInputComponent->BindAxis("MoveRight");
-	//PROTOTYPE Build input
-	PlayerInputComponent->BindAction("Delete", IE_Pressed, this, &ATT_PlayerGridCamera::RemoveBlockUnderCursor);
-	/*
-	//Mouse
-	PlayerInputComponent->BindAction("InputSelect", IE_Pressed, this, &ATT_PlayerGridCamera::InputSelectButtonDown);
-	PlayerInputComponent->BindAction("InputSelect", IE_Released, this, &ATT_PlayerGridCamera::InputSelectButtonUp);
-	PlayerInputComponent->BindAction("InputCancel", IE_Released, this, &ATT_PlayerGridCamera::InputCancel);
-	PlayerInputComponent->BindAction("InputRotation", IE_Pressed, this, &ATT_PlayerGridCamera::InputRotationButtonDown);
-	PlayerInputComponent->BindAction("InputRotation", IE_Released, this, &ATT_PlayerGridCamera::InputRotationButtonUp);
-	PlayerInputComponent->BindAction("InputMovement", IE_Pressed, this, &ATT_PlayerGridCamera::InputMoveButtonDown);
-	PlayerInputComponent->BindAction("InputMovement", IE_Released, this, &ATT_PlayerGridCamera::InputMoveButtonUp);
-	PlayerInputComponent->BindAxis("ZoomIn", this, &ATT_PlayerGridCamera::InputCameraZoom); */
+
 	PlayerInputComponent->BindAxis("MouseY");
 	PlayerInputComponent->BindAxis("MouseX");
 

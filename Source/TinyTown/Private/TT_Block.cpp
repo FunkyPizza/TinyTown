@@ -6,6 +6,7 @@
 #include "TT_BlockManager.h"
 #include "TT_GridManager.h"
 #include "TimerManager.h"
+#include "Components/BoxComponent.h"
 
 
 /*---------- Primary functions ----------*/
@@ -22,7 +23,15 @@ ATT_Block::ATT_Block()
 	RotationRoot->SetupAttachment(BuildingRoot);
 
 	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
+	BlockMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	BlockMesh->SetupAttachment(RotationRoot);
+
+	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	BoxComp->InitBoxExtent(FVector(50, 50, 100));
+	BoxComp->SetupAttachment(RotationRoot);
+
+	BoxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Block);
+	BoxComp->SetCollisionResponseToChannel(ECC_Camera, ECollisionResponse::ECR_Overlap);
 	   
 }
 
@@ -67,6 +76,18 @@ void ATT_Block::SetBlockManager(ATT_BlockManager* BlockManager)
 ATT_BlockManager* ATT_Block::GetBlockManager()
 {
 	return blockManager;
+}
+
+ATT_GridManager* ATT_Block::GetGridManager()
+{
+	if (blockManager)
+	{
+		return blockManager->GridManager;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void ATT_Block::SetCentralTileID(int tileID)
@@ -161,12 +182,16 @@ void ATT_Block::ActivateEditMode()
 {
 	isInEditingMode = true;
 
+	BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetWorldTimerManager().SetTimer(TimerHandle_EditMode, this, &ATT_Block::EditModeTick, 0.01f, true, 0.0f);
 }
 
 void ATT_Block::StopEditMode()
 {
 	isInEditingMode = false;
+
+	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
 	GetWorldTimerManager().ClearTimer(TimerHandle_EditMode);
 }
 

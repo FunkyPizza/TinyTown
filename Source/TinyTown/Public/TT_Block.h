@@ -33,8 +33,11 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* BuildingRoot;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* BlockMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UBoxComponent* BoxComp;
 
 
 /*---------- Functions -----------*/
@@ -88,6 +91,10 @@ public:
 	void SetBlockManager(ATT_BlockManager* BlockManager);
 	UFUNCTION(BlueprintPure)
 	ATT_BlockManager* GetBlockManager();
+
+	/* Returns a reference to the grid manager this object is using. */
+	UFUNCTION(BlueprintPure)
+		ATT_GridManager* GetGridManager();
 
 	void SetCentralTileID(int tileID);
 

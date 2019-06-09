@@ -67,14 +67,7 @@ protected:
 
 	/*---------- Variables -----------*/
 
-	/** Tile Array - Array of spawned block IDs where index = index of the tile, and element = BlockID.*/
-	TArray<int> spawnedBlockID; 
 
-	/** Tile Array - Array of spawned zone IDs where index = index of the tile, and element = BlockID. */
-	TArray<int> spawnedZoneID;
-
-	/** Tile Array - Array of spawned blocks where index = index of the tile, and element = TT_Block instance.*/
-	TArray<ATT_Block*> spawnedBlocks;
 
 	/** Data table holding data of all the blocks.*/
 	UDataTable* data_Block;
@@ -165,6 +158,7 @@ public:
 	int GetHoveredTileFromZoneParameter(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
 	/**
 	 * Returns the TileID of the corner tile opposite to tileA in a zone defined by parameters (see top of page for zone explanation).
+	 * Caution, this functions doesn't take in account the edges of the grid.
 	 * @param tileA Corner A / StartTile of the zone.
 	 * @param sizeX X size of block's zone (how big is the block in tiles).
 	 * @param sizeY Y size of block's zone (how big is the block in tiles).
@@ -208,16 +202,31 @@ public:
 	*/
 	TArray<int> GetAllBlockIDsFromParameter(FString buildingType, int efficiency, int sizeX, int sizeY);
 
-	/** Accessor - Returns the array of spawned zone where index = index of the tile, and element = BlockID;*/
+	/* Accessor - Returns the array of spawned zones where index = index of the tile, and element = BlockID. */
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
 	TArray<int> GetSpawnedZoneTileIDs();
 
-	/** Accessor - Returns the array of spawned blocks where index = index of the tile, and element = BlockID. */
+	/* Accessor - Returns the array of spawned blocks where index = index of the tile, and element = BlockID. */
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
 	TArray<int> GetSpawnedBlockIDs();
+
+	/* Accessor - Returns the array of spawned blocks where index = index of the tile, and element = reference to the ATT_Block object. */
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
+	TArray<ATT_Block*> GetSpawnedBlocks();
 
 	
 
 	/*---------- Variables -----------*/
 	
+		/** Tile Array - Array of spawned block IDs where index = index of the tile, and element = BlockID.*/
+	TArray<int> spawnedBlockID;
+
+	/** Tile Array - Array of spawned zone IDs where index = index of the tile, and element = BlockID. */
+	TArray<int> spawnedZoneID;
+
+	/** Tile Array - Array of spawned blocks where index = index of the tile, and element = TT_Block instance.*/
+	TArray<ATT_Block*> spawnedBlocks;
+
 	/** Reference to the GridManager who created this block manager.*/
 	ATT_GridManager* GridManager;
 
@@ -254,4 +263,5 @@ public:
 	UFUNCTION(BlueprintPure, Category = "BlockManager")
 		TMap<FString, int>  GetAllZoneBuildings();
 
+	
 };
