@@ -64,6 +64,7 @@ TArray<ATT_Block*> ATT_BlockManager::GetSpawnedBlocks()
 	return spawnedBlocks;
 }
 
+
 /*---------- Block & Zone building functions ----------*/
 
 void ATT_BlockManager::SpawnBlockFromParameters(int tileID, FRotator blockRotation, FString buildingType, int efficiency, int sizeX, int sizeY)
@@ -88,31 +89,14 @@ void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileI
 	FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(blockID);
 
 	//Get the block's zone characteristics
-	bool isModuloHalfPi = !FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f);
+	bool isModuloHalfPi = FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f);
 	TArray<int> BlockZoneTileIDs;
-	int tileA = tileID;
-	int tileB = tileID;
+	
 
-	// If block is of size 1x1, its zone will always be 1x1.
-	if (BlockStats->Size_X > 1 || BlockStats->Size_Y > 1)
+	if (!CheckIfBlockIsBuildable(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi, BlockZoneTileIDs))
 	{
-		tileA = GetZoneStartTileFromHoveredTile(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-		tileB = GetZoneEndTileFromZoneSize(tileA, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-	}
-
-	BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
-
-	for (int i : BlockZoneTileIDs)
-	{
-
-		if (GridManager->IsTileValid(i))
-		{
-			if (spawnedBlockID[i] != 0)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("A block is already placed on one of these tiles."));
-				return;
-			}
-		}
+		UE_LOG(LogTemp, Warning, TEXT("A block is already placed on one of these tiles."));
+		return;
 	}
 
 	ATT_Block* SpawnedActor;
@@ -263,7 +247,6 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 
 
 /*---------- Zone Tiles functions ----------*/
-
 
 TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB, bool excludeTileB)
 {
@@ -539,6 +522,15 @@ bool ATT_BlockManager::CheckZoneTileIDs(TArray<int> zoneTileIDs, int tileA, int 
 
 bool ATT_BlockManager::CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi)
 {
+	TArray<int> OutZoneTile;
+	bool result = CheckIfBlockIsBuildable(tileID, sizeX, sizeY, isModuloHalfPi, OutZoneTile);
+	return result;
+}
+
+bool ATT_BlockManager::CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi, TArray<int>& OutZoneTileIDs)
+{
+	TArray<int> placingBlockOccupiedTiles;
+	OutZoneTileIDs = placingBlockOccupiedTiles;
 	bool isBlockClearToBePlaced = true;
 
 	int tileA = GetZoneStartTileFromHoveredTile(tileID, sizeX, sizeY, isModuloHalfPi);
@@ -546,7 +538,7 @@ bool ATT_BlockManager::CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY,
 
 	if (tileA != -1 && tileB != -1)
 	{
-		TArray<int> placingBlockOccupiedTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
+		placingBlockOccupiedTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
 
 		// Check that the block's zone isn't going over the edge of the grid
 		if (!CheckZoneTileIDs(placingBlockOccupiedTiles, tileA, tileB))
@@ -570,25 +562,19 @@ bool ATT_BlockManager::CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY,
 				return false;
 			}
 		}
-
-		// DEBUG: Shows the tiles being checked
-		GridManager->TileClearState();
-		for (auto i : placingBlockOccupiedTiles)
-		{
-			GridManager->SetTileColor(i, FLinearColor::Green);
-		}
 	}
 	else
 	{
 		return false;
 	}
-
+	OutZoneTileIDs = placingBlockOccupiedTiles;
 	return true;
 }
 
 bool ATT_BlockManager::GetNearestBuildableTileID(int& OutTileID, int tileID, int sizeX, int sizeY, bool isModuloHalfPi)
 {
 	TArray<int> Neighbours = GridManager->GetTileNeighbours(tileID, true);
+	TArray<int> ExtraNeighbours;
 
 	for (int i : Neighbours)
 	{
@@ -599,14 +585,33 @@ bool ATT_BlockManager::GetNearestBuildableTileID(int& OutTileID, int tileID, int
 				OutTileID = i;
 				return true;
 			}
+
+			for (int j : GridManager->GetTileNeighbours(i, true))
+			{
+				if (!ExtraNeighbours.Contains(j))
+				{
+					ExtraNeighbours.Add(j);
+				}
+			}
 		}
 	}
 
-	// Enable the check of the neighbour's neighbour
+	for (int a : ExtraNeighbours)
+	{
+		if (GridManager->IsTileValid(a))
+		{
+			if (CheckIfBlockIsBuildable(a, sizeX, sizeY, isModuloHalfPi))
+			{
+				OutTileID = a;
+				return true;
+			}
+		}
+	}
 
 	OutTileID = -1;
 	return false;
 }
+
 
 /*---------- Data Table functions ----------*/
 

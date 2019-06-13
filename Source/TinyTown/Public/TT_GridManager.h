@@ -86,7 +86,7 @@ protected:
 	TArray<FVector> tileLocations; 
 
 	/** TileID of the currently clicked tile. */
-	int32 clickedTile; 	
+	int32 lastClickedTile; 	
 
 	/** Array of all tiles that have been altered. */
 	TArray<int32> modifiedTiles; 
@@ -140,35 +140,44 @@ public:
 
 	/*---------- Functions -----------*/
 
-	/** Tile Effect - Reset this tile to its original state (both colour and transform). */
+	/* Tile Effect - Reset this tile to its original state (both colour and transform). */
 	void TileReset(int tileID);
 
-	/** Tile Effect - Set this array of tiles as Residential Zone. 
+	/* Tile Effect - Set this array of tiles as Residential Zone. 
 	* @param TileIDs Array of all TileIDs in the zone. 
 	* @param ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
 	*/
 	void SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID);
 
-	/** Tile Effect - Set the tile a certain color. */
+	/* Tile Effect - Set the tile a certain color. */
 	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
 	void SetTileColor(int tileID, FLinearColor colour);
 
-	/** Tile Effect - Reset all altered tiles to their original state. */
-		void TileClearState();
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
+	void SetTileTransform(int tileID, FTransform newTransform);
+
+	/* Tile Effect - Reset all altered tiles to their original state. */
+	void TileClearState();
 
 
-	/** Accessor - Public accessor for tile locations. 
+	/* Accessor - Public accessor for tile locations. 
 	*	@param tileID TileID (instance index) of the tile.
 	*/
 	UFUNCTION(BlueprintPure, Category = "GridManager")
 	FVector GetTileLocation(int tileID);
 
-	/** Returns the tile's neighbours in a clockwise order (Right, Down, Left, Up).
+	/* Returns the tile's neighbours in a clockwise order. If one direction doesn't have a neighbour, nothing will be returned.
+	* AllNeighboursTileID returns -1 when a tile doesn't exist, this allows you to use array index to get a specific direction.
+	* Direction index: Right 0 - Bottom 1 - Left 2 - Top 3.
+	* If allowDiagonalPaths enabled: Right 0 - Bottom/Right 1 - Bottom 2 - Bottom Left 3 etc ...
 	* @param tileID Specified tileID.
 	* @param allowDiagonalPaths Include the diagonal neighbours
+	* @return AllNeighboursTileID This returns all neighbours TileIDs keeping the clockwise order.
 	*/
 	UFUNCTION(BlueprintPure, Category = "Pathfinder")
-		TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths);
+	TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths, TArray<int>& AllNeighboursTileID);
+
+	TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths);
 
 	/** Accessor - Returns the distance between each tile. */
 	float GetDistanceBetweenTiles();

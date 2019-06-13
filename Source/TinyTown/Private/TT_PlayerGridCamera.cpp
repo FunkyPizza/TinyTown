@@ -648,64 +648,30 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 
 		if (!isSettingBlockSize)
 		{			
-			isBlockClearToBePlaced = GridManager->BlockManager->CheckIfBlockIsBuildable(lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
-
-// 			// Get the block's occupied tiles
-// 			bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
-// 			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
-// 			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
-// 
-// 			if (tileA != -1 && tileB != -1)
-// 			{
-// 				TArray<int> placingBlockOccupiedTiles = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
-// 				
-// 				// Check that the block's zone isn't going over the edge of the grid
-// 				if (!GridManager->BlockManager->CheckZoneTileIDs(placingBlockOccupiedTiles, tileA, tileB))
-// 				{
-// 					isBlockClearToBePlaced = false;
-// 				}
-// 
-// 				// Check that the block's zone isn't overlapping another block
-// 				for (auto i : placingBlockOccupiedTiles)
-// 				{
-// 					if (GridManager->IsTileValid(i))
-// 					{
-// 						if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
-// 						{
-// 							isBlockClearToBePlaced = false;
-// 						}
-// 					}
-// 
-// 					else
-// 					{
-// 						isBlockClearToBePlaced = false;
-// 					}
-// 				}
-// 
-// 				// DEBUG: Shows the tiles being checked
-// 				GridManager->TileClearState();
-// 				for (auto i : placingBlockOccupiedTiles)
-// 				{
-// 					GridManager->SetTileColor(i, FLinearColor::Green);
-// 				}
-// 			}
-// 
-// 			else 
-// 			{
-// 				isBlockClearToBePlaced = false;
-// 			}
+			isBlockClearToBePlaced = GridManager->BlockManager->CheckIfBlockIsBuildable
+			(
+				lastLinetracedTile, 
+				currentBuildToolBlock->GetBlockStats()->Size_X, 
+				currentBuildToolBlock->GetBlockStats()->Size_Y, 
+				isModuloHalfPi
+			);
 		}
 
 		if (isBlockClearToBePlaced)
 		{
-			lastBuildableTileID = currentLinetracedTile;
+			lastBuildableTileID = lastLinetracedTile;
 		}
 
 		else
 		{
-			if (GridManager->BlockManager->GetNearestBuildableTileID(lastBuildableTileID, lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi))
+			int newBuildableTileID;
+			if (GridManager->BlockManager->GetNearestBuildableTileID(newBuildableTileID, lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi))
 			{
-				isBlockClearToBePlaced = true;
+				if (newBuildableTileID != -1)
+				{
+					isBlockClearToBePlaced = true;
+					lastBuildableTileID = newBuildableTileID;
+				}
 			}
 		}
 
@@ -713,6 +679,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		if (!isSettingBlockSize && isBlockClearToBePlaced)
 		{
 			placingBlockTargetLocation = GridManager->GetTileLocation(lastBuildableTileID);
+			UE_LOG(LogTemp, Warning, TEXT("Buildable tile is tile ID %d"), lastBuildableTileID);
 		}
 
 		// Get tile location to lerp the block to

@@ -74,112 +74,127 @@ FVector ATT_GridManager::GetTileLocation(int tileID)
 	return tempVector;
 }
 
-TArray<int> ATT_GridManager::GetTileNeighbours(int tileID, bool allowDiagonalPaths)
+TArray<int> ATT_GridManager::GetTileNeighbours(int tileID, bool allowDiagonalPaths, TArray<int>& AllNeighboursTileID)
 {
 	TArray<int> neighbours;
+	TArray<int> neighboursAll;
 	FVector2D gridSize = GetGridSize();
 	int currentNeighbour;
+	int tempRow;
+
 
 	// Right tile
 	currentNeighbour = tileID + gridSize.X;
 	if (IsTileValid(currentNeighbour))
 	{
+		neighboursAll.Add(currentNeighbour);
 		neighbours.Add(currentNeighbour);
+	}
+	else
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Bottom right
-	if (allowDiagonalPaths)
+	currentNeighbour = tileID + gridSize.X - 1;
+	tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+	if (allowDiagonalPaths && tileID % int(gridSize.X) != 0 && tileID != tempRow * gridSize.X && IsTileValid(currentNeighbour))
 	{
-		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
-
-		if (tileID != tempRow * gridSize.X)
-		{
-			currentNeighbour = tileID + gridSize.X - 1;
-			if (IsTileValid(currentNeighbour))
-			{
-				neighbours.Add(currentNeighbour);
-			}
-		}
+		neighboursAll.Add(currentNeighbour);
+		neighbours.Add(currentNeighbour);
+	}
+	else if (allowDiagonalPaths)
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Bottom tile
 	currentNeighbour = tileID - 1;
-	if (IsTileValid(currentNeighbour))
+	tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+	if (tileID % int(gridSize.X) != 0 && IsTileValid(currentNeighbour) && tileID != tempRow * gridSize.X) 
 	{
-		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
-
-		if (tileID != tempRow * gridSize.X)
-		{
-			neighbours.Add(currentNeighbour);
-		}
+		neighboursAll.Add(currentNeighbour);
+		neighbours.Add(currentNeighbour);
+	}
+	else
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Bottom left
-	if (allowDiagonalPaths)
+	currentNeighbour = tileID - gridSize.X - 1;
+	tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
+	if (allowDiagonalPaths && tileID % int(gridSize.X) != 0 && tileID != tempRow * gridSize.X && IsTileValid(currentNeighbour))
 	{
-		int tempRow = FMath::TruncToInt(float(tileID / gridSize.X));
-
-		if (tileID != tempRow * gridSize.X)
-		{
-
-			currentNeighbour = tileID - gridSize.X - 1;
-			if (IsTileValid(currentNeighbour))
-			{
-				neighbours.Add(currentNeighbour);
-			}
-		}
+		neighboursAll.Add(currentNeighbour);
+		neighbours.Add(currentNeighbour);		
+	}
+	else if(allowDiagonalPaths)
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Left tile
 	currentNeighbour = tileID - gridSize.X;
 	if (IsTileValid(currentNeighbour))
 	{
+		neighboursAll.Add(currentNeighbour);
 		neighbours.Add(currentNeighbour);
+	}
+	else
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Top left
-	if (allowDiagonalPaths)
+	currentNeighbour = tileID - gridSize.X + 1;
+	tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+	if (allowDiagonalPaths && (tileID + 1) % int(gridSize.X) != 0 && tileID + 1 != tempRow * gridSize.X && IsTileValid(currentNeighbour))
 	{
-		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
-
-		if (tileID + 1 != tempRow * gridSize.X)
-		{
-			currentNeighbour = tileID - gridSize.X + 1;
-			if (IsTileValid(currentNeighbour))
-			{
-				neighbours.Add(currentNeighbour);
-			}
-		}
+		neighboursAll.Add(currentNeighbour);
+		neighbours.Add(currentNeighbour);
+	}
+	else if (allowDiagonalPaths)
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Top tile
 	currentNeighbour = tileID + 1;
-	if (IsTileValid(currentNeighbour))
+	tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+	if ((tileID + 1) % int(gridSize.X) != 0 && IsTileValid(currentNeighbour) && tileID + 1 != tempRow * gridSize.X) 
 	{
-		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
-
-		if (tileID + 1 != tempRow * gridSize.X)
-		{
-			neighbours.Add(currentNeighbour);
-		}
+		neighboursAll.Add(currentNeighbour);
+		neighbours.Add(currentNeighbour);
+	}
+	else
+	{
+		neighboursAll.Add(-1);
 	}
 
 	// Top right tile
-	if (allowDiagonalPaths)
+	currentNeighbour = tileID - gridSize.X + 1;
+	tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
+	if (allowDiagonalPaths && (tileID + 1) % int(gridSize.X) != 0 && tileID + 1 != tempRow * gridSize.X && IsTileValid(currentNeighbour))
 	{
-		int tempRow = FMath::TruncToInt(float(tileID + 1 / gridSize.X));
-
-		if (tileID + 1 != tempRow * gridSize.X)
-		{
-			currentNeighbour = tileID - gridSize.X + 1;
-			if (IsTileValid(currentNeighbour))
-			{
-				neighbours.Add(currentNeighbour);
-			}
-		}
+		neighboursAll.Add(currentNeighbour);
+		neighbours.Add(currentNeighbour);
+	}
+	else if (allowDiagonalPaths)
+	{
+		neighboursAll.Add(-1);
 	}
 
+	AllNeighboursTileID = neighboursAll;
 	return neighbours;
+}
+
+TArray<int> ATT_GridManager::GetTileNeighbours(int tileID, bool allowDiagonalPaths)
+{
+	TArray<int> tempBoolArray;
+	TArray<int> returnArray = GetTileNeighbours(tileID, allowDiagonalPaths, tempBoolArray);
+
+	return returnArray;
 }
 
 float ATT_GridManager::GetDistanceBetweenTiles()
@@ -268,7 +283,7 @@ void ATT_GridManager::OnTileHovered_Implementation(int tileID)
 	if (!modifiedTiles.Contains(tileID) || viewModeTiles.Contains(tileID))
 	{
 		TileClearState();
-		clickedTile = -1;
+		lastClickedTile = -1;
 
 		FTransform tempTileTransform;
 		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTileTransform, true);
@@ -284,7 +299,7 @@ void ATT_GridManager::OnTileHovered_Implementation(int tileID)
 void ATT_GridManager::OnTileClicked_Implementation(int tileID)
 {
 	//Check the tile is hovered and hasn't been clicked
-	if (modifiedTiles.Contains(tileID) && (clickedTile == -1))
+	if (modifiedTiles.Contains(tileID) && (lastClickedTile == -1))
 	{
 		TileClearState();
 
@@ -336,9 +351,24 @@ void ATT_GridManager::SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID
 
 void ATT_GridManager::SetTileColor(int tileID, FLinearColor colour)
 {
+	if (IsTileValid(tileID))
+	{
+		instanceGroupedSpriteComp->UpdateInstanceColor(tileID, colour);
+		modifiedTiles.Add(tileID);
+	}
+}
 
-	instanceGroupedSpriteComp->UpdateInstanceColor(tileID, colour);
-	modifiedTiles.Add(tileID);
+void ATT_GridManager::SetTileTransform(int tileID, FTransform newTransform)
+{
+	if (IsTileValid(tileID))
+	{
+		instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform);
+	}
+
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Tile ID was not valid, couldn't update tile transform."));
+	}
 }
 
 void ATT_GridManager::TileClearState()

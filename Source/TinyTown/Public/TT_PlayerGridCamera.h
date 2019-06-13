@@ -257,7 +257,7 @@ protected:
 	bool isPlacingDownAResizableBlock; // Indicates whether the ghostBlock that was spawn is resizable OR can be rotated
 	TArray<int> placingLastZoneBuilt; // The tile array of the last zone to be placed down
 	FVector placingBlockTargetLocation; // Target location to lerp to (when placing a building and hovering tiles)
-	FRotator placingBlockTargetRotation; // Target rotation to lerp to (when rotating the ghostBlock)
+	FRotator placingBlockTargetRotation = FRotator(0,0,0); // Target rotation to lerp to (when rotating the ghostBlock)
 	float placingBlockMouseX; // X Mouse position at beginning of ghostBlock rotation
 	float placingBlockMouseY; // Y Mouse position at beginning of ghostBlock rotation
 	int lastBuildableTileID;

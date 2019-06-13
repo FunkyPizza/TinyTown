@@ -181,6 +181,8 @@ public:
 
 	bool CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi);
 
+	bool CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi, TArray<int>& OutZoneTileIDs);
+
 	/* Returns the nearest tileID with the space to accomodate a block of the specified size. */
 	bool GetNearestBuildableTileID(int& OutTileID, int tileID, int sizeX, int sizeY, bool isModuloHalfPi);
 		
