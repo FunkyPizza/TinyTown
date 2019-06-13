@@ -273,7 +273,7 @@ void ATT_PlayerGridCamera::MouseMovementsTick()
 		{
 			isMovingCamera = true;
 
-			MoveCamera(-GetInputAxisValue("MouseX"), -GetInputAxisValue("MouseY"), mouseMovementSpeed);
+			MoveCamera(FMath::Clamp(-GetInputAxisValue("MouseX"), -1.0f, 1.0f), FMath::Clamp(-GetInputAxisValue("MouseY"), -1.0f, 1.0f), mouseMovementSpeed);
 		}
 
 		else
@@ -291,7 +291,7 @@ void ATT_PlayerGridCamera::InputMoveButtonUp()
 }
 
 
-/*---------- Camera movement functions ----------*/
+/*---------- Camera movement functions --------Z--*/
 
 void ATT_PlayerGridCamera::MoveCamera(float x, float y, float sensitivity)
 {
@@ -531,7 +531,7 @@ void ATT_PlayerGridCamera::ConfirmBuildTool()
 	// Block has a fixed size
 	if (!isPlacingDownAResizableBlock)
 	{
-		GridManager->BlockManager->SpawnBlock(placingBlockID, placingBlockTargetRotation, lastLinetracedTile);
+		GridManager->BlockManager->SpawnBlock(placingBlockID, placingBlockTargetRotation, lastBuildableTileID);
 	}
 
 	// Block is a zone / is resizable
@@ -579,12 +579,14 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 					//placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile));
 					//placingLastZoneBuilt = PathfinderComp->FindShortestPathDijkstra(placingBlockTileID, lastLinetracedTile);
 					//placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile);
+					TArray<int> blocksToIgnore;
+					blocksToIgnore.Add(placingBlockID); 
 
-					placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile), false, placingBlockID);
+					placingLastZoneBuilt = PathfinderComp->FindShortestPathInZoneDijkstra(placingBlockTileID, lastLinetracedTile, GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile, false), false, blocksToIgnore);
 
 					if (placingLastZoneBuilt.Num() < 5)
 					{
-						placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile, false, placingBlockID);
+						placingLastZoneBuilt = PathfinderComp->FindShortestPathAStar(placingBlockTileID, lastLinetracedTile, false, blocksToIgnore);
 					}
 
 					lastPathGoalTile = lastLinetracedTile;
@@ -595,7 +597,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 
 			else 
 			{
-				placingLastZoneBuilt = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
+				placingLastZoneBuilt = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile, false);
 				GridManager->SetPlayerSelection(placingLastZoneBuilt);
 				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockID);
 
@@ -642,37 +644,75 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 
 		// Check if block is clear to be placed (not hovering used tiles)
 		bool isBlockClearToBePlaced = true;
+		bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
+
 		if (!isSettingBlockSize)
+		{			
+			isBlockClearToBePlaced = GridManager->BlockManager->CheckIfBlockIsBuildable(lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
+
+// 			// Get the block's occupied tiles
+// 			bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
+// 			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
+// 			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
+// 
+// 			if (tileA != -1 && tileB != -1)
+// 			{
+// 				TArray<int> placingBlockOccupiedTiles = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
+// 				
+// 				// Check that the block's zone isn't going over the edge of the grid
+// 				if (!GridManager->BlockManager->CheckZoneTileIDs(placingBlockOccupiedTiles, tileA, tileB))
+// 				{
+// 					isBlockClearToBePlaced = false;
+// 				}
+// 
+// 				// Check that the block's zone isn't overlapping another block
+// 				for (auto i : placingBlockOccupiedTiles)
+// 				{
+// 					if (GridManager->IsTileValid(i))
+// 					{
+// 						if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
+// 						{
+// 							isBlockClearToBePlaced = false;
+// 						}
+// 					}
+// 
+// 					else
+// 					{
+// 						isBlockClearToBePlaced = false;
+// 					}
+// 				}
+// 
+// 				// DEBUG: Shows the tiles being checked
+// 				GridManager->TileClearState();
+// 				for (auto i : placingBlockOccupiedTiles)
+// 				{
+// 					GridManager->SetTileColor(i, FLinearColor::Green);
+// 				}
+// 			}
+// 
+// 			else 
+// 			{
+// 				isBlockClearToBePlaced = false;
+// 			}
+		}
+
+		if (isBlockClearToBePlaced)
 		{
-			bool isModuloHalfPi = FMath::IsNearlyEqual(abs(placingBlockTargetRotation.Yaw), 90, 0.1f);
-			int tileA = GridManager->BlockManager->GetZoneStartTileFromHoveredTile(lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
-			int tileB = GridManager->BlockManager->GetZoneEndTileFromZoneSize(tileA, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi);
-			TArray<int> ghostBlockTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB);
+			lastBuildableTileID = currentLinetracedTile;
+		}
 
-			
-			for (auto i : ghostBlockTiles)
+		else
+		{
+			if (GridManager->BlockManager->GetNearestBuildableTileID(lastBuildableTileID, lastLinetracedTile, currentBuildToolBlock->GetBlockStats()->Size_X, currentBuildToolBlock->GetBlockStats()->Size_Y, isModuloHalfPi))
 			{
-				if (GridManager->IsTileValid(i))
-				{
-					if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
-					{
-						GridManager->SetTileColor(i, FLinearColor::Red);
-						UE_LOG(LogTemp, Warning, TEXT("Tile used by block ID %d"), GridManager->BlockManager->GetSpawnedBlockIDs()[i]);
-						isBlockClearToBePlaced = false;
-					}
-				}
-
-				else
-				{
-					isBlockClearToBePlaced = false;
-				}
+				isBlockClearToBePlaced = true;
 			}
 		}
 
 		// If the player is resizing a block or if the hovered tile is already used, do not update the block's location to the mouse's position
 		if (!isSettingBlockSize && isBlockClearToBePlaced)
 		{
-			placingBlockTargetLocation = GridManager->GetTileLocation(lastLinetracedTile);
+			placingBlockTargetLocation = GridManager->GetTileLocation(lastBuildableTileID);
 		}
 
 		// Get tile location to lerp the block to
@@ -715,7 +755,7 @@ void ATT_PlayerGridCamera::TickRemoveTool()
 {
 	if (isRemoveToolSelecting)
 	{
-		tilesToBeRemoved = GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile);
+		tilesToBeRemoved = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile, false);
 		GridManager->SetPlayerSelection(tilesToBeRemoved);
 		GridManager->SetTileColorFromZoneID(tilesToBeRemoved, -1);
 		return;
@@ -758,64 +798,6 @@ void ATT_PlayerGridCamera::DeleteBlockOnTile(int tileID)
 
 
 /*---------- Other functions ----------*/
-
-TArray<int> ATT_PlayerGridCamera::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
-{
-	TArray<int> TileIDs;
-
-	if (tileA == tileB)
-	{
-		TileIDs.Add(tileA);
-		return TileIDs;
-	}
-
-	// Convert TileID into polar coordinates
-	int Ay;
-	int Ax;
-	Ay = tileA / GridManager->GetGridSize().X;
-	Ax = tileA - (Ay * GridManager->GetGridSize().X);
-
-	int By;
-	int Bx;
-	By = tileB / GridManager->GetGridSize().X;
-	Bx = tileB - (By * GridManager->GetGridSize().X);
-
-	// Get block size from vector AB>
-	FVector2D blockSize;
-
-	blockSize = FVector2D(Bx - Ax, By - Ay);
-
-
-	// Convert polar coordinates into grid of tiles
-	float distance = GridManager->GetDistanceBetweenTiles();
-	FVector startLocation = GridManager->GetTileLocation(tileA);
-
-	float xSign = 1.0f;
-	float ySign = 1.0f;
-
-	if (blockSize.X != 0)
-	{
-		xSign = abs(blockSize.X) / blockSize.X;
-	}
-
-	if (blockSize.Y != 0)
-	{
-		ySign = abs(blockSize.Y) / blockSize.Y;
-	}
-
-
-	for (int i = 0; i <= abs(blockSize.Y); i++)
-	{
-		for (int j = 0; j <= abs(blockSize.X); j++)
-		{
-			int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
-
-			TileIDs.Add(newTileID);
-		}
-	}
-
-	return TileIDs;
-}
 
 void ATT_PlayerGridCamera::ToggleViewMode(int ViewMode)
 {

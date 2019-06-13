@@ -88,19 +88,19 @@ void ATT_BlockManager::SpawnBlock(int blockID, FRotator blockRotation, int tileI
 	FTT_Struct_Block* BlockStats = GetBlockStatsFromBlockID(blockID);
 
 	//Get the block's zone characteristics
-	bool isModuloHalfPi = FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f);
+	bool isModuloHalfPi = !FMath::IsNearlyEqual(abs(blockRotation.Yaw), 90, 0.1f);
 	TArray<int> BlockZoneTileIDs;
-	int BlockStartTile = tileID;
-	int BlockEndTile = tileID;
+	int tileA = tileID;
+	int tileB = tileID;
 
 	// If block is of size 1x1, its zone will always be 1x1.
 	if (BlockStats->Size_X > 1 || BlockStats->Size_Y > 1)
 	{
-		BlockStartTile = GetZoneStartTileFromHoveredTile(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
-		BlockEndTile = GetZoneEndTileFromZoneSize(BlockStartTile, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+		tileA = GetZoneStartTileFromHoveredTile(tileID, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
+		tileB = GetZoneEndTileFromZoneSize(tileA, BlockStats->Size_X, BlockStats->Size_Y, isModuloHalfPi);
 	}
 
-	BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(BlockStartTile, BlockEndTile);
+	BlockZoneTileIDs = GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
 
 	for (int i : BlockZoneTileIDs)
 	{
@@ -164,7 +164,7 @@ void ATT_BlockManager::DeleteBlockOnTile(int tileID)
 		ClearTileArraysAtIndex(indexToClear);
 	}
 
-	blockToDelete->DestroyBlock();
+	blockToDelete->OnDestroyBlock();
 }
 
 void ATT_BlockManager::CreateZoneOnTiles(TArray<int> tileIDs, int zoneID)
@@ -265,7 +265,7 @@ void ATT_BlockManager::FindZoneLayout(int zoneID, TArray<int> zone)
 /*---------- Zone Tiles functions ----------*/
 
 
-TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
+TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB, bool excludeTileB)
 {
 	TArray<int> TileIDs;
 
@@ -275,7 +275,7 @@ TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int ti
 		return TileIDs;
 	}
 
-	if (tileA != 0 && tileB != 0)
+	if (tileA != -1 && tileB != -1)
 	{
 		// Convert TileID into polar coordinates
 		int Ay;
@@ -291,8 +291,8 @@ TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int ti
 		// Get block size from vector AB>
 		FVector2D blockSize;
 
-		blockSize = FVector2D(By - Ay, Bx - Ax);
-
+		//blockSize = FVector2D(By - Ay, Bx - Ax);
+		blockSize = FVector2D(Bx - Ax, By - Ay);
 
 		// Convert polar coordinates into grid of tiles
 		float distance = GridManager->GetDistanceBetweenTiles();
@@ -311,20 +311,41 @@ TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int ti
 		}
 
 
-		for (int i = 0; i < abs(blockSize.Y); i++)
+		if (excludeTileB)
 		{
-
-			for (int j = 0; j < abs(blockSize.X); j++)
+			for (int i = 0; i < abs(blockSize.Y); i++)
 			{
-				int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
 
-				if (GridManager->IsTileValid(newTileID))
+				for (int j = 0; j < abs(blockSize.X); j++)
 				{
-					TileIDs.Add(newTileID);
-				}
-			}
+					int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
 
+					if (GridManager->IsTileValid(newTileID))
+					{
+						TileIDs.Add(newTileID);
+					}
+				}
+
+			}
 		}
+		else
+		{
+			for (int i = 0; i <= abs(blockSize.Y); i++)
+			{
+
+				for (int j = 0; j <= abs(blockSize.X); j++)
+				{
+					int newTileID = tileA + j * xSign + (i * ySign  * GridManager->GetGridSize().X);
+
+					if (GridManager->IsTileValid(newTileID))
+					{
+						TileIDs.Add(newTileID);
+					}
+				}
+
+			}
+		}
+
 		return TileIDs;
 	}
 
@@ -333,7 +354,7 @@ TArray<int> ATT_BlockManager::GetZoneTileIDsFromZoneParameters(int tileA, int ti
 
 int ATT_BlockManager::GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int sizeY, bool isModuloHalfPi)
 {
-	/* This function is tightly bound to the way a building is moved and rotated (when being placed down). 
+	/* This function is tightly bound to the way a building is moved and rotated (when being placed down).
 		For any changes to this function, make sure to change EditMode in Block.cpp	*/
 
 	int offsetX;
@@ -363,11 +384,17 @@ int ATT_BlockManager::GetZoneStartTileFromHoveredTile(int tileC, int sizeX, int 
 	if (isModuloHalfPi)
 	{
 		ActualTileID = tileC - offsetX * GridManager->GetGridSize().X - offsetY;
-		return ActualTileID;
+	}
+	else
+	{
+		ActualTileID = tileC - offsetY * GridManager->GetGridSize().X - offsetX;
 	}
 
-	ActualTileID = tileC - offsetY * GridManager->GetGridSize().X - offsetX;
-	return ActualTileID;
+	if (GridManager->IsTileValid(ActualTileID))
+	{
+		return ActualTileID;
+	}
+	return -1;
 }
 
 int ATT_BlockManager::GetHoveredTileFromZoneParameter(int tileA, int sizeX, int sizeY, bool isModuloHalfPi)
@@ -402,17 +429,24 @@ int ATT_BlockManager::GetHoveredTileFromZoneParameter(int tileA, int sizeX, int 
 	if (isModuloHalfPi)
 	{
 		ActualTileID = tileA + offsetX * GridManager->GetGridSize().X + offsetY;
+	}
+	else
+	{
+		ActualTileID = tileA + offsetY * GridManager->GetGridSize().X + offsetX;
+	}
+	
+	if (GridManager->IsTileValid(ActualTileID))
+	{
 		return ActualTileID;
 	}
 
-	ActualTileID = tileA + offsetY * GridManager->GetGridSize().X + offsetX;
-	return ActualTileID;
+	return -1;
 }
 
 int ATT_BlockManager::GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY, bool isModuloHalfPi)
 {
-	int xSize = sizeX;
-	int ySize = sizeY;
+	int xSize = sizeX -1;
+	int ySize = sizeY -1;
 
 	if (isModuloHalfPi)
 	{
@@ -422,7 +456,13 @@ int ATT_BlockManager::GetZoneEndTileFromZoneSize(int tileA, int sizeX, int sizeY
 	}
 
 	int newTileID = tileA + (ySize * GridManager->GetGridSize().X) + xSize;
-	return newTileID;
+
+	if (GridManager->IsTileValid(newTileID))
+	{
+		return newTileID;
+	}
+
+	return -1;
 }
 
 FVector2D ATT_BlockManager::GetZoneSizeFromTileArray(TArray<int> zone)
@@ -462,6 +502,111 @@ FVector2D ATT_BlockManager::GetZoneSizeFromTileArray(TArray<int> zone)
 	return Result;
 }
 
+FVector2D ATT_BlockManager::GetTileGridCoordinate(int tileID)
+{
+	int X, Y;
+
+	X = FMath::TruncToInt(tileID / GridManager->GetGridSize().X);
+	Y = tileID - (X * GridManager->GetGridSize().X);
+
+	return FVector2D(X, Y);
+}
+
+bool ATT_BlockManager::CheckZoneTileIDs(TArray<int> zoneTileIDs, int tileA, int tileB)
+{
+	bool isSuccessful = true;
+	FVector2D minimumCoordinates = GetTileGridCoordinate(tileA);
+	FVector2D maximumCoordinates = GetTileGridCoordinate(tileB);
+
+	for (int i : zoneTileIDs)
+	{
+		FVector2D tileToCheck = GetTileGridCoordinate(i);
+
+		if (!GridManager->IsTileValid(i))
+		{
+			isSuccessful = false;
+		}
+
+		// Check if tileToCheck is in the range of coordinates. 
+		if ( !(tileToCheck.X >= minimumCoordinates.X && tileToCheck.X <= maximumCoordinates.X && tileToCheck.Y >= minimumCoordinates.Y && tileToCheck.Y <= maximumCoordinates.Y) )
+		{ 
+			isSuccessful = false;
+		}
+	}
+
+	return isSuccessful;
+}
+
+bool ATT_BlockManager::CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi)
+{
+	bool isBlockClearToBePlaced = true;
+
+	int tileA = GetZoneStartTileFromHoveredTile(tileID, sizeX, sizeY, isModuloHalfPi);
+	int tileB = GetZoneEndTileFromZoneSize(tileA, sizeX, sizeY, isModuloHalfPi);
+
+	if (tileA != -1 && tileB != -1)
+	{
+		TArray<int> placingBlockOccupiedTiles = GetZoneTileIDsFromZoneParameters(tileA, tileB, false);
+
+		// Check that the block's zone isn't going over the edge of the grid
+		if (!CheckZoneTileIDs(placingBlockOccupiedTiles, tileA, tileB))
+		{
+			return false;
+		}
+
+		// Check that the block's zone isn't overlapping another block
+		for (auto i : placingBlockOccupiedTiles)
+		{
+			if (GridManager->IsTileValid(i))
+			{
+				if (GridManager->BlockManager->GetSpawnedBlockIDs()[i] != 0)
+				{
+					return false;
+				}
+			}
+
+			else
+			{
+				return false;
+			}
+		}
+
+		// DEBUG: Shows the tiles being checked
+		GridManager->TileClearState();
+		for (auto i : placingBlockOccupiedTiles)
+		{
+			GridManager->SetTileColor(i, FLinearColor::Green);
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool ATT_BlockManager::GetNearestBuildableTileID(int& OutTileID, int tileID, int sizeX, int sizeY, bool isModuloHalfPi)
+{
+	TArray<int> Neighbours = GridManager->GetTileNeighbours(tileID, true);
+
+	for (int i : Neighbours)
+	{
+		if (GridManager->IsTileValid(i))
+		{
+			if (CheckIfBlockIsBuildable(i, sizeX, sizeY, isModuloHalfPi))
+			{
+				OutTileID = i;
+				return true;
+			}
+		}
+	}
+
+	// Enable the check of the neighbour's neighbour
+
+	OutTileID = -1;
+	return false;
+}
 
 /*---------- Data Table functions ----------*/
 
@@ -538,14 +683,6 @@ void ATT_BlockManager::RefreshDataFromDataTable()
 		// Set grid manager values for zones
 		zoneIDMap.GenerateValueArray(zoneViewModeIndex);
 		isZoneViewModeActive.SetNum(zoneViewModeIndex.Num(), true);
-
-		// Log all types once found.
-		TArray<FString> mapKey;
-		blockTypeMap.GetKeys(mapKey);
-		for (int i = 0; i < mapKey.Num(); i++)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Yo, I found the type: %s"), *mapKey[i]);
-		}
 	}
 }
 
@@ -650,5 +787,10 @@ TMap<FString, int>  ATT_BlockManager::GetAllZones()
 TMap<FString, int>  ATT_BlockManager::GetAllZoneBuildings()
 {
 	return zoneBuildingIDMap;
+}
+
+TArray<int> ATT_BlockManager::GetAllBlockIDs()
+{
+	return allBlockIDs;
 }
 

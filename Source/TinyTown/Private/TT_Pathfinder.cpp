@@ -16,13 +16,15 @@ void UTT_Pathfinder::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GridManager = GetGridManager();	
+	GridManager = GetGridManager();
 	if (!GridManager)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GridManager isn't valid in pathfinder component. Pathfinding won't work."))
 	}
-
-	tileArray = GridManager->GetAllTileIDs();
+	else
+	{
+		tileArray = GridManager->GetAllTileIDs();
+	}
 }
 
 ATT_GridManager* UTT_Pathfinder::GetGridManager()
@@ -52,13 +54,13 @@ TArray<int> UTT_Pathfinder::GetTileNeighbours(int tileID, bool allowDiagonalPath
 	return GridManager->GetTileNeighbours(tileID, allowDiagonalPaths);
 }
 
-int UTT_Pathfinder::GetTileMoveCost(int tileID, int blockToIgnore)
+int UTT_Pathfinder::GetTileMoveCost(int tileID, TArray<int> blockToIgnore)
 {
 	if (GridManager)
 	{
 		int tileToCheck = GridManager->BlockManager->GetSpawnedBlockIDs()[tileID];
 
-		if ( tileToCheck != 0 && tileToCheck != blockToIgnore)
+		if ( tileToCheck != 0 && !blockToIgnore.Contains(tileToCheck))
 		{
 			return 1000;
 		}
@@ -73,7 +75,7 @@ int UTT_Pathfinder::GetTileMoveCost(int tileID, int blockToIgnore)
 
 bool UTT_Pathfinder::IsTileUsed(int tileID)
 {
-	if (GetTileMoveCost(tileID, 0) > 10)
+	if (GetTileMoveCost(tileID, TArray<int>()) > 10)
 	{
 		return true;
 	}
@@ -90,12 +92,12 @@ int UTT_Pathfinder::GetDistanceBetweenTwoTile(int tileA, int tileB)
 	return distance;
 }
 
-TArray<int> UTT_Pathfinder::FindShortestPathDijkstra(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore)
+TArray<int> UTT_Pathfinder::FindShortestPathDijkstra(int startTile, int goalTile, bool allowDiagonalPaths, TArray<int> blockToIgnore)
 {
 	return FindShortestPathInZoneDijkstra(startTile, goalTile, tileArray, allowDiagonalPaths, blockToIgnore);
 }
 
-TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone, bool allowDiagonalPaths, int blockToIgnore)
+TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone, bool allowDiagonalPaths, TArray<int> blockToIgnore)
 {
 	if (zone.Num() > 1)
 	{
@@ -199,7 +201,7 @@ TArray<int> UTT_Pathfinder::FindShortestPathInZoneDijkstra(int startTile, int go
 	}
 }
 
-TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore)
+TArray<int> UTT_Pathfinder::FindShortestPathAStar(int startTile, int goalTile, bool allowDiagonalPaths, TArray<int> blockToIgnore)
 {
 	if (startTile != goalTile && GetTileMoveCost(goalTile, blockToIgnore) < 500)
 	{

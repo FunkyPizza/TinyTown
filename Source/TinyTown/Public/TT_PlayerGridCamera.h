@@ -177,13 +177,6 @@ protected:
 	 * @param ViewMode ViewMode ID (should be replaced by EBuildingType)
 	 */
 	void ToggleViewMode(int ViewMode);
-
-	/* Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
-	 * This function is very similar to the one in BlockManager to the exception of the for loop (<= instead of <).
-	 * @param tileA Corner A / StartTile of the zone.
-	 * @param tileB Opposite corner to A.
-	 */
-	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
 	
 	
 	/*---------- Variables -----------*/
@@ -267,6 +260,7 @@ protected:
 	FRotator placingBlockTargetRotation; // Target rotation to lerp to (when rotating the ghostBlock)
 	float placingBlockMouseX; // X Mouse position at beginning of ghostBlock rotation
 	float placingBlockMouseY; // Y Mouse position at beginning of ghostBlock rotation
+	int lastBuildableTileID;
 
 	// Remove tool
 	TArray<int> tilesToBeRemoved;

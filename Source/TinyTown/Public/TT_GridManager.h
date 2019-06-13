@@ -219,9 +219,10 @@ public:
 	 * Returns all the tiles included in the zone delimited by tileA & tileB (opposing corners of the rectangular zone).
 	 * @param tileA Tile with the smallest TileID in the zone.
 	 * @param tileB Tile with the biggest TileID in the zone.
+	 * @param If true, the zone will not include tileB.
 	 */
 	UFUNCTION(BlueprintPure)
-		TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
+		TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB, bool excludeTileB);
 	
 	/**
  * Returns the tileID of Tile A (corner with the smallest TileID in the zone) associated with the zone defined by parameters.

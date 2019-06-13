@@ -482,9 +482,9 @@ ATT_BlockManager* ATT_GridManager::GetBlockManager()
 	return BlockManager;
 }
 
-TArray<int> ATT_GridManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB)
+TArray<int> ATT_GridManager::GetZoneTileIDsFromZoneParameters(int tileA, int tileB, bool excludeTileB)
 {
-	return BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB);
+	return BlockManager->GetZoneTileIDsFromZoneParameters(tileA, tileB, excludeTileB);
 }
 
 int ATT_GridManager::GetZoneTileAFromHoveredTile(int tileC, int sizeX, int sizeY)

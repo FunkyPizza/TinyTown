@@ -139,8 +139,9 @@ public:
 	 * (see top of page for zone explanation)
 	 * @param tileA Corner A / StartTile of the zone.
 	 * @param tileB Opposite corner to A.
+	 * @param includeTileB If true, the zone will not include tileB.
 	 */
-	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB);
+	TArray<int> GetZoneTileIDsFromZoneParameters(int tileA, int tileB, bool excludeTileB);
 
 	/**
 	 * Returns the TileID of the StartTile associated with the zone defined by parameters (see top of page for zone explanation).
@@ -171,6 +172,18 @@ public:
 */
 	FVector2D GetZoneSizeFromTileArray(TArray<int> zone);
 
+
+	/* Returns the tile's column and row. This is usefulf when checking if a zone is going over the edge of the grid. */
+	FVector2D GetTileGridCoordinate(int tileID);
+
+	/* Returns true if the zone is on the grid and not crossing over the edge of the grid. */
+	bool CheckZoneTileIDs(TArray<int> zoneTileIDs, int tileA, int tileB);
+
+	bool CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi);
+
+	/* Returns the nearest tileID with the space to accomodate a block of the specified size. */
+	bool GetNearestBuildableTileID(int& OutTileID, int tileID, int sizeX, int sizeY, bool isModuloHalfPi);
+		
 	/**
 	* Returns pointer to data of block from its BlockID (see TT_Struct_Block).
 	* @param blockID Data table index of the row corresponding to the block to spawn.
@@ -242,6 +255,9 @@ public:
 	/* This is array is mapped like isZoneViewModeActive. It holds the original BlockID of each zone. */
 	TArray<int> zoneViewModeIndex;
 
+	/* This array references all the block IDs that have been recognised in the DataTable. */
+	TArray<int> allBlockIDs;
+
 
 	/*---------- Blueprints Exposed -----------*/
 
@@ -263,5 +279,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "BlockManager")
 		TMap<FString, int>  GetAllZoneBuildings();
 
+	/** This returns an array of all the block IDs that have been recognised in the data table. */
+	UFUNCTION(BlueprintPure, Category = "BlockManager")
+		TArray<int>  GetAllBlockIDs();
 	
 };

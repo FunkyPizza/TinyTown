@@ -119,9 +119,13 @@ public:
 
 	// Block functions
 	
-	// Plays the destruction effect and destroys the block
-	void DestroyBlock();
 
+	/* Called when this block is about to be destroyed. */
+	UFUNCTION(BlueprintNativeEvent)
+		void OnDestroyBlock();
+
+	/* Destroys the block. */
+	void OnDestroyBlock_Implementation();
 
 /*---------- Variables -----------*/
 

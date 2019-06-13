@@ -23,7 +23,6 @@ protected:
 	/**
 	* Looks for spawned GridManager and return the first one found. Make sure you only have one GridManager in your scene. 
 	*/
-	UFUNCTION(BlueprintPure, Category = "Pathfinder")
 	ATT_GridManager* GetGridManager();
 
 	/** Returns the tile's neighbours in a clockwise order (Right, Down, Left, Up). 
@@ -37,7 +36,7 @@ protected:
 	* @param tileID			Tile to return of the cost of.
 	* @param blockIDToIgnore	Block ID of the block to ignore.
 	*/
-	int GetTileMoveCost(int tileID, int blockIDToIgnore);
+	int GetTileMoveCost(int tileID, TArray<int> blockIDsToIgnore);
 
 	/**
 	* Returns whether or not a tile is being occupied by a block.
@@ -72,7 +71,7 @@ public:
 	* @param allowDiagonalPaths  Allow the algorithm to use diagonal paths.
 	* @param blockToIgnore		 Allow the algorithm to ignore certain blocks. 
 	*/
-	TArray<int> FindShortestPathDijkstra(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore);
+	TArray<int> FindShortestPathDijkstra(int startTile, int goalTile, bool allowDiagonalPaths, TArray<int> blockIDsToIgnore);
 
 	/** Return an array of tile IDs representing the shortest path between startTile and goalTile guaranteed to be in the zone.
 	* @param							startTile TileID of the tile to start from.
@@ -82,7 +81,7 @@ public:
 	* @param blockToIgnore				Allow the algorithm to ignore certain blocks.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Pathfinder")
-	TArray<int> FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone, bool allowDiagonalPaths, int blockToIgnore);
+	TArray<int> FindShortestPathInZoneDijkstra(int startTile, int goalTile, TArray<int> zone, bool allowDiagonalPaths, TArray<int> blockIDsToIgnore);
 	
 	/**
 	* Return an array of tile IDs representing the shortest path between startTile and goalTile using A* pathfinding.
@@ -92,5 +91,5 @@ public:
 	* @param blockToIgnore			Allow the algorithm to ignore certain blocks.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Pathfinder")
-	TArray<int> FindShortestPathAStar(int startTile, int goalTile, bool allowDiagonalPaths, int blockToIgnore);
+	TArray<int> FindShortestPathAStar(int startTile, int goalTile, bool allowDiagonalPaths, TArray<int> blockIDsToIgnore);
 };

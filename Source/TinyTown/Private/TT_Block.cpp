@@ -206,10 +206,8 @@ void ATT_Block::EditModeTick()
 
 /*---------- Block Actions ----------*/
 
-void ATT_Block::DestroyBlock()
+void ATT_Block::OnDestroyBlock_Implementation()
 {
-
-// TODO: Play destruction effects
 	this->Destroy();
 }
 
