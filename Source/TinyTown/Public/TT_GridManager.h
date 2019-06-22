@@ -29,7 +29,6 @@ public:
 protected:
 
 	/*---------- Components ----------*/
-
 	UPROPERTY()
 		USceneComponent* Root;
 	
@@ -37,8 +36,7 @@ protected:
 	/*---------- Functions -----------*/
 	virtual void BeginPlay() override;
 
-	/** 
-	* Spawns a grid of tile instances separated by distance in a x by y grid, centered around Center.
+	/*Spawns a grid of tile instances separated by distance in a x by y grid, centered around Center.
 	* Calculates all tiles locations & stores them in tileLocations, then spawns the instances using tileSpriteNormal.
 	* The tiles will be spawned around a center point.
 	* @param x Size X in tiles of the grid.
@@ -46,69 +44,64 @@ protected:
 	* @param Center Center point world location.
 	* @param Distance between each tiles in UE units.
 	*/
-	void SpawnTiles(int x, int y, FVector center, float distance); 
+	void SpawnTiles(int x, int y, FVector center, float distance);
 
-	/**
+	/*
 	 * Spawns a BlockManager object (there can only be one at all times).
 	 */
 	void SpawnBlockManager();
 
-	/* Fetches zone colours from the data table and stores them in an array for use in this object. */
-	void FetchZoneColours();
 
 	/*---------- Variables -----------*/
 
-	/** Size of the grid in tiles on the X axis. */
+	/* Size of the grid in tiles on the X axis. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Grid Settings")
 		int gridSizeX;
 
-	/** Size of the grid in tiles on the Y axis. */
+	/* Size of the grid in tiles on the Y axis. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		int gridSizeY;
 
-	/** Distance that separate each tile from one another. */
+	/* Distance that separate each tile from one another. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		float distanceBetweenTiles;
 
-	/** Default sprite for a tile. */
+	/* Default sprite for a tile. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		UPaperSprite* tileSpriteNormal;
 
-	/** Toggles the spawning of TextRender displaying each tile's ID when they are spawned. */
+	/* Toggles the spawning of TextRender displaying each tile's ID when they are spawned. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid Settings")
 		bool displayTileID;
 
 
-	/** Array of all Tile IDs in order. */
+	/* Array of all Tile IDs in order. */
 	TArray<int> tileIDs;
 	
-	/** Array of all spawned tile instances locations. */
+	/* Array of all spawned tile instances locations. */
 	TArray<FVector> tileLocations; 
 
-	/** TileID of the currently clicked tile. */
+
+	/* TileID of the currently clicked tile. */
 	int32 lastClickedTile; 	
 
-	/** Array of all tiles that have been altered. */
+	/* Array of all tiles that have been altered. */
 	TArray<int32> modifiedTiles; 
 
 
-	// View modes
-	/** Timer responsible of the view mode tile refreshing. */
+	/* Timer responsible of the view mode tile refreshing. */
 	FTimerHandle TimerHandler_ViewMode;
+
 
 	/** Array of all the tiles affected by view modes. */
 	TArray<int> viewModeTiles;
 
 	TArray<int> playerTileSelection;
 
-	/* Indicates if any view mode is currently active. */
-	bool isViewMode;
-
-	/* Array of all zone colours. */
-	TArray<FLinearColor> zoneColours;
-
+	/* These are the object responsible for displaying the tiles IDs on the grid. */
 	TArray<ATextRenderActor*> tileIDActors;
-	   	 
+	  
+
 public:	
 
 	/*---------- Components ----------*/
@@ -116,10 +109,9 @@ public:
 		UPaperGroupedSpriteComponent* instanceGroupedSpriteComp;
 
 
-	/*---------- Events -----------*/
+	/*---------- Blueprint Events -----------*/
 
-	/** 
-	* Called whenever a tile is hovered by the mouse cursor.
+	/* Called whenever a tile is hovered by the mouse cursor.
 	* @param tileID TileID of the tile that has been hovered.
 	*/
 	UFUNCTION(BlueprintNativeEvent, Category = "Grid Customisation")
@@ -138,30 +130,18 @@ public:
 	/** Tile Effect -Set this tile as clicked. */
 	void OnTileClicked_Implementation(int tileID);
 
+
 	/*---------- Functions -----------*/
 
-	/* Tile Effect - Reset this tile to its original state (both colour and transform). */
-	void TileReset(int tileID);
+	/* Returns the distance between each tile (set via the grid's instanced object). */
+	float GetDistanceBetweenTiles();
 
-	/* Tile Effect - Set this array of tiles as Residential Zone. 
-	* @param TileIDs Array of all TileIDs in the zone. 
-	* @param ZoneID Block ID of the zone, used to specify a colour. If -1, colour will be Charcoal Grey.
-	*/
-	void SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID);
+	/* Returns the size of the grid in a 2D Vector (set via the grid's instanced object). */
+	FVector2D GetGridSize();
 
-	/* Tile Effect - Set the tile a certain color. */
-	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
-	void SetTileColor(int tileID, FLinearColor colour);
-
-	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
-	void SetTileTransform(int tileID, FTransform newTransform);
-
-	/* Tile Effect - Reset all altered tiles to their original state. */
-	void TileClearState();
-
-
-	/* Accessor - Public accessor for tile locations. 
+	/* Returns this tiles location if valid.
 	*	@param tileID TileID (instance index) of the tile.
+	*	@return Location of the tile
 	*/
 	UFUNCTION(BlueprintPure, Category = "GridManager")
 	FVector GetTileLocation(int tileID);
@@ -177,34 +157,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Pathfinder")
 	TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths, TArray<int>& AllNeighboursTileID);
 
+	/* Returns the tile's neighbours in a clockwise order. If one direction doesn't have a neighbour, nothing will be returned. 
+	* @param tileID Specified tileID.
+	* @param allowDiagonalPaths Include the diagonal neighbours.
+	*/
 	TArray<int> GetTileNeighbours(int tileID, bool allowDiagonalPaths);
 
-	/** Accessor - Returns the distance between each tile. */
-	float GetDistanceBetweenTiles();
-
-	/** Accessor - Returns the size of the grid in a 2D Vector. */
-	FVector2D GetGridSize();
-
-	/**
-	 *  Activates zone view modes, displays the zone a certain colour on the grid.
-	 * Starts a timer to trigger ViewModeTick at a tick like rate.
-	 * @param ViewMode Zone's internal index. A zone's int.ID depends on its position in the data table relative to other zones.
-	 */
-	void ActivateZoneViewMode(int viewMode);
-
-	/** Deactivates all view modes, stops the timer and reset tile colours */
-	void StopZoneViewMode();
-
-	/** Depending on the activated view mode, will fetch the zone's tile and apply an effect on them. */
-	void ViewModeTick();
-
-	/** Set a TArray of tiles' colour to avoid being overridden by view modes. */
-	void SetPlayerSelection(TArray<int> selectedTileIDs);
-
-	/** Clears the TArray of tiles, and reset their colour. */
-	void ClearPlayerSelection();
-
-	/** Checks if a tileID exists on the grid. */
+	/* Checks if a tileID exists on the grid. */
 	UFUNCTION(BlueprintPure, Category = "GridManager")
 	bool IsTileValid(int tileID);
 
@@ -213,11 +172,45 @@ public:
 	TArray<int> GetAllTileIDs();
 
 
-	/*---------- Variables -----------*/
- 
-	/** Reference to the block manager spawned with SpawnBlockManager(). */
-	ATT_BlockManager* BlockManager; 
-	   	 
+
+	/* Reset this tile to its original state (colour and transform). */
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
+	void TileReset(int tileID);
+
+	/* Set an array of tiles to the color corresponding to the specified block ID. (Color set in data table).
+	* @param tileIDs Array of all TileIDs to alter.
+	* @param blockID Block ID of the desired colour.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
+	void SetTileColorToBlockID(TArray<int> tileIDs, int blockID);
+
+	/* Set the tile a certain color.
+	* @param tileID Tile ID to change color.
+	* @param colour Colour to change the tile to.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
+	void SetTileColour(int tileID, FLinearColor colour);
+
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
+	void SetTileTransform(int tileID, FTransform newTransform);
+
+	/* Reset all altered tiles to their original state. */
+	void TileClearState();
+
+
+	/*---------- TODO: REFACTOR -----------*/
+
+	/* Save an array of tiles in order to call ClearPlayerSelection() to reset their color/transform. */
+	void SetPlayerSelection(TArray<int> selectedTileIDs);
+
+	/* Clears the TArray of tiles, and reset their colour. */
+	void ClearPlayerSelection();
+
+	/* Reference to the block manager spawned with SpawnBlockManager(). 
+	* TODO: Change all call to this variable to GetBlockManager().
+	*/
+	ATT_BlockManager* BlockManager;
+
 
 	/*---------- BlockManager Access -----------*/
 	UFUNCTION(BlueprintPure)

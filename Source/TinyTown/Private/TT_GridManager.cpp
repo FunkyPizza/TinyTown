@@ -57,6 +57,65 @@ void ATT_GridManager::BeginPlay()
 	}
 }
 
+void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
+{
+	int tileCounter = -1;
+
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < x; j++)
+		{
+			tileCounter++;
+
+			//Calculating new location (will spawn around center vector hence the very long expression). Taken from "2D Grid Execution Macro".
+			FVector newLocation = FVector(center + (FVector(distance * 0.5f, distance * 0.5f, 0.0f) + (distance * (FVector((j - (float(x) / 2)), (i - (float(y) / 2)), 0.0f)))));
+			tileLocations.Add(newLocation);
+
+			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
+			instanceGroupedSpriteComp->AddInstance(tileTransform, tileSpriteNormal, true, FLinearColor::White);
+
+			if (displayTileID)
+			{
+				int tileID = tileCounter;
+				ATextRenderActor* Text = GetWorld()->SpawnActor<ATextRenderActor>(ATextRenderActor::StaticClass(), FVector(0.f, 100, 170.f), FRotator(90.f, 180.f, 0.f));
+				Text->GetTextRender()->SetText(FString::FromInt(tileID));
+				Text->GetTextRender()->SetTextRenderColor(FColor::White);
+				Text->GetTextRender()->SetVerticalAlignment(EVRTA_TextCenter);
+				Text->GetTextRender()->SetHorizontalAlignment(EHTA_Center);
+				Text->SetActorLocation(newLocation);
+				Text->SetActorScale3D(FVector(4.f, 4.f, 4.f));
+
+				tileIDActors.Add(Text);
+			}
+
+		}
+	}
+
+	for (int i = 0; i < x*y; i++)
+	{
+		tileIDs.Add(i);
+	}
+}
+
+void ATT_GridManager::SpawnBlockManager()
+{
+	//Spawn TT_BlockManager and assign its TT_GridManager to this object
+	ATT_BlockManager* newBlockManager;
+	newBlockManager = GetWorld()->SpawnActorDeferred<ATT_BlockManager>(ATT_BlockManager::StaticClass(), GetActorTransform());
+
+	if (newBlockManager)
+	{
+		newBlockManager->SetGridManager(this);
+		BlockManager = newBlockManager;
+
+		UGameplayStatics::FinishSpawningActor(newBlockManager, GetActorTransform());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BlockManagerClass no set in GridManager. Please set it, and try again."))
+	}
+}
+
 
 /*---------- Accessor functions ----------*/
 
@@ -65,7 +124,7 @@ FVector ATT_GridManager::GetTileLocation(int tileID)
 	FTransform tempTransform;
 	FVector tempVector;
 
-	if (tileID != -1)
+	if (IsTileValid(tileID))
 	{
 		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTransform, true);
 		tempVector = tempTransform.GetLocation();
@@ -207,75 +266,19 @@ FVector2D ATT_GridManager::GetGridSize()
 	return FVector2D(gridSizeX, gridSizeY);
 }
 
-
-/*---------- Tile Spawning ----------*/
-
-void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
+bool ATT_GridManager::IsTileValid(int tileID)
 {
-	int tileCounter = -1;
-
-	for (int i = 0; i < y; i++) 
-	{
-		for (int j = 0; j < x; j++) 
-		{
-			tileCounter++;
-
-			//Calculating new location (will spawn around center vector hence the very long expression). Taken from "2D Grid Execution Macro".
-			FVector newLocation = FVector(center + (FVector(distance * 0.5f, distance * 0.5f, 0.0f) + (distance * (FVector((j - (float(x) / 2)), (i - (float(y) / 2)), 0.0f)))));
-			tileLocations.Add(newLocation);
-
-			FTransform tileTransform = FTransform(FRotator(0, 0, -90), newLocation, FVector(1, 1, 1));
-			instanceGroupedSpriteComp->AddInstance(tileTransform, tileSpriteNormal, true, FLinearColor::White);
-
-			if (displayTileID)
-			{
-				int tileID = tileCounter;
-				ATextRenderActor* Text = GetWorld()->SpawnActor<ATextRenderActor>(ATextRenderActor::StaticClass(), FVector(0.f, 100, 170.f), FRotator(90.f, 180.f, 0.f));
-				Text->GetTextRender()->SetText(FString::FromInt(tileID));
-				Text->GetTextRender()->SetTextRenderColor(FColor::White);
-				Text->GetTextRender()->SetVerticalAlignment(EVRTA_TextCenter);
-				Text->GetTextRender()->SetHorizontalAlignment(EHTA_Center);
-				Text->SetActorLocation(newLocation);
-				Text->SetActorScale3D(FVector(4.f, 4.f, 4.f));
-
-				tileIDActors.Add(Text);
-			}
-
-		}
-	}
-
-	for (int i = 0; i < x*y; i++)
-	{
-		tileIDs.Add(i);
-	}
+	FTransform emptyTransform;
+	return instanceGroupedSpriteComp->GetInstanceTransform(tileID, emptyTransform, false);
 }
 
-void ATT_GridManager::SpawnBlockManager()
+TArray<int> ATT_GridManager::GetAllTileIDs()
 {
-		//Spawn TT_BlockManager and assign its TT_GridManager to this object
-		ATT_BlockManager* newBlockManager;
-		newBlockManager = GetWorld()->SpawnActorDeferred<ATT_BlockManager>(ATT_BlockManager::StaticClass(), GetActorTransform());
-		
-		if (newBlockManager) 
-		{
-			newBlockManager->SetGridManager(this);
-			BlockManager = newBlockManager;
-
-			UGameplayStatics::FinishSpawningActor(newBlockManager, GetActorTransform());
-		}
-	else 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BlockManagerClass no set in GridManager. Please set it, and try again."))
-	}
+	return tileIDs;
 }
 
-void ATT_GridManager::FetchZoneColours()
-{
-	for (auto i : BlockManager->zoneViewModeIndex)
-	{
-		zoneColours.Add(BlockManager->GetBlockStatsFromBlockID(i)->Grid_Colour);
-	}	
-}
+
+/*---------- Tile customisation ----------*/
 
 void ATT_GridManager::OnTileHovered_Implementation(int tileID)
 {
@@ -315,41 +318,28 @@ void ATT_GridManager::OnTileClicked_Implementation(int tileID)
 	}
 }
 
-
-/*---------- Tile functions ----------*/
-
-void ATT_GridManager::TileReset(int tileID)
+void ATT_GridManager::SetTileColorToBlockID(TArray<int> tileIDs, int blockID)
 {
-	FTransform tempTileTransform;
-	instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTileTransform, true);
-	FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
-
-	instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform, true);
-	instanceGroupedSpriteComp->UpdateInstanceColor(tileID, FLinearColor::White, true);
-}
-
-void ATT_GridManager::SetTileColorFromZoneID(TArray<int> zoneTileIDs, int zoneID)
-{
-	if (zoneTileIDs.Num() > 0)
+	if (tileIDs.Num() > 0)
 	{
 		TileClearState();
 
 		FLinearColor ZoneColour;
 		ZoneColour = FVector(0.1, 0.1, 0.1);
 
-		if(zoneID != -1)
+		if(blockID != -1)
 		{ 
-			ZoneColour = BlockManager->GetBlockStatsFromBlockID(zoneID)->Grid_Colour;
+			ZoneColour = BlockManager->GetBlockStatsFromBlockID(blockID)->Grid_Colour;
 		}
 
-		for (int i = 0; i < zoneTileIDs.Num(); ++i)
+		for (int i = 0; i < tileIDs.Num(); ++i)
 		{
-				SetTileColor(zoneTileIDs[i], ZoneColour);
+				SetTileColour(tileIDs[i], ZoneColour);
 		}
 	}
 }
 
-void ATT_GridManager::SetTileColor(int tileID, FLinearColor colour)
+void ATT_GridManager::SetTileColour(int tileID, FLinearColor colour)
 {
 	if (IsTileValid(tileID))
 	{
@@ -369,6 +359,16 @@ void ATT_GridManager::SetTileTransform(int tileID, FTransform newTransform)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Tile ID was not valid, couldn't update tile transform."));
 	}
+}
+
+void ATT_GridManager::TileReset(int tileID)
+{
+	FTransform tempTileTransform;
+	instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTileTransform, true);
+	FTransform newTransform = FTransform(tempTileTransform.GetRotation(), tempTileTransform.GetLocation(), FVector(1.0f, 1.0f, 1.0f));
+
+	instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform, true);
+	instanceGroupedSpriteComp->UpdateInstanceColor(tileID, FLinearColor::White, true);
 }
 
 void ATT_GridManager::TileClearState()
@@ -393,90 +393,14 @@ void ATT_GridManager::TileClearState()
 			modifiedTiles.Empty();
 	}
 
-	// If no view modes active, reset all tiles that were affected 
-	if (!isViewMode)
+	for (int i = 0; i < viewModeTiles.Num(); i++)
 	{
-		for (int i = 0; i < viewModeTiles.Num(); i++)
-		{
-			instanceGroupedSpriteComp->UpdateInstanceColor(viewModeTiles[i], FLinearColor::White, true);
-		}
+		instanceGroupedSpriteComp->UpdateInstanceColor(viewModeTiles[i], FLinearColor::White, true);
 	}
 }
 
 
-/*---------- View modes functions ----------*/
-
-void ATT_GridManager::ActivateZoneViewMode(int viewMode)
-{
-	if (!BlockManager)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BlockManager hasn't been spawned from GridManager, cannot use view modes."));
-		return;
-	}
-
-	// Stop any active ViewModes & Refresh zoneColour from data table
-	StopZoneViewMode();
-	FetchZoneColours();
-
-	if (viewMode < BlockManager->isZoneViewModeActive.Num())
-	{
-		// Activate new one
-		BlockManager->isZoneViewModeActive[viewMode] = true;
-		isViewMode = true;
-
-		// Start ViewModeTick Timer
-		GetWorldTimerManager().SetTimer(TimerHandler_ViewMode, this, &ATT_GridManager::ViewModeTick, 0.1f, true, 0.0f);
-	}
-}
-
-void ATT_GridManager::StopZoneViewMode()
-{
-	// Stop ViewModeTick timer
-	GetWorldTimerManager().ClearTimer(TimerHandler_ViewMode);
-
-	// Deactivate all view modes
-	for (int i = 0; i < BlockManager->isZoneViewModeActive.Num(); i++)
-	{
-		BlockManager->isZoneViewModeActive[i] = false;
-	}
-
-	isViewMode = false;
-	TileClearState();
-}
-
-void ATT_GridManager::ViewModeTick()
-{
-	if (!isViewMode)
-	{
-		return;
-	}
-
-	TArray<int> tempZoneTileIDs;
-	tempZoneTileIDs = BlockManager->GetSpawnedZoneTileIDs();
-	viewModeTiles.Empty();
-
-	for (int i = 0; i < tempZoneTileIDs.Num(); i++)
-	{
-		if (!playerTileSelection.Contains(i))
-		{
-			// Check which mode is activated
-			for (int viewModeIndex = 0; viewModeIndex < BlockManager->isZoneViewModeActive.Num(); viewModeIndex++)
-			{
-				if (BlockManager->isZoneViewModeActive[viewModeIndex])
-				{
-					// Check if the zone on the tile corresponds to the active view mode
-					if (tempZoneTileIDs[i] == BlockManager->zoneViewModeIndex[viewModeIndex])
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Yo road"));
-						// Add the tile to view mode tile, & change its colour
-						viewModeTiles.Add(i);
-						SetTileColor(i, zoneColours[viewModeIndex]);
-					}
-				}
-			}
-		}
-	}
-}
+/*---------- TODO: REFACTOR functions ----------*/
 
 void ATT_GridManager::SetPlayerSelection(TArray<int> selectedTileIDs)
 {
@@ -491,17 +415,6 @@ void ATT_GridManager::ClearPlayerSelection()
 		TileReset(i);
 	}
 	playerTileSelection.Empty();
-}
-
-bool ATT_GridManager::IsTileValid(int tileID)
-{
-	FTransform emptyTransform;
-	return instanceGroupedSpriteComp->GetInstanceTransform(tileID, emptyTransform, false);
-}
-
-TArray<int> ATT_GridManager::GetAllTileIDs()
-{
-	return tileIDs;
 }
 
 

@@ -559,7 +559,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		{
 			TArray<int> tempTiles;
 			tempTiles.Add(lastLinetracedTile);
-			GridManager->SetTileColorFromZoneID(tempTiles, placingBlockID);
+			GridManager->SetTileColorToBlockID(tempTiles, placingBlockID);
 		}
 
 		// Enables keyboard movement when placing down a block
@@ -592,14 +592,14 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 					lastPathGoalTile = lastLinetracedTile;
 				}
 					GridManager->SetPlayerSelection(placingLastZoneBuilt);
-					GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockID);
+					GridManager->SetTileColorToBlockID(placingLastZoneBuilt, placingBlockID);
 			}
 
 			else 
 			{
 				placingLastZoneBuilt = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile, false);
 				GridManager->SetPlayerSelection(placingLastZoneBuilt);
-				GridManager->SetTileColorFromZoneID(placingLastZoneBuilt, placingBlockID);
+				GridManager->SetTileColorToBlockID(placingLastZoneBuilt, placingBlockID);
 
 			}
 		}
@@ -724,13 +724,13 @@ void ATT_PlayerGridCamera::TickRemoveTool()
 	{
 		tilesToBeRemoved = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile, false);
 		GridManager->SetPlayerSelection(tilesToBeRemoved);
-		GridManager->SetTileColorFromZoneID(tilesToBeRemoved, -1);
+		GridManager->SetTileColorToBlockID(tilesToBeRemoved, -1);
 		return;
 	}
 	
 	FLinearColor ZoneColour;
 	ZoneColour = FVector(0.1, 0.1, 0.1);
-	GridManager->SetTileColor(lastLinetracedTile, ZoneColour);
+	GridManager->SetTileColour(lastLinetracedTile, ZoneColour);
 }
 
 void ATT_PlayerGridCamera::ConfirmRemoveToolStartTile()
@@ -761,14 +761,6 @@ void ATT_PlayerGridCamera::DeleteBlockOnTile(int tileID)
 		GridManager->TileClearState();
 		currentLinetracedTile = -1;
 	}
-}
-
-
-/*---------- Other functions ----------*/
-
-void ATT_PlayerGridCamera::ToggleViewMode(int ViewMode)
-{
-	GridManager->ActivateZoneViewMode(ViewMode);
 }
 
 

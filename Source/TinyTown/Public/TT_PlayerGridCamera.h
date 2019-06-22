@@ -171,12 +171,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Block Building")
 	void DeleteBlockOnTile(int tileID);
 
-
-	/* @TODO: Not used, needs to be removed. 
-	 * Calls ActivateZoneViewMode in GridManager. 
-	 * @param ViewMode ViewMode ID (should be replaced by EBuildingType)
-	 */
-	void ToggleViewMode(int ViewMode);
 	
 	
 	/*---------- Variables -----------*/
