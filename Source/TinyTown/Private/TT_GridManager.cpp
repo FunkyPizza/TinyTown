@@ -119,14 +119,14 @@ void ATT_GridManager::SpawnBlockManager()
 
 /*---------- Accessor functions ----------*/
 
-FVector ATT_GridManager::GetTileLocation(int tileID)
+FVector ATT_GridManager::GetTileLocation(int tileID, bool WorldSpace)
 {
 	FTransform tempTransform;
 	FVector tempVector;
 
 	if (IsTileValid(tileID))
 	{
-		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTransform, true);
+		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tempTransform, WorldSpace);
 		tempVector = tempTransform.GetLocation();
 	}
 
@@ -348,11 +348,11 @@ void ATT_GridManager::SetTileColour(int tileID, FLinearColor colour)
 	}
 }
 
-void ATT_GridManager::SetTileTransform(int tileID, FTransform newTransform)
+void ATT_GridManager::SetTileTransform(int tileID, FTransform newTransform, bool WorldSpace)
 {
 	if (IsTileValid(tileID))
 	{
-		instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform);
+		instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTransform, WorldSpace);
 	}
 
 	else

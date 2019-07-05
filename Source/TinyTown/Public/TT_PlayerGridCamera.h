@@ -53,50 +53,50 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputCameraZoom(float value); 
 
-	/* Handles the left click input for things such as selecting a block, placing one down or simply interacting with the grid. */
+	/** Handles the left click input for things such as selecting a block, placing one down or simply interacting with the grid. */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputSelectButtonDown(); 
 
-	/* Handles the left click input for things such as confirming the remove tool or interacting with the grid. */
+	/** Handles the left click input for things such as confirming the remove tool or interacting with the grid. */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputSelectButtonUp();
 
-	/* Start rotating the camera using input axis "MouseX" and "MouseY". */
+	/** Start rotating the camera using input axis "MouseX" and "MouseY". */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputRotationButtonDown(); 
 
-	/* Stop rotating the camera using input axis "MouseX" and "MouseY". */
+	/** Stop rotating the camera using input axis "MouseX" and "MouseY". */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputRotationButtonUp();
 
-	/* Start moving the camera using input axis "MouseX" and "MouseY". */
+	/** Start moving the camera using input axis "MouseX" and "MouseY". */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputMoveButtonDown();
 
-	/* Stop moving the camera using input axis "MouseX" and "MouseY". */
+	/** Stop moving the camera using input axis "MouseX" and "MouseY". */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputMoveButtonUp();
 	
-	/* Cancels the building of a block and deactivates the remove tool. */
+	/** Cancels the building of a block and deactivates the remove tool. */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void InputCancel();
 
-	/* Select a block from one of its tile IDs. If the tile isn't owned by a block, nothing will happen. */
+	/** Select a block from one of its tile IDs. If the tile isn't owned by a block, nothing will happen. */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	bool SelectBlockFromTileID(int tileID);
 
-	/* Select a block from a reference to the block itself. If the input block isn't valid, nothing will happen. */
+	/** Select a block from a reference to the block itself. If the input block isn't valid, nothing will happen. */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	bool SelectBlock(ATT_Block* blockToSelect);
 
-	/* Deselects currently selected block. */
+	/** Deselects currently selected block. */
 	UFUNCTION(BlueprintCallable, Category = "Player Input")
 	void DeselectBlock();
 
-	/* Line trace from the camera to the grid and updates tile if they are hovered. */
+	/** Line trace from the camera to the grid and updates tile if they are hovered. */
 	void MouseTrace(); 
 
-	/* Moves the camera in XY direction multiplied by Sensitivity. XY are axis values (-1 < value < 1).
+	/** Moves the camera in XY direction multiplied by Sensitivity. XY are axis values (-1 < value < 1).
 	* @param x Direction X to move in (-1 < X < 1).
 	* @param y Direction Y to move in (-1 < x < 1).
 	* @param sensitivity Used to scale movement speed (defined by blueprint variable).
@@ -104,7 +104,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void MoveCamera(float x, float y, float sensitivity); 
 
-	/* Rotates the camera around Y and Z axis multiplied by Sensitivity.  XY are axis values (-1 < value < 1).
+	/** Rotates the camera around Y and Z axis multiplied by Sensitivity.  XY are axis values (-1 < value < 1).
 	* @param x Amount of Yaw to add.
 	* @param y Amount of Pitch to add.
 	* @param xSensitivity Used to scale Yaw rotation speed (defined by blueprint variable).
@@ -113,59 +113,58 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void RotateCamera(float x, float y, float xSensitivity, float ySensitivity);
 
-	/* Returns a reference to the grid manager this object is using. */
+	/** Returns a reference to the grid manager this object is using. */
 	UFUNCTION(BlueprintPure)
 	ATT_GridManager* GetGridManager(); 
 
-	/*Gets a reference to the blockmanager from the gridmanager. */
+	/** Gets a reference to the blockmanager from the gridmanager. */
 	UFUNCTION(BlueprintPure)
 	ATT_BlockManager* GetBlockManager();
 
-	/* Spawns a block in edit mode (with rotation and movements enables) to show the player where he is placing down the block.
+	/** Spawns a block in edit mode (with rotation and movements enables) to show the player where he is placing down the block.
 	 * Block placement is confirmed by calling ConfirmBuildTool() or cancelled with StopBuildTool(). 
 	 * @param blockID Data table index of the row corresponding to the block to spawn.
 	 */ 
 	UFUNCTION(BlueprintCallable, Category = "Block Building")
 	void StartBuildTool(int blockID);
 
-	/* Cancels the building of a block. */
+	/** Cancels the building of a block. */
 	UFUNCTION(BlueprintCallable, Category = "Block Building")
 	void StopBuildTool();
 
-	/* Lerps the "ghost block" on tick to ensure a smooth movement. If placing a zone, this will update the grid to show what tiles are being affected.
+	/** Lerps the "ghost block" on tick to ensure a smooth movement. If placing a zone, this will update the grid to show what tiles are being affected.
 	 * @param deltaTime deltaTime value being passed through via the Tick function.
 	 */
 	void TickBuildTool(float deltaTime);
 
-	/* If placing a Zone or Path, use this to confirm the first tile of the zone or path. 
-	* This allows the user  to hold click and drag to place down this type of block.
+	/** If placing a Zone or Path, use this to confirm the first tile of the zone or path. 
+	 * This allows the user  to hold click and drag to place down this type of block.
 	 */
 	void ConfirmBuildToolStartTile();
 
-	/* Confirms the placement of the block, and call the logic to spawn the block on the grid.
-	*/
+	/** Confirms the placement of the block, and call the logic to spawn the block on the grid. */
 	UFUNCTION(BlueprintCallable, Category = "Block Building")
 	void ConfirmBuildTool();
 
 
-	/* Start the  removeTool. The player will have to click and drag to select a zone of tiles to clear. */
+	/** Start the  removeTool. The player will have to click and drag to select a zone of tiles to clear. */
 	UFUNCTION(BlueprintCallable, Category = "Block Building")
 	void StartRemoveTool();
 
-	/* Stop the remove tool and cancel the current selection. */
+	/** Stop the remove tool and cancel the current selection. */
 	UFUNCTION(BlueprintCallable, Category = "Block Building")
 	void StopRemoveTool();
 
-	/* Used to refresh the zone selection. */
+	/** Used to refresh the zone selection. */
 	void TickRemoveTool();
 
-	/* This confirms the currently hovered tile to be the first tile of the RemoveTool selection zone. */
+	/** This confirms the currently hovered tile to be the first tile of the RemoveTool selection zone. */
 	void ConfirmRemoveToolStartTile();
 
-	/* To be called when StartTile has been confirmed. This concludes the RemoveTool, deleting selected tile and disabling the tool. */
+	/** To be called when StartTile has been confirmed. This concludes the RemoveTool, deleting selected tile and disabling the tool. */
 	void ConfirmRemoveToolEndTile();
 
-	/* Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
+	/** Calls DeleteBlockOnTile in BlockManager to delete the block or clear the zone a TileID.
 	 * @param tileID TileID of the tile to clear/ owned by the block to delete.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Block Building")

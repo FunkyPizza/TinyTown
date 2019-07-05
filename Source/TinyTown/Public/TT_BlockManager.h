@@ -62,7 +62,9 @@ protected:
 	void ClearTileArraysAtIndex(int index);
 
 
-	void FindZoneLayout(int zoneID, TArray<int> zone);
+	void SpawnZoneBuildingsInZone(int zoneID, TArray<int> tileIDs);
+
+	void SpawnBlockInZone(int tileA, TArray<int> zoneTiles, TMap<int, FVector2D> blockSizesMap);
 
 
 	/*---------- Variables -----------*/
@@ -128,6 +130,8 @@ public:
 */
 	void CreateZoneOnTiles(TArray<int> tileIDs, int zoneID);
 
+	void CreatePathOnTiles(TArray<int> tileIDs, int blockID);
+
 	/**
 	* Clears the tile of any zoneIDs.
 	* @param tileID TileID of the tile to clear of a zone.
@@ -179,9 +183,9 @@ public:
 	/* Returns true if the zone is on the grid and not crossing over the edge of the grid. */
 	bool CheckZoneTileIDs(TArray<int> zoneTileIDs, int tileA, int tileB);
 
-	bool CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi);
+	bool CheckIfBlockIsBuildable(int tileC, int sizeX, int sizeY, bool isModuloHalfPi);
 
-	bool CheckIfBlockIsBuildable(int tileID, int sizeX, int sizeY, bool isModuloHalfPi, TArray<int>& OutZoneTileIDs);
+	bool CheckIfBlockIsBuildable(int tileC, int sizeX, int sizeY, bool isModuloHalfPi, TArray<int>& OutZoneTileIDs);
 
 	/* Returns the nearest tileID with the space to accomodate a block of the specified size. */
 	bool GetNearestBuildableTileID(int& OutTileID, int tileID, int sizeX, int sizeY, bool isModuloHalfPi);
@@ -249,7 +253,7 @@ public:
 	TMap<FString, int> zoneIDMap;
 
 	/* This maps contains contains all the blocks fallaged BT_ZoneBuilding block names alongside their blockID. */
-	TMap<FString, int> zoneBuildingIDMap;
+	TMap<FString, FTT_Struct_BlockType> zoneBuildingIDMap;
 
 	/* This array of bool indicates which zone view mode is activate. For each block of type "zone", there is a bool. */
 	TArray<bool> isZoneViewModeActive;
@@ -279,7 +283,7 @@ public:
 	* Each key is the name of the zone the building is associated to, and contains the block zone building's block ID.
 	*/
 	UFUNCTION(BlueprintPure, Category = "BlockManager")
-		TMap<FString, int>  GetAllZoneBuildings();
+		TMap<FString, FTT_Struct_BlockType>  GetAllZoneBuildings();
 
 	/** This returns an array of all the block IDs that have been recognised in the data table. */
 	UFUNCTION(BlueprintPure, Category = "BlockManager")

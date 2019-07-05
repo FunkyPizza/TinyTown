@@ -141,10 +141,11 @@ public:
 
 	/* Returns this tiles location if valid.
 	*	@param tileID TileID (instance index) of the tile.
+	*	@param WorldSpace Whether or not this should return the world location or relative to the GridManager.
 	*	@return Location of the tile
 	*/
 	UFUNCTION(BlueprintPure, Category = "GridManager")
-	FVector GetTileLocation(int tileID);
+	FVector GetTileLocation(int tileID, bool WorldSpace);
 
 	/* Returns the tile's neighbours in a clockwise order. If one direction doesn't have a neighbour, nothing will be returned.
 	* AllNeighboursTileID returns -1 when a tile doesn't exist, this allows you to use array index to get a specific direction.
@@ -192,7 +193,7 @@ public:
 	void SetTileColour(int tileID, FLinearColor colour);
 
 	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
-	void SetTileTransform(int tileID, FTransform newTransform);
+	void SetTileTransform(int tileID, FTransform newTransform, bool WorldSpace);
 
 	/* Reset all altered tiles to their original state. */
 	void TileClearState();

@@ -52,6 +52,11 @@ void ATT_PlayerGridCamera::Tick(float DeltaTime)
 		TickBuildTool(DeltaTime);
 	}
 
+	if (isRemoveToolActive)
+	{
+		TickRemoveTool();
+	}
+
 	// Linetrace cursor to 3D world
 	MouseTrace();
 }
@@ -534,8 +539,19 @@ void ATT_PlayerGridCamera::ConfirmBuildTool()
 		GridManager->BlockManager->SpawnBlock(placingBlockID, placingBlockTargetRotation, lastBuildableTileID);
 	}
 
+	if (isPlacingDownAPath)
+	{
+		GetBlockManager()->CreatePathOnTiles(placingLastZoneBuilt, placingBlockID);
+		GridManager->ClearPlayerSelection();
+
+		for (int i : placingLastZoneBuilt)
+		{
+			GridManager->TileReset(i);
+		}
+	}
+
 	// Block is a zone / is resizable
-	if (isPlacingDownAResizableBlock)
+	if (isPlacingDownAResizableBlock && !isPlacingDownAPath)
 	{
 		GridManager->BlockManager->CreateZoneOnTiles(placingLastZoneBuilt, placingBlockID);
 		GridManager->ClearPlayerSelection();
@@ -598,6 +614,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 			else 
 			{
 				placingLastZoneBuilt = GridManager->BlockManager->GetZoneTileIDsFromZoneParameters(placingBlockTileID, lastLinetracedTile, false);
+				//@TODO Remove the tiles that are being used already
 				GridManager->SetPlayerSelection(placingLastZoneBuilt);
 				GridManager->SetTileColorToBlockID(placingLastZoneBuilt, placingBlockID);
 
@@ -678,7 +695,7 @@ void ATT_PlayerGridCamera::TickBuildTool(float deltaTime)
 		// If the player is resizing a block or if the hovered tile is already used, do not update the block's location to the mouse's position
 		if (!isSettingBlockSize && isBlockClearToBePlaced)
 		{
-			placingBlockTargetLocation = GridManager->GetTileLocation(lastBuildableTileID);
+			placingBlockTargetLocation = GridManager->GetTileLocation(lastBuildableTileID, true);
 			UE_LOG(LogTemp, Warning, TEXT("Buildable tile is tile ID %d"), lastBuildableTileID);
 		}
 
@@ -706,7 +723,7 @@ void ATT_PlayerGridCamera::StartRemoveTool()
 	StopRemoveTool();
 
 	isRemoveToolActive = true;
-	GetWorldTimerManager().SetTimer(TimerHandle_RemoveTool, this, &ATT_PlayerGridCamera::TickRemoveTool, 0.1f, true, 0.0f);
+	//GetWorldTimerManager().SetTimer(TimerHandle_RemoveTool, this, &ATT_PlayerGridCamera::TickRemoveTool, 0.1f, true, 0.0f);
 }
 
 void ATT_PlayerGridCamera::StopRemoveTool()
@@ -728,9 +745,9 @@ void ATT_PlayerGridCamera::TickRemoveTool()
 		return;
 	}
 	
-	FLinearColor ZoneColour;
-	ZoneColour = FVector(0.1, 0.1, 0.1);
-	GridManager->SetTileColour(lastLinetracedTile, ZoneColour);
+// 	FLinearColor ZoneColour;
+// 	ZoneColour = FVector(0.1, 0.1, 0.1);
+// 	GridManager->SetTileColour(lastLinetracedTile, ZoneColour);
 }
 
 void ATT_PlayerGridCamera::ConfirmRemoveToolStartTile()

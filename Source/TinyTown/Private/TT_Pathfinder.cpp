@@ -85,8 +85,8 @@ bool UTT_Pathfinder::IsTileUsed(int tileID)
 int UTT_Pathfinder::GetDistanceBetweenTwoTile(int tileA, int tileB)
 {
 	int distance;
-	FVector locA = GridManager->GetTileLocation(tileA);
-	FVector locB = GridManager->GetTileLocation(tileB);
+	FVector locA = GridManager->GetTileLocation(tileA, true);
+	FVector locB = GridManager->GetTileLocation(tileB, true);
 
 	distance = abs(FVector::Distance(locA, locB));
 	return distance;
