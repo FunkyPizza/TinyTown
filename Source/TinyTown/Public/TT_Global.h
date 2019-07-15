@@ -36,9 +36,6 @@ struct FTT_Struct_Block : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		FString Category_Name;
 
-	/** Defines how the game should do with this block. See enum description for more info on the types. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		EBlockType Block_Type;
 
 	/** How many tiles on the X axis should this building take. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
@@ -48,81 +45,21 @@ struct FTT_Struct_Block : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		int32 Size_Y;
 
-	/** Not properly implemented yet. So far, only used for viewmode filters. */
+	/** Defines how the game should do with this block. See enum description for more info on the types. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		FLinearColor Grid_Colour;
+		EBlockType Block_Type;
 
-	/** Gameplay - Level of efficiency of the building. */
+	/** Icon to represent this block in UI widgets. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 Efficiency;
-
-	/** Gameplay - Cost to buy this building in money. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 Initial_Cost;
-
-	/** Gameplay - Recurrent cost in money. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_Mo;
-
-	/** Gameplay - Recurrent cost in population. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_Po;
-
-	/** Gameplay - Recurrent cost in happiness. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_Ha;
-
-	/** Gameplay - Recurrent cost in electricity. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_El;
-
-	/** Gameplay - Recurrent cost in water. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_Wa;
-
-	/** Gameplay - Recurrent cost in internet. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_In;
-
-	/** Gameplay - Recurrent cost in production. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 R_Pr;
-
-	/** Gameplay - Production of money. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_Mo;
-
-	/** Gameplay - Production of population. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_Po;
-
-	/** Gameplay - Production of happiness. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_Ha;
-
-	/** Gameplay - Production of electricity. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_El;
-
-	/** Gameplay - Production of water. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_Wa;
-
-	/** Gameplay - Production of internet. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_In;
-
-	/** Gameplay - Production of production. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		int32 P_Pr;
+		UPaperSprite* Icon;
 
 	/** Each block should have its own child class of TT_Block. Use this to assign a block to its class. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
 		TSubclassOf<ATT_Block> BlockClass;
 
-	/** Icon to represent this block in UI widgets. */
+	/** Not properly implemented yet. So far, only used for viewmode filters. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FStruct_Block")
-		UPaperSprite* Icon;
+		FLinearColor Grid_Colour;
 
 };
 
