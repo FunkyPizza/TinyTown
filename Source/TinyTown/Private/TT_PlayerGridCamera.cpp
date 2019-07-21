@@ -176,11 +176,7 @@ void ATT_PlayerGridCamera::InputSelectButtonUp()
 {
 	isSelectButtonDown = false;
 
-	if (currentLinetracedTile != -1)
-	{
-		GridManager->TileClearState();
-		currentLinetracedTile = -1;
-	}
+	GridManager->OnTileUnClicked(currentLinetracedTile);
 
 	if (isRemoveToolActive)
 	{
@@ -417,11 +413,13 @@ void ATT_PlayerGridCamera::MouseTrace()
 					{
 						// Hit a tile
 						currentLinetracedTile = Hit.Item;
+						int unhoveredTile = lastLinetracedTile;
 						lastLinetracedTile = currentLinetracedTile;
 
 						if (!isSettingBlockSize)
 						{
 							GridManager->OnTileHovered(currentLinetracedTile);
+							GridManager->OnTileUnHovered(unhoveredTile);
 						}
 						return;
 					}
@@ -431,11 +429,13 @@ void ATT_PlayerGridCamera::MouseTrace()
 				if (Hit.Actor->GetClass()->IsChildOf(ATT_Block::StaticClass()))
 				{
 					currentLinetracedTile = Cast<ATT_Block>(Hit.Actor)->centralTileID;
+					int unhoveredTile = lastLinetracedTile;
 					lastLinetracedTile = currentLinetracedTile;
 
 					if (!isSettingBlockSize)
 					{
 						GridManager->OnTileHovered(currentLinetracedTile);
+						GridManager->OnTileUnHovered(unhoveredTile);
 					}
 
 					return;

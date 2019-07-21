@@ -78,7 +78,7 @@ void ATT_GridManager::SpawnTiles(int x, int y, FVector center, float distance)
 			{
 				int tileID = tileCounter;
 				ATextRenderActor* Text = GetWorld()->SpawnActor<ATextRenderActor>(ATextRenderActor::StaticClass(), FVector(0.f, 100, 170.f), FRotator(90.f, 180.f, 0.f));
-				Text->GetTextRender()->SetText(FString::FromInt(tileID));
+				Text->GetTextRender()->SetText(FText::AsNumber(tileID));
 				Text->GetTextRender()->SetTextRenderColor(FColor::White);
 				Text->GetTextRender()->SetVerticalAlignment(EVRTA_TextCenter);
 				Text->GetTextRender()->SetHorizontalAlignment(EHTA_Center);
@@ -299,6 +299,11 @@ void ATT_GridManager::OnTileHovered_Implementation(int tileID)
 	}
 }
 
+void ATT_GridManager::OnTileUnHovered_Implementation(int tileID)
+{
+
+}
+
 void ATT_GridManager::OnTileClicked_Implementation(int tileID)
 {
 	//Check the tile is hovered and hasn't been clicked
@@ -316,6 +321,11 @@ void ATT_GridManager::OnTileClicked_Implementation(int tileID)
 		int32 clickedTile = tileID;
 		modifiedTiles.Add(clickedTile);
 	}
+}
+
+void ATT_GridManager::OnTileUnClicked_Implementation(int tileID)
+{
+
 }
 
 void ATT_GridManager::SetTileColorToBlockID(TArray<int> tileIDs, int blockID)
@@ -346,6 +356,10 @@ void ATT_GridManager::SetTileColour(int tileID, FLinearColor colour)
 		instanceGroupedSpriteComp->UpdateInstanceColor(tileID, colour);
 		modifiedTiles.Add(tileID);
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Tile ID was not valid, couldn't update tile colour."));
+	}
 }
 
 void ATT_GridManager::SetTileTransform(int tileID, FTransform newTransform, bool WorldSpace)
@@ -358,6 +372,23 @@ void ATT_GridManager::SetTileTransform(int tileID, FTransform newTransform, bool
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Tile ID was not valid, couldn't update tile transform."));
+	}
+}
+
+void ATT_GridManager::SetTileScale(int tileID, float scale)
+{
+	if (IsTileValid(tileID))
+	{
+		FTransform tileTransform;
+		instanceGroupedSpriteComp->GetInstanceTransform(tileID, tileTransform, false);
+
+		FVector newScale3D =  FVector(scale, scale, scale);
+		FTransform newTileTransform = FTransform(tileTransform.GetRotation(), tileTransform.GetLocation(), newScale3D);
+		instanceGroupedSpriteComp->UpdateInstanceTransform(tileID, newTileTransform, false);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Tile ID was not valid, couldn't update tile scale."));
 	}
 }
 

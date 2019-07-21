@@ -120,6 +120,15 @@ public:
 	/** Tile Effect - Set this tile as hovered. */
 	void OnTileHovered_Implementation(int tileID);
 
+
+	/* Called whenever a mouse cursor leaves the tile for another one.
+	* @param tileID TileID of the tile that has been unhovered.
+	*/
+	UFUNCTION(BlueprintNativeEvent, Category = "Grid Customisation")
+		void OnTileUnHovered(int tileID);
+
+	void OnTileUnHovered_Implementation(int tileID);
+
 	/**
 	* Called whenever a tile is clicked by the mouse cursor.
 	* @param tileID TileID of the tile that has been clicked.
@@ -130,6 +139,15 @@ public:
 	/** Tile Effect -Set this tile as clicked. */
 	void OnTileClicked_Implementation(int tileID);
 
+	/**
+* Called whenever a tile is unclicked by the mouse cursor.
+* @param tileID TileID of the tile that has been unclicked.
+*/
+	UFUNCTION(BlueprintNativeEvent, Category = "Grid Customisation")
+		void OnTileUnClicked(int tileID);
+
+	/** Tile Effect -Set this tile as unclicked. */
+	void OnTileUnClicked_Implementation(int tileID);
 
 	/*---------- Functions -----------*/
 
@@ -194,6 +212,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
 	void SetTileTransform(int tileID, FTransform newTransform, bool WorldSpace);
+
+	UFUNCTION(BlueprintCallable, Category = "Grid Customisation")
+		void SetTileScale(int tileID, float scale);
 
 	/* Reset all altered tiles to their original state. */
 	void TileClearState();
